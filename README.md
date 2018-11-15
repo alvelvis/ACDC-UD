@@ -92,8 +92,8 @@ Logo, ele deve receber o tipo de relação "parataxis". Resultado:
     padrão: 0 (a primeira palavra)
     
     --critério <coluna>:<condição>:<substituição>
-    O critério para modificação do arquivo UD, sendo <coluna> o item que deverá ser procurado, começando pelo número 0, <condição>, a palavra/número que deverá estar preenchendo essa coluna, e <substituição>, pelo quê essa palavra/número será substituída/o
-    padrão: 7:ccomp:ccomp parataxis (6ª coluna preenchida com a palavra "ccomp" vira "ccomp parataxis")
+    O critério para modificação do arquivo UD, sendo <coluna> o número da coluna, começando por 0, <condição>, a palavra/número que deverá estar preenchendo essa coluna, e <substituição>, pelo quê essa palavra/número será substituída/o
+    padrão: 7:ccomp:ccomp parataxis (sexta coluna preenchida com a palavra "ccomp" vira "ccomp parataxis")
     
     --não-marcar
     Caso o parâmetro não seja fornecido, toda substituição será seguida pelo identificador "#!$", de modo que seja fácil encontrar no arquivo SAÍDA as alterações feitas
