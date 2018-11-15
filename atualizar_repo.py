@@ -16,3 +16,5 @@ def atualizar():
 			Git().remote('add','origin','https://github.com/alvelvis/ACDC-UD.git')
 			Git().fetch()
 			Git().checkout('master')
+
+atualizar()

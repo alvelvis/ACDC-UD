@@ -2,30 +2,37 @@
 
 import sys
 
+#Compara 2 arquivos UD, mantendo ou não as informações de cada sentença (id_sent etc.)
 def compara(arquivo, arquivo2, texto, texto2, info):
 	novotexto = list()
+	
+	#Separa cada sentença no arquivo 1 e arquivo 2
 	texto = texto.split('\n\n')
 	texto2 = texto2.split('\n\n')
+	
+	#Tira os itens em branco das listas
 	texto = [x.splitlines() for x in texto if x]
 	texto2 = [x.splitlines() for x in texto2 if x]
 	
+	#Retira os itens de informação, do tipo "# id_sent", mantendo apenas as linhas com "# text" e os tokens em si
 	if not info:
 		for i, sentença in enumerate(texto): texto[i] = [x for x in sentença if not '# ' in x or '# text =' in x]
 		for i, sentença in enumerate(texto2): texto2[i] = [x for x in sentença if not '# ' in x or '# text =' in x]
 
-	for sentença in texto:
-		for linha in sentença:
-			if '# text' in linha:
-				for sentença2 in texto2:
+	#Início da comparação
+	for sentença in texto: #Para cada sentença do arquivo 1
+		for linha in sentença: #Para cada linha nessa sentença
+			if '# text' in linha: #Se tiver "# text" nessa linha
+				for sentença2 in texto2: #Início da comparação com o arquivo 2
 					for linha2 in sentença2:
-						if linha2 == linha:
-							if sentença != sentença2:
+						if linha2 == linha: #Alinhou o "# text" do arquivo 1 com o "# text" do arquivo 2
+							if sentença != sentença2: #Se a sentença do arquivo1 for diferente da sentença do arquivo 2 (ou seja, houver discrepância em algum token)
 								for a, line in enumerate(sentença):
 									for b, line2 in enumerate(sentença2):
-										if a == b and line == line2:
+										if a == b and line == line2: #Alinha os tokens que estão iguais, então printa 1 vez só
 											novotexto.append(line)
 											break
-										elif a == b:
+										elif a == b: #Alinha os tokens que estão diferentes e printa o mesmo token dos arquivos 1 e 2
 											novotexto.append('--> ' + line + ' #' + line2)
 											break
 								novotexto.append('')
@@ -34,6 +41,7 @@ def compara(arquivo, arquivo2, texto, texto2, info):
 	return "\n".join(novotexto)
 
 def main(arquivo, arquivo2, saída, opcionais = ''):
+	#Checa os opcionais
 	if '--cod-1' in opcionais: codificação = opcionais.split('--cod-1')[1].split('--')[0].strip()
 	else: codificação = 'utf8'
 	if '--cod-2' in opcionais: codificação2 = opcionais.split('--cod-2')[1].split('--')[0].strip()
@@ -43,17 +51,20 @@ def main(arquivo, arquivo2, saída, opcionais = ''):
 	if '--sem-info' in opcionais: info = False
 	else: info = True
 
+	#Abre os arquivos CONLLU e salva o arquivo comparado
 	texto = open(arquivo, 'r', encoding=codificação).read()
 	texto2 = open(arquivo2, 'r', encoding=codificação2).read()
 	open(saída, 'w', encoding=codificação3).write(arquivo + '\n' + arquivo2 + '\n\n' + compara(arquivo, arquivo2, texto, texto2, info))
 
 if __name__ == "__main__":
-	#atualizar
+	#Atualizar repositório
 	if len(sys.argv) == 2 and sys.argv[1] == '--atualizar':
 		import atualizar_repo
-		atualizar.atualizar()
+		atualizar_repo.atualizar()
 		print('Atualizado com sucesso!')
 		exit()
+	
+	#Checa os argumentos
 	if len(sys.argv) < 4:
 		print("uso: comparar.py --atualizar conllu1 conllu2 saída.txt --cod-1 --cod-2 --cod-3 --sem-info")
 	elif len(sys.argv) == 4:

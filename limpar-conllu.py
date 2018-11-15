@@ -17,7 +17,7 @@ def main(antes, depois, codificação = "utf8", codificação2 = "utf-8"):
 if __name__ == "__main__":
 	if len(sys.argv) == 2 and sys.argv[1] == '--atualizar':
 		import atualizar_repo
-		atualizar.atualizar()
+		atualizar_repo.atualizar()
 		print('Atualizado com sucesso!')
 		exit()
 	if len(sys.argv) < 3:

@@ -59,18 +59,15 @@ def main(códigofonte, conllu, saída, opcionais = ''):
     #Checa opcionais
     if '--cod-acdc' in opcionais: codificação = opcionais.split('--cod-acdc')[1].split('--')[0].strip()
     else: codificação = 'utf8'
-
     if '--cod-ud' in opcionais: codificação2 = opcionais.split('--cod-ud')[1].split('--')[0].strip()
     else: codificação2 = 'utf8'
-
     if '--cod-saída' in opcionais: codificação3 = opcionais.split('--cod-saída')[1].split('--')[0].strip()
     else: codificação3 = 'utf8'
-
     if '--palavra-negrito' in opcionais: palavranegrito = int(opcionais.split('--palavra-negrito')[1].split('--')[0].strip())
     else: palavranegrito = 0
-
     if '--critério' in opcionais: critério = opcionais.split('--critério')[1].split('--')[0].strip()
-    else: critério = '7:ccomp:ccomp parataxis!@#'
+    else: critério = '7:ccomp:ccomp parataxis'
+    if not '--não-marcar' in opcionais: critério += '#!$'
 
     print(códigofonte, conllu, saída, codificação, codificação2, codificação3, str(palavranegrito), critério)
 
@@ -96,7 +93,7 @@ if __name__ == '__main__':
     #atualizar
     if len(sys.argv) == 2 and sys.argv[1] == '--atualizar':
         import atualizar_repo
-        atualizar.atualizar()
+        atualizar_repo.atualizar()
         print('Atualizado com sucesso!')
         exit()
 
@@ -115,4 +112,5 @@ if __name__ == '__main__':
                 + '\n--cod-ud utf8'
                 + '\n--cod-saída utf8'
                 + '\n--palavra-negrito 0 (para casos de negrito com mais de uma palavra)'
-                + '\n--critério 7:ccomp:ccomp parataxis!@# (coluna:padrão:substituição)')
+                + '\n--critério 7:ccomp:ccomp parataxis (coluna:padrão:substituição)
+                + '\n--não-marcar (não marcar as sentenças que foram alteradas)')
