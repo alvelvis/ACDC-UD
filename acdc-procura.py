@@ -32,7 +32,7 @@ def substituiUD(ud, item, palavranegrito, critério):
     for a, sentença in enumerate(ud):
         for b, linha in enumerate(sentença):
 
-            #Retira as marcas de strong na hora de comparar se é a sentença que quero e o ponto final com espaço
+            #Retira as marcas de strong na hora de comparar se é a sentença que quero e retira o ponto final com espaço
             if '# text = ' + re.sub(r'</?[sS][tT][rR][oO][nN][gG]>','',re.sub(' .$','.',item)) in linha:
 
                 #Identifica a palavra bold no item do ACDC e o número do token no UD

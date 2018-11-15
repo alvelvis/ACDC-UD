@@ -10,7 +10,7 @@ Ferramentas de conversão do AC/DC ([http://www.linguateca.pt/ACDC](http://www.l
 
 # acdc-procura.py
 
-Com esse código é possível, a partir do resultado de uma busca no AC/DC, realizar alterações em um arquivo UD (.conllu).
+Com esse código é possível, a partir do resultado de uma busca no AC/DC, realizar alterações em um arquivo UD (.conllu)
 
 ## Exemplo
 
