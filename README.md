@@ -22,7 +22,9 @@ O AC/DC retorna 76 sentenças, por exemplo:
 
     id=481 cad="Caderno Especial" sec="nd" sem="94a": «Existem algumas opções de como fazer isso», **disse** Sérgio Amaral, chefe de gabinete do ministro Rubens Ricupero .
 
-Agora quero que, no arquivo BOSQUE.conllu (formato UD), essas 76 sentenças sejam alteradas.
+Agora quero que, no arquivo BOSQUE.conllu (formato UD), essas 76 sentenças sejam alteradas caso sigam algumas condições.
+
+Observe a mesma sentença acima, do AC/DC, no UD:
 
     # text = «Existem algumas opções de como fazer isso», disse Sérgio Amaral, chefe de gabinete do ministro Rubens Ricupero.
     # source = CETENFolha n=487 cad=Brasil sec=pol sem=94b
@@ -53,11 +55,11 @@ Agora quero que, no arquivo BOSQUE.conllu (formato UD), essas 76 sentenças seja
     22	Ricupero	Ricupero	PROPN	_	Number=Sing	21	flat:name	_	SpaceAfter=No
     23	.	.	PUNCT	_	_	11	punct	_	_
     
-Quero que as palavras que, aqui no UD, apontam para a palavra em negrito no AC/DC, e que tenham o tipo de relação "ccomp", recebam também o tipo "parataxis".
+A condição de modificação é que as palavras que, no UD, apontam para a palavra em negrito no AC/DC, e que tenham o tipo de relação "ccomp", recebam também o tipo "parataxis".
 
 O token em negrito no AC/DC é "disse". Aqui no UD, ele é o token de número 11. Quem aponta para o número 11 (coluna 7) e tem o tipo de relação "ccomp" (coluna 8), no UD, é a palavra "Existem", token de número 2.
 
-Resultado:
+Logo, ele deve receber o tipo de relação "parataxis". Resultado:
 
     2	Existem	existir	VERB	_	Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin	11	ccomp parataxis	_	_
     
@@ -73,9 +75,9 @@ Resultado:
 
 *Opcionais:*
 
-* --cod-acdc <codificação> (a codificação do arquivo AC/DC --> padrão: utf8)
-* --cod-ud <codificação> (a codificação do arquivo UD --> padrão: utf8)
-* --cod-saída <codificação> (a codificação do arquivo de saída --> padrão: utf8)
+* --cod-acdc <\codificação> (a codificação do arquivo AC/DC --> padrão: utf8)
+* --cod-ud <\codificação> (a codificação do arquivo UD --> padrão: utf8)
+* --cod-saída <\codificação> (a codificação do arquivo de saída --> padrão: utf8)
 * --palavra-negrito <índice> (da expressão em negrito, qual a palavra que deverá ser procurada no UD, começando pelo número 0 --> padrão: 0)
-* --critério <coluna>:<condição>:<substituição> (o critério para modificação do arquivo UD, sendo <coluna> o item que deverá ser procurado, começando pelo número 0, <condição>, a palavra/número que deverá estar preenchido nessa coluna, e <substituição>, pelo que essa palavra/número será substituído(a))
+* --critério <\coluna>:<\condição>:<\substituição> (o critério para modificação do arquivo UD, sendo <\coluna> o item que deverá ser procurado, começando pelo número 0, <\condição>, a palavra/número que deverá estar preenchido nessa coluna, e <\substituição>, pelo que essa palavra/número será substituído(a))
 * --não-marcar (caso o parâmetro não seja fornecido, toda substituição será seguida pelo identificado "#!$", de modo que seja fácil encontrar no arquivo SAÍDA as alterações feitas)
