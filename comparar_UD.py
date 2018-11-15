@@ -50,7 +50,7 @@ def main(arquivo, arquivo2, saída, opcionais = ''):
 if __name__ == "__main__":
 	#atualizar
 	if len(sys.argv) == 2 and sys.argv[1] == '--atualizar':
-		import atualizar
+		import atualizar_repo
 		atualizar.atualizar()
 		print('Atualizado com sucesso!')
 		exit()
