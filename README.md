@@ -78,22 +78,17 @@ Logo, ele deve receber o tipo de relação "parataxis". Resultado:
     --cod-acdc <codificação>
     A codificação do arquivo AC/DC --> padrão: utf8
     
-    
     --cod-ud <codificação>
     A codificação do arquivo UD --> padrão: utf8
-    
     
     --cod-saída <codificação>
     A codificação do arquivo de saída --> padrão: utf8
     
-    
     --palavra-negrito <índice>
     Qual a palavra que deverá ser procurada no UD entre as palavras da expressão em negrito no AC/DC, começando pelo número 0 --> padrão: 0
     
-    
     --critério <coluna>:<condição>:<substituição>
     O critério para modificação do arquivo UD, sendo <coluna> o item que deverá ser procurado, começando pelo número 0, <condição>, a palavra/número que deverá estar preenchida/o nessa coluna, e <substituição>, pelo que essa palavra/número será substituída/o --> padrão: 7:ccomp:ccomp parataxis
-    
     
     --não-marcar
     Caso o parâmetro não seja fornecido, toda substituição será seguida pelo identificador "#!$", de modo que seja fácil encontrar no arquivo SAÍDA as alterações feitas
