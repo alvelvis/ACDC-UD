@@ -3,10 +3,10 @@ Ferramentas de conversão do AC/DC ([http://www.linguateca.pt/ACDC](http://www.l
 
 Conteúdo:
 
-* [acdc-procura.py](#acdc-procura.py)
-* [comparar-UD.py](#comparar-UD.py)
-* [limpar-conllu.py](#limpar-conllu.py)
-* [atualizar-repo.py](#atualizar-repo.py)
+* [acdc-procura.py](#acdc-procurapy)
+* [comparar-UD.py](#comparar-UDpy)
+* [limpar-conllu.py](#limpar-conllupy)
+* [atualizar-repo.py](#atualizar-repopy)
 
 # acdc-procura.py
 
@@ -55,7 +55,7 @@ Observe a mesma sentença acima, do AC/DC, no UD:
     22	Ricupero	Ricupero	PROPN	_	Number=Sing	21	flat:name	_	SpaceAfter=No
     23	.	.	PUNCT	_	_	11	punct	_	_
     
-A condição de modificação é que as palavras que, no UD, apontam para a palavra em negrito no AC/DC, e que tenham o tipo de relação "ccomp", recebam também o tipo "parataxis".
+A condição de modificação, nesse exemplo, é que as palavras que, no UD, apontam para a palavra em negrito no AC/DC, e que tenham o tipo de relação "ccomp", recebam também o tipo "parataxis".
 
 O token em negrito no AC/DC é "disse". Aqui no UD, ele é o token de número 11. Quem aponta para o número 11 (coluna 7) e tem o tipo de relação "ccomp" (coluna 8), no UD, é a palavra "Existem", token de número 2.
 
