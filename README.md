@@ -65,7 +65,7 @@ Logo, ele deve receber o tipo de relação "parataxis". Resultado:
     
 ## Como usar
 
-    acdc-procura.py ACDC.html UD.conllu SAÍDA.conllu <opcionais>
+    >> python3 acdc-procura.py ACDC.html UD.conllu SAÍDA.conllu <opcionais>
     
 1) ACDC.html é o código fonte da página de resultados do AC/DC. Você pode salvar o código fonte em um *.txt* , manualmente, ou simplesmente salvar a página *.html*
 
