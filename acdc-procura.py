@@ -112,5 +112,5 @@ if __name__ == '__main__':
                 + '\n--cod-ud utf8'
                 + '\n--cod-saída utf8'
                 + '\n--palavra-negrito 0 (para casos de negrito com mais de uma palavra)'
-                + '\n--critério 7:ccomp:ccomp parataxis (coluna:padrão:substituição)
+                + '\n--critério 7:ccomp:ccomp parataxis (coluna:padrão:substituição)'
                 + '\n--não-marcar (não marcar as sentenças que foram alteradas)')
