@@ -73,11 +73,11 @@ Logo, ele deve receber o tipo de relação "parataxis". Resultado:
 
 3) SAÍDA.conllu é o arquivo que será gerado com as modificações requisitadas
 
-*Opcionais:*
+**Opcionais:**
 
-* --cod-acdc <\codificação> (a codificação do arquivo AC/DC --> padrão: utf8)
-* --cod-ud <\codificação> (a codificação do arquivo UD --> padrão: utf8)
-* --cod-saída <\codificação> (a codificação do arquivo de saída --> padrão: utf8)
+* --cod-acdc <codificação> (a codificação do arquivo AC/DC --> padrão: utf8)
+* --cod-ud <codificação> (a codificação do arquivo UD --> padrão: utf8)
+* --cod-saída <codificação> (a codificação do arquivo de saída --> padrão: utf8)
 * --palavra-negrito <índice> (da expressão em negrito, qual a palavra que deverá ser procurada no UD, começando pelo número 0 --> padrão: 0)
-* --critério <\coluna>:<\condição>:<\substituição> (o critério para modificação do arquivo UD, sendo <\coluna> o item que deverá ser procurado, começando pelo número 0, <\condição>, a palavra/número que deverá estar preenchido nessa coluna, e <\substituição>, pelo que essa palavra/número será substituído(a))
+* --critério \<coluna>:<condição>:<substituição> (o critério para modificação do arquivo UD, sendo \<coluna> o item que deverá ser procurado, começando pelo número 0, <condição>, a palavra/número que deverá estar preenchido nessa coluna, e <\substituição>, pelo que essa palavra/número será substituído(a))
 * --não-marcar (caso o parâmetro não seja fornecido, toda substituição será seguida pelo identificado "#!$", de modo que seja fácil encontrar no arquivo SAÍDA as alterações feitas)
