@@ -20,6 +20,7 @@ def atualizar():
 			if os.path.isfile('acdc_procura.py'): os.remove('acdc_procura.py')
 			if os.path.isfile('comparar_UD.py'): os.remove('comparar_UD.py')
 			if os.path.isfile('limpar_conllu.py'): os.remove('limpar_conllu.py')
+			if os.path.isfile('apenas_tokens.py'): os.remove('apenas_tokens.py')
 			Git().checkout('master')
 
 atualizar()
