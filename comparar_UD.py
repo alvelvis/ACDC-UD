@@ -40,7 +40,7 @@ def compara(arquivo, arquivo2, texto, texto2, info):
 											novotexto.append(line)
 											break
 										elif a == b: #Alinha os tokens que estão diferentes e printa o mesmo token dos arquivos 1 e 2
-											novotexto.append('--> ' + line + ' #> ' + line2)
+											novotexto.append(line + '\n--> ' + line2)
 											break
 								novotexto.append('')
 							else: break
@@ -61,7 +61,7 @@ def main(arquivo, arquivo2, saída, opcionais = ''):
 	#Abre os arquivos CONLLU e salva o arquivo comparado
 	texto = open(arquivo, 'r', encoding=codificação).read()
 	texto2 = open(arquivo2, 'r', encoding=codificação2).read()
-	open(saída, 'w', encoding=codificação3).write(arquivo + '\n' + arquivo2 + '\n\n' + compara(arquivo, arquivo2, texto, texto2, info))
+	open(saída, 'w', encoding=codificação3).write(arquivo + '\n--> ' + arquivo2 + '\n\n' + compara(arquivo, arquivo2, texto, texto2, info))
 
 if __name__ == "__main__":
 	#Atualizar repositório

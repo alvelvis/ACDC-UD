@@ -113,7 +113,8 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
     1	«	«	PUNCT	_	_	4	punct	_	SpaceAfter=No
     2	Normalmente	normalmente	ADV	_	_	4	advmod	_	_
     3	nós	nós	PRON	_	Case=Nom|Gender=Unsp|Number=Plur|Person=1|PronType=Prs	4	nsubj	_	_
-    --> 4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp	_	_ #> 4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp:parataxis!$	_	_
+    4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp	_	_
+    --> 4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp:parataxis!$	_	_
     5	dados	dado	NOUN	_	Gender=Masc|Number=Plur	4	obj	_	_
     6	históricos	histórico	ADJ	_	Gender=Masc|Number=Plur	5	amod	_	_
     7	sobre	sobre	ADP	_	_	9	case	_	_
@@ -133,7 +134,7 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
     21	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	SpaceAfter=No
     22	.	.	PUNCT	_	_	21	punct	_	_
 
-Note que a versão do arquivo original está após a seta "-->", e a do arquivo novo, após "#>".
+Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que a do arquivo original está acima da alteração.
 
 ## Como usar
 
