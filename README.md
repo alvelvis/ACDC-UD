@@ -4,10 +4,10 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 
 **Conteúdo:**
 
-* [acdc_procura.py](#acdc-procurapy)
-* [comparar_UD.py](#comparar-UDpy)
-* [limpar_conllu.py](#limpar-conllupy)
-* [atualizar_repo.py](#atualizar-repopy)
+* [acdc_procura.py](#acdc_procurapy)
+* [comparar_UD.py](#comparar_UDpy)
+* [limpar_conllu.py](#limpar_conllupy)
+* [atualizar_repo.py](#atualizar_repopy)
 
 # acdc_procura.py
 
