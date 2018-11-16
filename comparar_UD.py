@@ -2,22 +2,29 @@
 
 import sys
 
+#Retira os itens de informação, do tipo "# id_sent", mantendo apenas as linhas com "# text" e os tokens em si
+#O UD já precisa estar "sentence segmented"
+def sem_info(ud_sent_segmented):
+	for i, sentença in enumerate(ud_sent_segmented): ud_sent_segmented[i] = [x for x in sentença if not '# ' in x or '# text =' in x]
+
+	return ud_sent_segmented
+
 #Compara 2 arquivos UD, mantendo ou não as informações de cada sentença (id_sent etc.)
 def compara(arquivo, arquivo2, texto, texto2, info):
 	novotexto = list()
-	
+
 	#Separa cada sentença no arquivo 1 e arquivo 2
 	texto = texto.split('\n\n')
 	texto2 = texto2.split('\n\n')
-	
+
 	#Tira os itens em branco das listas
 	texto = [x.splitlines() for x in texto if x]
 	texto2 = [x.splitlines() for x in texto2 if x]
-	
+
 	#Retira os itens de informação, do tipo "# id_sent", mantendo apenas as linhas com "# text" e os tokens em si
 	if not info:
-		for i, sentença in enumerate(texto): texto[i] = [x for x in sentença if not '# ' in x or '# text =' in x]
-		for i, sentença in enumerate(texto2): texto2[i] = [x for x in sentença if not '# ' in x or '# text =' in x]
+		texto = sem_info(texto)
+		texto2 = sem_info(texto2)
 
 	#Início da comparação
 	for sentença in texto: #Para cada sentença do arquivo 1
@@ -33,7 +40,7 @@ def compara(arquivo, arquivo2, texto, texto2, info):
 											novotexto.append(line)
 											break
 										elif a == b: #Alinha os tokens que estão diferentes e printa o mesmo token dos arquivos 1 e 2
-											novotexto.append('--> ' + line + ' #' + line2)
+											novotexto.append('--> ' + line + ' #> ' + line2)
 											break
 								novotexto.append('')
 							else: break
@@ -48,8 +55,8 @@ def main(arquivo, arquivo2, saída, opcionais = ''):
 	else: codificação2 = 'utf8'
 	if '--cod-3' in opcionais: codificação3 = opcionais.split('--cod-3')[1].split('--')[0].strip()
 	else: codificação3 = 'utf8'
-	if '--sem-info' in opcionais: info = False
-	else: info = True
+	if '--com-info' in opcionais: info = True
+	else: info = False
 
 	#Abre os arquivos CONLLU e salva o arquivo comparado
 	texto = open(arquivo, 'r', encoding=codificação).read()
@@ -66,7 +73,7 @@ if __name__ == "__main__":
 	
 	#Checa os argumentos
 	if len(sys.argv) < 4:
-		print("uso: comparar.py --atualizar conllu1 conllu2 saída.txt --cod-1 --cod-2 --cod-3 --sem-info")
+		print("uso: comparar_UD.py conllu1 conllu2 saída.txt --cod-1 --cod-2 --cod-3 --com-info")
 	elif len(sys.argv) == 4:
 		main(sys.argv[1], sys.argv[2], sys.argv[3])
 		print('OK!')
