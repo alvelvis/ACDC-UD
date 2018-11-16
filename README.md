@@ -7,6 +7,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [limpar_conllu.py](#limpar_conllupy)
+* [apenas_tokens.py](#apenas_tokenspy)
 * [atualizar_repo.py](#atualizar_repopy)
 
 # acdc_procura.py
@@ -164,6 +165,16 @@ Com esse código é possível remover toda a anotação de um arquivo UD, deixan
 ## Como usar
 
     >> python3 limpar-conllu.py UD.conllu TEXTO_LIMPO.txt codificação-original codificação-nova
+    
+A codificação é opcional, sendo o padrão *utf8*.
+
+# apenas_tokens.py
+
+Com esse código é possível remover todas as informações de um arquivo UD que não sejam a anotação em si de cada token e a sentença original.
+
+## Como usar
+
+    >> python3 apenas_tokens.py UD.conllu:utf8 SAÍDA.conllu:utf8
     
 A codificação é opcional, sendo o padrão *utf8*.
 
