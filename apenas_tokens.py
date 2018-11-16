@@ -27,7 +27,7 @@ def main(CONLLU_input, CONLLU_output):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print('uso: apenas_tokens.py UD.conllu:utf8 SAÍDA.conllu:utf8')
+        print('uso: apenas_tokens.py ud.conllu:utf8 saída.conllu:utf8')
     elif len(sys.argv) == 3:
         main(sys.argv[1], sys.argv[2])
     else:

@@ -10,7 +10,19 @@ def limpar(texto):
 
 	return "\n".join(novotexto)
 
-def main(antes, depois, codificação = "utf8", codificação2 = "utf-8"):
+def main(antes, depois):
+	if ':' in antes:
+		codificação = antes.split(':')[1]
+		antes = antes.split(':')[0]
+	else:
+		codificação = 'utf8'
+		
+	if ':' in depois:
+		codificação2 = depois.split(':')[1]
+		depois = depois.split(':')[0]
+	else:
+		codificação2 = 'utf8'
+
 	antes = open(antes, 'r', encoding=codificação).read()
 	open(depois, 'w', encoding=codificação2).write(limpar(antes))
 
@@ -21,15 +33,9 @@ if __name__ == "__main__":
 		print('Atualizado com sucesso!')
 		exit()
 	if len(sys.argv) < 3:
-		print("uso: limpar_conllu.py UD.conllu texto.txt codificação-original* codificação-nova*\n* A codificação é opcional")
+		print("uso: limpar_conllu.py ud.conllu:utf8 texto.txt:utf8")
 	elif len(sys.argv) == 3: 
 		main(sys.argv[1], sys.argv[2])
-		print('OK!')
-	elif len(sys.argv) == 4:
-		main(sys.argv[1], sys.argv[2], sys.argv[3])
-		print('OK!')
-	elif len(sys.argv) == 5:
-		main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 		print('OK!')
 	else:
 		print("Argumentos excessivos")
