@@ -105,7 +105,7 @@ Com esse código, é possível comparar dois arquivos *.conllu* , formato UD, e 
 
 ## Exemplo
 
-Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 7, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo com todas as sentenças em que essa alteração foi realizada, havendo destaque para a alteração em si com uma seta *-->* .
+Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 7, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo com todas as sentenças em que essa alteração foi realizada, havendo destaque para a alteração em si com uma seta "-->".
 
 Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
 
@@ -133,6 +133,8 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
     21	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	SpaceAfter=No
     22	.	.	PUNCT	_	_	21	punct	_	_
 
+Note que a versão do arquivo original está após a seta "-->", e a do arquivo novo, após "#>".
+
 ## Como usar
 
     >> python3 comparar_UD.py UD1.conllu UD2.conllu SAÍDA.txt <opcionais>
@@ -152,7 +154,7 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
     padrão: utf8
     
     --com-info
-    caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source" para que não sejam encarados como diferenças arquivos que venham de fontes diferentes, por exemplo
+    caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encarados como diferenças arquivos que venham de fontes diferentes, por exemplo
     
 # limpar_conllu.py
 
@@ -176,4 +178,4 @@ Repare que, caso você não tenha alguma biblioteca instalada, ele instalará au
 
 Importante possuir instalado "python3-pip":
 
-    sudo apt install python3-pip
+    $ sudo apt install python3-pip
