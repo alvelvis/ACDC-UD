@@ -106,6 +106,8 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 Com esse código, é possível comparar dois arquivos *.conllu* , formato UD, e buscar sentenças cujas anotações sejam diferentes.
 
+No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes no arquivo 1 mas não estejam no arquivo 2.
+
 ## Exemplo
 
 Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 7, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo com todas as sentenças em que essa alteração foi realizada, havendo destaque para a alteração em si com uma seta "-->".
