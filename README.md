@@ -106,7 +106,7 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 Com esse código, é possível comparar dois arquivos *.conllu* , formato UD, e buscar sentenças cujas anotações sejam diferentes.
 
-No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes no arquivo 1 mas não estejam no arquivo 2.
+No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes em um dos arquivos, mas não no outro.
 
 ## Exemplo
 
@@ -143,12 +143,12 @@ Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que
 
 ## Como usar
 
-    >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <opcionais>
+    >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <parâmetros>
 
-**Opcionais:**
+**Parâmetros:**
 
     --com-info
-    caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encarados como diferenças arquivos que venham de fontes diferentes, por exemplo
+    caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encaradas como diferenças arquivos que venham de fontes diferentes, por exemplo
 
 # limpar_conllu.py
 
