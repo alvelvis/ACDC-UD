@@ -5,12 +5,21 @@ import re
 
 def limpar(texto):
 	novotexto = list()
-	for linha in texto.splitlines():
+	número1 = 1
+	número2 = 0
+	for a, linha in enumerate(texto.splitlines()):
 
-		if len(linha.split('\t')) == 10:
+		if len(linha.split('\t')) == 10 and '-' in linha.split('\t')[0]:
+			número1 = int(linha.split('\t')[0].split('-')[0])
+			número2 = int(linha.split('\t')[0].split('-')[1])
+			novotexto.append(re.sub(r'^.*?\t(.*?)\t.*$', r'\1\t-\t-\t-\t-\t-\t-\t-\t-', linha))
+
+		elif len(linha.split('\t')) == 10 and número1 == número2 + 1:
 			novotexto.append(re.sub(r'^.*?\t(.*?)\t.*$', r'\1\t-\t-\t-\t-\t-\t-\t-\t-', linha))
 
 		elif linha.strip() == '': novotexto.append('')
+
+		elif not '# ' in linha: número1 += 1
 
 	return "\n".join(novotexto)
 
