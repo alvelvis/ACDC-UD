@@ -22,6 +22,7 @@ def atualizar():
 			if os.path.isfile('limpar_conllu.py'): os.remove('limpar_conllu.py')
 			if os.path.isfile('apenas_tokens.py'): os.remove('apenas_tokens.py')
 			if os.path.isfile('tokenizar_conllu.py'): os.remove('tokenizar_conllu.py')
+			if os.path.isfile('udpipe_vertical.py'): os.remove('udpipe_vertical.py')
 			Git().checkout('master')
 
 atualizar()
