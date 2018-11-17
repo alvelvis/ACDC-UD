@@ -7,6 +7,8 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [limpar_conllu.py](#limpar_conllupy)
+* [tokenizer_conllu.py](#tokenizar_conllupy)
+* [udpipe_vertical.py](#udpipe_verticalpy)
 * [apenas_tokens.py](#apenas_tokenspy)
 * [atualizar_repo.py](#atualizar_repopy)
 
@@ -56,7 +58,7 @@ Observe a mesma sentença acima, da página de pesquisa do AC/DC, no UD:
     21	Rubens	Rubens	PROPN	_	Gender=Masc|Number=Sing	20	dep	_	MWE=Rubens_Ricupero|MWEPOS=PROPN
     22	Ricupero	Ricupero	PROPN	_	Number=Sing	21	flat:name	_	SpaceAfter=No
     23	.	.	PUNCT	_	_	11	punct	_	_
-    
+
 A condição de modificação, nesse exemplo, será que as palavras que, no UD, apontam para a palavra em negrito no AC/DC, e que tenham o tipo de relação "ccomp", recebam também o tipo "parataxis" (critério 1).
 
 O token em negrito no AC/DC é "disse". No UD, como visto acima, ele é o token de número 11. A palavra que aponta para o número 11 (coluna 7) e tem o tipo de relação "ccomp" (coluna 8), no UD, é a palavra "Existem", token de número 2. Logo, ela deve receber o tipo de relação "ccomp:parataxis".
@@ -65,12 +67,12 @@ Resultado:
 
     2	Existem	existir	VERB	_	Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin	11	ccomp:parataxis!$	_	_
 
-Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na revisão de todos os tokens alterados.    
-   
+Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na revisão de todos os tokens alterados.
+
 ## Como usar
 
     >> python3 acdc-procura.py acdc.html:utf8 ud.conllu:utf8 saída.conllu:utf8 --critério <parâmetros>
-    
+
 1) **acdc.html** é o código fonte da página de resultados do AC/DC. Você pode salvar o código fonte em um *.txt*, manualmente, ou simplesmente salvar a página *.html*
 
 2) **ud.conllu** é o arquivo no formato Universal Dependencies que será modificado (ele deve conter as sentenças da página AC/DC)
@@ -89,17 +91,17 @@ Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na r
 
     --não-marcar
     Caso o parâmetro não seja fornecido, toda substituição será seguida pelo identificador "!$", de modo que seja fácil encontrar no arquivo SAÍDA.conllu as alterações feitas
-    
+
 **Critérios de substituição:**
 
 Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACDC e substituir a coluna X, se Y, por Z
- 
+
     exemplo: --critério 1 7#ccomp#ccomp:parataxis
     explicação: se a sexta coluna (índice 7) da palavra do UD que aponta para a palavra em negrito no ACDC estiver preenchida com a palavra "ccomp", vira "ccomp:parataxis"
     X = 7
     Y = ccomp
     Z = ccomp:parataxis
-    
+
 # comparar_UD.py
 
 Com esse código, é possível comparar dois arquivos *.conllu* , formato UD, e buscar sentenças cujas anotações sejam diferentes.
@@ -140,12 +142,12 @@ Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que
 ## Como usar
 
     >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <opcionais>
-    
+
 **Opcionais:**
 
     --com-info
     caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encarados como diferenças arquivos que venham de fontes diferentes, por exemplo
-    
+
 # limpar_conllu.py
 
 Com esse código é possível remover toda a anotação de um arquivo UD, deixando apenas o texto cru.
@@ -153,8 +155,24 @@ Com esse código é possível remover toda a anotação de um arquivo UD, deixan
 ## Como usar
 
     >> python3 limpar-conllu.py ud.conllu:utf8 texto.txt:utf8
-    
+
 A codificação é opcional, sendo o padrão *utf8*.
+
+# tokenizar_conllu.py
+
+Apaga as anotações de um arquivo *.conllu* mas mantém a tokenização vertical, de modo que seja possível rodar o UDPipe nele posteriormente (veja [udpipe_vertical.py](#udpipe_verticalpy)).
+
+## Como usar
+
+    >> python3 tokenizar_conllu.py ud.conllu tokenizado.conllu
+
+# udpipe_vertical.py
+
+Com esse script é possível rodar o UDPipe em um arquivo já tokenizado verticalmente pelo código [tokenizar_conllu.py](#tokenizar_conllupy).
+
+## Como usar
+
+    >> python3 udpipe_vertical.py modelo.udpipe tokenizado.conllu resultado.conllu
 
 # apenas_tokens.py
 
@@ -163,7 +181,7 @@ Com esse código é possível remover todas as informações de um arquivo UD qu
 ## Como usar
 
     >> python3 apenas_tokens.py ud.conllu:utf8 saída.conllu:utf8
-    
+
 A codificação é opcional, sendo o padrão *utf8*.
 
 # atualizar_repo.py
