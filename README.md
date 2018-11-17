@@ -7,7 +7,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [limpar_conllu.py](#limpar_conllupy)
-* [tokenizer_conllu.py](#tokenizar_conllupy)
+* [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
 * [apenas_tokens.py](#apenas_tokenspy)
 * [atualizar_repo.py](#atualizar_repopy)
