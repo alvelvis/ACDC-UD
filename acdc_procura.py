@@ -126,7 +126,7 @@ if __name__ == '__main__':
         main(sys.argv[1], sys.argv[2], sys.argv[3], " ".join(sys.argv[4:]))
 
     #nem os argumentos essenciais
-    else: print('uso: acdc_procura.py ACDC.html:utf8 UD.conllu:utf8 SAÍDA.conllu:utf8 <parâmetros>'
+    else: print('uso: acdc_procura.py acdc.html:utf8 ud.conllu:utf8 saída.conllu:utf8 <parâmetros>'
                 + '\n\nParâmetros:'
                 + '\n--critério <tipo> <parâmetros>'
                 + '\n--palavra-negrito (para casos de negrito com mais de uma palavra, sendo a primeira palavra a de número 0)'

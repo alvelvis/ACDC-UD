@@ -7,6 +7,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [limpar_conllu.py](#limpar_conllupy)
+* [apenas_tokens.py](#apenas_tokenspy)
 * [atualizar_repo.py](#atualizar_repopy)
 
 # acdc_procura.py
@@ -68,13 +69,13 @@ Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na r
    
 ## Como usar
 
-    >> python3 acdc-procura.py ACDC.html:utf8 UD.conllu:utf8 SAÍDA.conllu:utf8 --critério <parâmetros>
+    >> python3 acdc-procura.py acdc.html:utf8 ud.conllu:utf8 saída.conllu:utf8 --critério <parâmetros>
     
-1) ACDC.html é o código fonte da página de resultados do AC/DC. Você pode salvar o código fonte em um *.txt* , manualmente, ou simplesmente salvar a página *.html*
+1) **acdc.html** é o código fonte da página de resultados do AC/DC. Você pode salvar o código fonte em um *.txt*, manualmente, ou simplesmente salvar a página *.html*
 
-2) UD.conllu é o arquivo no formato Universal Dependencies que será modificado (ele deve conter as sentenças da página AC/DC)
+2) **ud.conllu** é o arquivo no formato Universal Dependencies que será modificado (ele deve conter as sentenças da página AC/DC)
 
-3) SAÍDA.conllu é o arquivo que será gerado com as modificações requisitadas
+3) **saída.conllu** é o arquivo que será gerado com as modificações requisitadas
 
 **Parâmetros:**
 
@@ -138,22 +139,10 @@ Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que
 
 ## Como usar
 
-    >> python3 comparar_UD.py UD1.conllu UD2.conllu SAÍDA.txt <opcionais>
+    >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <opcionais>
     
 **Opcionais:**
 
-    --cod-1
-    codificação do arquivo UD1.conllu
-    padrão: utf8
-    
-    --cod-2
-    codificação do arquivo UD2.conllu
-    padrão: utf8
-    
-    --cod-3
-    codificação do arquivo SAÍDA.txt
-    padrão: utf8
-    
     --com-info
     caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encarados como diferenças arquivos que venham de fontes diferentes, por exemplo
     
@@ -163,7 +152,17 @@ Com esse código é possível remover toda a anotação de um arquivo UD, deixan
 
 ## Como usar
 
-    >> python3 limpar-conllu.py UD.conllu TEXTO_LIMPO.txt codificação-original codificação-nova
+    >> python3 limpar-conllu.py ud.conllu:utf8 texto.txt:utf8
+    
+A codificação é opcional, sendo o padrão *utf8*.
+
+# apenas_tokens.py
+
+Com esse código é possível remover todas as informações de um arquivo UD que não sejam a anotação em si de cada token e a sentença original.
+
+## Como usar
+
+    >> python3 apenas_tokens.py ud.conllu:utf8 saída.conllu:utf8
     
 A codificação é opcional, sendo o padrão *utf8*.
 

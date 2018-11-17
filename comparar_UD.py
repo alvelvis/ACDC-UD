@@ -48,13 +48,25 @@ def compara(arquivo, arquivo2, texto, texto2, info):
 	return "\n".join(novotexto)
 
 def main(arquivo, arquivo2, saída, opcionais = ''):
-	#Checa os opcionais
-	if '--cod-1' in opcionais: codificação = opcionais.split('--cod-1')[1].split('--')[0].strip()
-	else: codificação = 'utf8'
-	if '--cod-2' in opcionais: codificação2 = opcionais.split('--cod-2')[1].split('--')[0].strip()
-	else: codificação2 = 'utf8'
-	if '--cod-3' in opcionais: codificação3 = opcionais.split('--cod-3')[1].split('--')[0].strip()
-	else: codificação3 = 'utf8'
+	#Checa os parâmetros
+	if ':' in arquivo:
+		codificação = arquivo.split(':')[1]
+		arquivo = arquivo.split(':')[0]
+	else:
+		codificação = 'utf8'
+		
+	if ':' in arquivo2:
+		codificação2 = arquivo2.split(':')[1]
+		arquivo2 = arquivo2.split(':')[0]
+	else:
+		codificação2 = 'utf8'
+		
+	if ':' in saída:
+		codificação3 = saída.split(':')[1]
+		saída = saída.split(':')[0]
+	else:
+	    codificação3 = 'utf8'
+
 	if '--com-info' in opcionais: info = True
 	else: info = False
 
@@ -73,11 +85,13 @@ if __name__ == "__main__":
 	
 	#Checa os argumentos
 	if len(sys.argv) < 4:
-		print("uso: comparar_UD.py conllu1 conllu2 saída.txt --cod-1 --cod-2 --cod-3 --com-info")
+		print("uso: comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 --com-info")
 	elif len(sys.argv) == 4:
 		main(sys.argv[1], sys.argv[2], sys.argv[3])
 		print('OK!')
-	elif len(sys.argv) > 4:
+	elif len(sys.argv) == 4 or len(sys.argv) == 5:
 		main(sys.argv[1], sys.argv[2], sys.argv[3], " ".join(sys.argv[4:]))
 		print('OK!')
+	else:
+	    print('Argumentos demais')
 
