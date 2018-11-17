@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
 from subprocess import call
 
 def adiciona_text(arquivo):
     novoarquivo = arquivo.split('\n\n')
-    novoarquivo = [x for x in novoarquivo if x]
+    novoarquivo = [x for x in novoarquivo if x.strip() != '']
     for i, sentença in enumerate(novoarquivo):
         text = str()
         tokens = sentença.splitlines()
@@ -21,7 +20,8 @@ def adiciona_text(arquivo):
 def main(modelo, tokenizado, resultado):
 
     call('cat | ./udpipe-* --tag --parse --input vertical "' + modelo + '" "' + tokenizado + '" > "' + resultado +'"', shell=True)
-    open(resultado, 'w').write(adiciona_text(open(resultado, 'r').read()))
+    novo_texto = adiciona_text(open(resultado, 'r').read())
+    open(resultado, 'w').write(novo_texto)
     print('OK!')
 
 
