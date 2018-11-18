@@ -104,15 +104,15 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 # comparar_UD.py
 
-Com esse código é possível comparar dois arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes.
+Com esse código é possível comparar dois arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes e que ficarão destacadas com uma seta "-->".
 
 No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes em um dos arquivos, mas não no outro.
 
-Caso deseje revisar um arquivo UD a partir das diferenças entre dois arquivos, você pode fazer alterações nas linhas do arquivo de comparação que não contenham "-->" (identificador de discrepância) e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as alterações feitas nas outras linhas.
+Caso deseje revisar um arquivo UD a partir das diferenças entre dois arquivos, veja [revisar_UD.py](#revisar_UDpy).
 
 ## Exemplo
 
-Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 7, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo com todas as sentenças em que essa alteração foi realizada, havendo destaque para a alteração em si com uma seta "-->".
+Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo com todas as sentenças em que essa alteração foi realizada, havendo destaque para a alteração em si com uma seta "-->".
 
 Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
 
@@ -143,7 +143,7 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
 
 Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que a do arquivo original está acima da alteração.
 
-Caso as linhas com seta sejam as corretas, ele pode alterar as linhas "oficiais", sem seta, para deixá-las iguais às com setas e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as alterações feitas na revisão.
+Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiais", sem seta, para deixá-las iguais às com setas e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as antigas e as alterações, sem as linhas com setas.
 
 ## Como usar
 
@@ -182,7 +182,7 @@ O token 4, para um dos arquivos de comparação, teria como lema "o"; para o out
 ## Como usar
 
     >> python3 revisar_UD.py comparação.conllu:utf8 revisado.conllu:utf8
-    
+
 O arquivo *comparação.conllu* deverá ser aquele que veio como resultado do [comparar_UD.py](#comparar_UDpy), tendo já sido revisado. O arquivo *revisado.conllu* será o resultado final, sem as setas da comparação.
 
 # limpar_conllu.py
@@ -258,7 +258,7 @@ Observe a seguinte sentença, de um arquivo *.conllu*:
     27	forma	forma	NOUN	_	Gender=Fem|Number=Sing	15	nsubj	_	_
     28	justa	justo	ADJ	_	Gender=Fem|Number=Sing	27	amod	_	_
     29	.	.	PUNCT	_	_	1	punct	_	_
-    
+
 Após a execução do **tokenizar_conllu.py**, ela se transformará em:
 
     # text = Provoca em quem o ouve a sensação de que aquilo que diz, o diz da forma mais justa, se não da única forma justa.
