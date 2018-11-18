@@ -46,7 +46,10 @@ def compara(arquivo, arquivo2, texto_raw, texto2_raw, info):
 												novotexto.append(line + '\n--> ' + line2)
 												break
 									novotexto.append('')
-								else: break
+								else:
+									novotexto.extend(sentença)
+									novotexto.append('')
+									break
 
 				else: #se não tiver #text igual no arquivo2
 					solitários.append(linha)
@@ -56,7 +59,7 @@ def compara(arquivo, arquivo2, texto_raw, texto2_raw, info):
 		if '# text =' in linha and not linha in texto_raw:
 			solitários2.append(linha)
 
-	return "\n".join(novotexto) + '\n\n#!$$ Sentenças de "' + arquivo + '" que não têm em "' + arquivo2 + '":' + '\n\n' + '\n'.join(solitários) + '\n\n#!$$ Sentenças de "' + arquivo2 + '" que não têm em "' + arquivo + '":' + '\n\n' + '\n'.join(solitários2)
+	return "\n".join(novotexto) + '\n\n#!$$ Sentenças de "' + arquivo + '" que não foram encontradas em "' + arquivo2 + '":' + '\n\n' + '\n'.join(solitários) + '\n\n#!$$ Sentenças de "' + arquivo2 + '" que não foram encontradas em "' + arquivo + '":' + '\n\n' + '\n'.join(solitários2)
 
 def main(arquivo, arquivo2, saída, opcionais = ''):
 	#Checa os parâmetros

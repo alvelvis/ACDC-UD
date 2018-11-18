@@ -6,6 +6,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
+* [revisar_UD.py](#revisar_UDpy)
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
@@ -103,9 +104,11 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 # comparar_UD.py
 
-Com esse código, é possível comparar dois arquivos *.conllu* , formato UD, e buscar sentenças cujas anotações sejam diferentes.
+Com esse código é possível comparar dois arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes.
 
 No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes em um dos arquivos, mas não no outro.
+
+Caso deseje revisar um arquivo UD a partir das diferenças entre dois arquivos, você pode fazer alterações nas linhas do arquivo de comparação que não contenham "-->" (identificador de discrepância) e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as alterações feitas nas outras linhas.
 
 ## Exemplo
 
@@ -140,6 +143,8 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
 
 Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que a do arquivo original está acima da alteração.
 
+Caso as linhas com seta sejam as corretas, ele pode alterar as linhas "oficiais", sem seta, para deixá-las iguais às com setas e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as alterações feitas na revisão.
+
 ## Como usar
 
     >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <parâmetros>
@@ -149,9 +154,62 @@ Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que
     --com-info
     caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encaradas como diferenças arquivos que venham de fontes diferentes, por exemplo
 
+# revisar_UD.py
+
+Com esse código, é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode comparar dois arquivos UD para revisar qual está certo, corrigir a partir da observação das setas ('-->'), e deixar apenas as alterações feitas.
+
+## Exemplo
+
+Observe a seguinte sentença gerada pelo [comparar_UD.py](#comparar_UDpy):
+
+    # text = Gosto de levar a sério o meu papel de consultor encartado.
+    1	Gosto	gosto	NOUN	_	Gender=Masc|Number=Sing	0	root	_	_
+    2	de	de	ADP	_	_	3	mark	_	_
+    3	levar	levar	VERB	_	VerbForm=Inf	1	acl	_	_
+    4	a	o	ADP	_	_	5	case	_	_
+    --> 4	a	a	ADP	_	_	5	case	_	_
+    5	sério	sério	NOUN	_	Gender=Masc|Number=Sing	3	obl	_	_
+    6	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	8	det	_	_
+    7	meu	meu	DET	_	Gender=Masc|Number=Sing|PronType=Prs	8	det	_	_
+    8	papel	papel	NOUN	_	Gender=Masc|Number=Sing	3	obj	_	_
+    9	de	de	ADP	_	_	10	case	_	_
+    10	consultor	consultor	NOUN	_	Gender=Masc|Number=Sing	8	nmod	_	_
+    11	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
+    12	.	.	PUNCT	_	_	1	punct	_	_
+
+O token 4, para um dos arquivos de comparação, teria como lema "o"; para o outro, "a". Caso eu queira manter como "o", basta deixá-lo assim e rodar o **revisar_UD.py**, que então a versão com seta ('-->') será apagada. Caso eu queira aceitar a resposta da seta de que o correto é "a", posso alterar o lema de "o" para "a" diretamente nesse arquivo de comparação. Desse modo, quando o script de revisão for executado, as linhas com seta serão apagadas, e permanecerá a versão que editei: "a".
+
+## Como usar
+
+    >> python3 revisar_UD.py comparação.conllu:utf8 revisado.conllu:utf8
+    
+O arquivo *comparação.conllu* deverá ser aquele que veio como resultado do [comparar_UD.py](#comparar_UDpy), tendo já sido revisado. O arquivo *revisado.conllu* será o resultado final, sem as setas da comparação.
+
 # limpar_conllu.py
 
 Com esse código é possível remover toda a anotação de um arquivo UD, deixando apenas o texto cru.
+
+## Exemplo
+
+No arquivo *.conllu* original, há a seguinte sentença:
+
+    # text = Gosto de levar a sério o meu papel de consultor encartado.
+    1	Gosto	gosto	NOUN	_	Gender=Masc|Number=Sing	0	root	_	_
+    2	de	de	ADP	_	_	3	mark	_	_
+    3	levar	levar	VERB	_	VerbForm=Inf	1	acl	_	_
+    4	a	o	ADP	_	_	5	case	_	_
+    5	sério	sério	NOUN	_	Gender=Masc|Number=Sing	3	obl	_	_
+    6	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	8	det	_	_
+    7	meu	meu	DET	_	Gender=Masc|Number=Sing|PronType=Prs	8	det	_	_
+    8	papel	papel	NOUN	_	Gender=Masc|Number=Sing	3	obj	_	_
+    9	de	de	ADP	_	_	10	case	_	_
+    10	consultor	consultor	NOUN	_	Gender=Masc|Number=Sing	8	nmod	_	_
+    11	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
+    12	.	.	PUNCT	_	_	1	punct	_	_
+
+Após rodar o **limpar_conllu.py**, essa sentença se transformará em:
+
+    Gosto de levar a sério o meu papel de consultor encartado.
 
 ## Como usar
 
@@ -162,6 +220,81 @@ A codificação é opcional, sendo o padrão *utf8*.
 # tokenizar_conllu.py
 
 Apaga as anotações de um arquivo *.conllu* mas mantém a tokenização vertical, de modo que seja possível rodar o UDPipe nele posteriormente (veja [udpipe_vertical.py](#udpipe_verticalpy)).
+
+## Exemplo
+
+Observe a seguinte sentença, de um arquivo *.conllu*:
+
+    # text = Provoca em quem o ouve a sensação de que aquilo que diz, o diz da forma mais justa, se não da única forma justa.
+    # sent_id = 19
+    1	Provoca	provoca	NOUN	_	Gender=Fem|Number=Sing	0	root	_	_
+    2	em	em	ADP	_	_	3	case	_	_
+    3	quem	quem	PRON	_	Gender=Fem|Number=Sing|PronType=Rel	5	obl	_	_
+    4	o	ele	PRON	_	Case=Acc|Gender=Masc|Number=Sing|Person=3|PronType=Prs	5	obj	_	_
+    5	ouve	ouver	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	1	acl:relcl	_	_
+    6	a	o	DET	_	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	7	det	_	_
+    7	sensação	sensação	NOUN	_	Gender=Fem|Number=Sing	5	nsubj	_	_
+    8	de	de	ADP	_	_	15	mark	_	_
+    9	que	que	SCONJ	_	_	15	mark	_	_
+    10	aquilo	aquilo	PRON	_	Gender=Masc|Number=Sing|PronType=Dem	15	nsubj	_	_
+    11	que	que	PRON	_	Gender=Masc|Number=Sing|PronType=Rel	12	nsubj	_	_
+    12	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	10	acl:relcl	_	_
+    13	,	,	PUNCT	_	_	12	punct	_	_
+    14	o	ele	PRON	_	Case=Acc|Gender=Masc|Number=Sing|Person=3|PronType=Prs	15	obj	_	_
+    15	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	7	acl	_	_
+    16-17	da	_	_	_	_	_	_	_	_
+    16	de	de	ADP	_	_	18	case	_	_
+    17	a	o	DET	_	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	18	det	_	_
+    18	forma	forma	NOUN	_	Gender=Fem|Number=Sing	15	obl	_	_
+    19	mais	mais	ADV	_	_	20	advmod	_	_
+    20	justa	justo	ADJ	_	Gender=Fem|Number=Sing	18	amod	_	_
+    21	,	,	PUNCT	_	_	27	punct	_	_
+    22	se	se	SCONJ	_	_	27	mark	_	_
+    23	não	não	ADV	_	Polarity=Neg	27	advmod	_	_
+    24-25	da	_	_	_	_	_	_	_	_
+    24	de	de	ADP	_	_	27	case	_	_
+    25	a	o	DET	_	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	27	det	_	_
+    26	única	único	ADJ	_	Gender=Fem|Number=Sing	27	amod	_	_
+    27	forma	forma	NOUN	_	Gender=Fem|Number=Sing	15	nsubj	_	_
+    28	justa	justo	ADJ	_	Gender=Fem|Number=Sing	27	amod	_	_
+    29	.	.	PUNCT	_	_	1	punct	_	_
+    
+Após a execução do **tokenizar_conllu.py**, ela se transformará em:
+
+    # text = Provoca em quem o ouve a sensação de que aquilo que diz, o diz da forma mais justa, se não da única forma justa.
+    Provoca	_	_	_	_	_	_	_	_	_
+    em	_	_	_	_	_	_	_	_	_
+    quem	_	_	_	_	_	_	_	_	_
+    o	_	_	_	_	_	_	_	_	_
+    ouve	_	_	_	_	_	_	_	_	_
+    a	_	_	_	_	_	_	_	_	_
+    sensação	_	_	_	_	_	_	_	_	_
+    de	_	_	_	_	_	_	_	_	_
+    que	_	_	_	_	_	_	_	_	_
+    aquilo	_	_	_	_	_	_	_	_	_
+    que	_	_	_	_	_	_	_	_	_
+    diz	_	_	_	_	_	_	_	_	_
+    ,	_	_	_	_	_	_	_	_	_
+    o	_	_	_	_	_	_	_	_	_
+    diz	_	_	_	_	_	_	_	_	_
+    16-17-=da	_	_	_	_	_	_	_	_	_
+    de	_	_	_	_	_	_	_	_	_
+    a	_	_	_	_	_	_	_	_	_
+    forma	_	_	_	_	_	_	_	_	_
+    mais	_	_	_	_	_	_	_	_	_
+    justa	_	_	_	_	_	_	_	_	_
+    ,	_	_	_	_	_	_	_	_	_
+    se	_	_	_	_	_	_	_	_	_
+    não	_	_	_	_	_	_	_	_	_
+    24-25-=da	_	_	_	_	_	_	_	_	_
+    de	_	_	_	_	_	_	_	_	_
+    a	_	_	_	_	_	_	_	_	_
+    única	_	_	_	_	_	_	_	_	_
+    forma	_	_	_	_	_	_	_	_	_
+    justa	_	_	_	_	_	_	_	_	_
+    .	_	_	_	_	_	_	_	_	_
+
+Repare que alguns tokens, as MWEs, tiveram o número da tokenização misturado com a palavra em si. Isso ocorre para facilitar o trabalho do [udpipe_vertical.py](#udpipe_verticalpy), pois de outra forma ele não teria como adivinhar quais chunks são MWEs ou não.
 
 ## Como usar
 
