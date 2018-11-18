@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
 	#Checa os argumentos
 	if len(sys.argv) < 4:
-		print("uso: comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 --com-info")
+		print("uso: comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.conllu:utf8 --com-info")
 		print('O arquivo ud1.conllu será o mais importante, sendo o ud2.conllu representado apenas se houver discrepâncias, com setas "-->"')
 	elif len(sys.argv) == 4:
 		main(sys.argv[1], sys.argv[2], sys.argv[3])

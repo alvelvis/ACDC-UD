@@ -112,7 +112,7 @@ Caso deseje revisar um arquivo UD a partir das diferenças entre dois arquivos, 
 
 ## Exemplo
 
-Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo com todas as sentenças em que essa alteração foi realizada, havendo destaque para a alteração em si com uma seta "-->".
+Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo em que todas essas alterações serão destacadas com uma seta "-->".
 
 Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
 
@@ -147,7 +147,13 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 ## Como usar
 
-    >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <parâmetros>
+    >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.conllu:utf8 <parâmetros>
+
+1) **ud1.conllu** é um dos arquivos de comparação. No caso de discrepância, ele será o considerado "mais importante".
+
+2) **ud2.conllu** é o segundo arquivo de comparação. Em caso de discrepância, ele será considerado "acidental", e por isso sua versão será representada com uma seta "-->".
+
+3) **saída.conllu** é o arquivo final de comparação, com as duas versões para todas as sentenças.
 
 **Parâmetros:**
 
@@ -177,13 +183,21 @@ Observe a seguinte sentença gerada pelo [comparar_UD.py](#comparar_UDpy):
     11	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
     12	.	.	PUNCT	_	_	1	punct	_	_
 
-O token 4, para um dos arquivos de comparação, teria como lema "o"; para o outro, "a". Caso eu queira manter como "o", basta deixá-lo assim e rodar o **revisar_UD.py**, que então a versão com seta ('-->') será apagada. Caso eu queira aceitar a resposta da seta de que o correto é "a", posso alterar o lema de "o" para "a" diretamente nesse arquivo de comparação. Desse modo, quando o script de revisão for executado, as linhas com seta serão apagadas, e permanecerá a versão que editei: "a".
+O token 4, para o arquivo UD1, teria como lema "o"; para o outro (UD2), "a".
+
+* Caso eu queira manter como "o", a versão do UD1, basta deixá-lo assim e rodar o **revisar_UD.py**, que então a versão com seta (UD2) será apagada.
+
+* Caso eu queira aceitar a resposta do UD2 (versão com seta) de que o correto é "a", posso alterar o lema de "o" para "a" diretamente nesse arquivo de comparação. Assim, quando o script de revisão for executado, as linhas com seta serão apagadas, e permanecerá a versão que editei: "a".
 
 ## Como usar
 
     >> python3 revisar_UD.py comparação.conllu:utf8 revisado.conllu:utf8
 
-O arquivo *comparação.conllu* deverá ser aquele que veio como resultado do [comparar_UD.py](#comparar_UDpy), tendo já sido revisado. O arquivo *revisado.conllu* será o resultado final, sem as setas da comparação.
+1) **comparação.conllu** deverá ser aquele que veio como resultado do [comparar_UD.py](#comparar_UDpy), tendo já sido revisado.
+
+2) **revisado.conllu** será o resultado final, sem as setas da comparação.
+
+A codificação é opcional, sendo o padrão *utf8*.
 
 # limpar_conllu.py
 
