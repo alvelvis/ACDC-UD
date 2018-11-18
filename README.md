@@ -9,7 +9,6 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
-* [apenas_tokens.py](#apenas_tokenspy)
 * [atualizar_repo.py](#atualizar_repopy)
 
 # acdc_procura.py
@@ -175,16 +174,6 @@ Com esse script é possível rodar o UDPipe em um arquivo já tokenizado vertica
 ## Como usar
 
     >> python3 udpipe_vertical.py modelo.udpipe tokenizado.conllu resultado.conllu
-
-# apenas_tokens.py
-
-Com esse código é possível remover todas as informações de um arquivo UD que não sejam a anotação em si de cada token e a sentença original.
-
-## Como usar
-
-    >> python3 apenas_tokens.py ud.conllu:utf8 saída.conllu:utf8
-
-A codificação é opcional, sendo o padrão *utf8*.
 
 # atualizar_repo.py
 

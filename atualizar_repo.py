@@ -4,7 +4,6 @@ lista_arquivos = [
     'acdc_procura.py',
     'comparar_UD.py',
     'limpar_conllu.py',
-    'apenas_tokens.py',
     'tokenizar_conllu.py',
     'udpipe_vertical.py',
 ]

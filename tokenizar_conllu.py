@@ -3,21 +3,32 @@
 import sys
 import re
 
+#Deixa apenas a tokenização, mas limpa
 def limpar(texto):
 	novotexto = list()
 	for a, linha in enumerate(texto.splitlines()):
 
-		if len(linha.split('\t')) == 10 and not '-' in linha.split('\t')[0]:
+		#Com MWE
+		if len(linha.split('\t')) == 10 and '-' in linha.split('\t')[0]:
+			novotexto.append(re.sub(r'^(.*?)\t(.*?)\t.*$', r'\1-=\2\t_\t_\t_\t_\t_\t_\t_\t_\t_', linha))
+
+		#Sem MWE
+		elif len(linha.split('\t')) == 10:
+			#Mantém a palavra e nas outras 9 colunas adiciona uma underline
 			novotexto.append(re.sub(r'^(.*?)\t(.*?)\t.*$', r'\2\t_\t_\t_\t_\t_\t_\t_\t_\t_', linha))
 
+		#Deixa a frase "# text"
 		elif '# text ' in linha:
 			novotexto.append(linha)
 
+		#Pula linha em branco
 		elif linha.strip() == '': novotexto.append('')
 
-	return "\n".join(novotexto)
+	#Linha em branco no final
+	return "\n".join(novotexto) + '\n\n'
 
 def main(antes, depois):
+	#Codificação
 	if ':' in antes:
 		codificação = antes.split(':')[1]
 		antes = antes.split(':')[0]

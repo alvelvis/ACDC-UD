@@ -2,7 +2,9 @@
 
 import sys
 from subprocess import call
+import os
 
+#Busca no arquivo "com_text" as entradas de texto e tenta alinhar as sentenças
 def adiciona_text(arquivo, tokenizado):
     novoarquivo = arquivo.split('\n\n')
     novoarquivo = [x for x in novoarquivo if x.strip() != '']
@@ -14,23 +16,40 @@ def adiciona_text(arquivo, tokenizado):
                 novoarquivo[i] = linha + '\n' + novoarquivo[i]
                 break
 
-    return "\n\n".join(novoarquivo) + '\n'
+    for i, sentença in enumerate(novoarquivo):
+        novoarquivo[i] = novoarquivo[i].splitlines()
+        for a, linha in enumerate(tokenizado[i].splitlines()):
+            if len(linha.split('\t')) == 10 and '-=' in linha.split('\t')[0]:
+                novoarquivo[i].insert(a + 1, linha.split('\t')[0].split('-=')[0] + '\t' + linha.split('\t')[0].split('-=')[1] + '\t_\t_\t_\t_\t_\t_\t_\t_')
+        novoarquivo[i] = "\n".join(novoarquivo[i])
 
+    #Linha em branco no final
+    return "\n\n".join(novoarquivo) + '\n\n'
+
+#Apaga o "# text" E as MWES
 def apagar_text(arquivo):
     arquivo = arquivo.splitlines()
     novo_arquivo = list()
     for i, linha in enumerate(arquivo):
-        if not '# text = ' in linha:
+        #Retira as hashtags e as MWES
+        if len(linha.split('\t')) == 10 and not '-=' in linha.split('\t')[0]:
             novo_arquivo.append(linha)
+        elif linha.strip() == '':
+            novo_arquivo.append('')
 
     return '\n'.join(novo_arquivo)
-
 
 def main(modelo, tokenizado, resultado):
 
     com_text = open(tokenizado, 'r').read()
-    open(tokenizado, 'w').write(apagar_text(com_text))
-    call('cat | ./udpipe-* --tag --parse --input vertical "' + modelo + '" "' + tokenizado + '" > "' + resultado +'"', shell=True)
+    open(tokenizado + 'x', 'w').write(apagar_text(com_text))
+
+    #Chama o udpipe
+    call('cat | ./udpipe-* --tag --parse --input vertical "' + modelo + '" "' + tokenizado + 'x" > "' + resultado + '"', shell=True)
+
+    #Apaga o arquivo temporário "sem_text" (e sem MWE)
+    os.remove(tokenizado + 'x')
+
     novo_texto = adiciona_text(open(resultado, 'r').read(), com_text)
     open(resultado, 'w').write(novo_texto)
     print('OK!')
