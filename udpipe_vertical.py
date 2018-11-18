@@ -3,24 +3,35 @@
 import sys
 from subprocess import call
 
-def adiciona_text(arquivo):
+def adiciona_text(arquivo, tokenizado):
     novoarquivo = arquivo.split('\n\n')
     novoarquivo = [x for x in novoarquivo if x.strip() != '']
-    for i, sentença in enumerate(novoarquivo):
-        text = str()
-        tokens = sentença.splitlines()
-        for token in tokens:
-            if not '# ' in token and not '-' in token.split('\t')[0]:
-                text = text + ' ' + token.split('\t')[1]
-        novoarquivo[i] = '# text = ' + text.strip() + '\n' + novoarquivo[i]
+    tokenizado = tokenizado.split('\n\n')
 
-    return "\n\n".join(novoarquivo)
+    for i, sentença in enumerate(novoarquivo):
+        for linha in tokenizado[i].splitlines():
+            if '# text = ' in linha:
+                novoarquivo[i] = linha + '\n' + novoarquivo[i]
+                break
+
+    return "\n\n".join(novoarquivo) + '\n'
+
+def apagar_text(arquivo):
+    arquivo = arquivo.splitlines()
+    novo_arquivo = list()
+    for i, linha in enumerate(arquivo):
+        if not '# text = ' in linha:
+            novo_arquivo.append(linha)
+
+    return '\n'.join(novo_arquivo)
 
 
 def main(modelo, tokenizado, resultado):
 
+    com_text = open(tokenizado, 'r').read()
+    open(tokenizado, 'w').write(apagar_text(com_text))
     call('cat | ./udpipe-* --tag --parse --input vertical "' + modelo + '" "' + tokenizado + '" > "' + resultado +'"', shell=True)
-    novo_texto = adiciona_text(open(resultado, 'r').read())
+    novo_texto = adiciona_text(open(resultado, 'r').read(), com_text)
     open(resultado, 'w').write(novo_texto)
     print('OK!')
 
