@@ -104,24 +104,25 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 # comparar_UD.py
 
-Com esse código é possível comparar dois arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes e que ficarão destacadas com uma seta "-->".
+Com esse código é possível comparar dois ou mais arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes e que ficarão destacadas com uma seta "-->".
 
-No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes em um dos arquivos, mas não no outro.
+No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo 1 (**ud_final.conllu**).
 
-Caso deseje revisar um arquivo UD a partir das diferenças entre dois arquivos, veja [revisar_UD.py](#revisar_UDpy).
+Caso deseje revisar um arquivo UD a partir das diferenças entre vários arquivos UD, veja [revisar_UD.py](#revisar_UDpy).
 
 ## Exemplo
 
-Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo original e o novo, teremos um novo arquivo em que todas essas alterações serão destacadas com uma seta "-->".
+Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo golden com o novo, além de uma outra versão treinada com um novo modelo derivado do Bosque, teremos um novo arquivo em que todas essas alterações serão destacadas com uma seta "-->" seguida pelo número do arquivo em que a diferença aparece, sendo 2 = arquivo gerado a partir do [acdc_procura.py](#acdc_procurapy), e 3 = arquivo gerado com o novo modelo do UDPipe.
 
-Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
+Abaixo, um exemplo de sentença ao se comparar os 3 arquivos:
 
     # text = «Normalmente nós utilizamos dados históricos sobre a produtividade em cada região, além de informações de agricultores», diz.
     1	«	«	PUNCT	_	_	4	punct	_	SpaceAfter=No
+    -->[2]	«	«	PUNCT	_	_	4	punct	_	_
+    -->[3]	«	«	PUNCT	_	_	4	punct	_	_
     2	Normalmente	normalmente	ADV	_	_	4	advmod	_	_
     3	nós	nós	PRON	_	Case=Nom|Gender=Unsp|Number=Plur|Person=1|PronType=Prs	4	nsubj	_	_
     4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp	_	_
-    --> 4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp:parataxis!$	_	_
     5	dados	dado	NOUN	_	Gender=Masc|Number=Plur	4	obj	_	_
     6	históricos	histórico	ADJ	_	Gender=Masc|Number=Plur	5	amod	_	_
     7	sobre	sobre	ADP	_	_	9	case	_	_
@@ -130,30 +131,48 @@ Abaixo, um exemplo de sentença ao se comparar o arquivo original com o novo:
     10	em	em	ADP	_	_	12	case	_	_
     11	cada	cada	DET	_	Gender=Fem|Number=Sing|PronType=Tot	12	det	_	_
     12	região	região	NOUN	_	Gender=Fem|Number=Sing	9	nmod	_	SpaceAfter=No
+    -->[2]	região	região	NOUN	_	Gender=Fem|Number=Sing	9	nmod	_	_
+    -->[3]	região	região	NOUN	_	Gender=Fem|Number=Sing	9	nmod	_	_
     13	,	,	PUNCT	_	_	16	punct	_	_
+    -->[2]	,	,	PUNCT	_	_	4	punct	_	_
+    -->[3]	,	,	PUNCT	_	_	4	punct	_	_
     14	além	além	ADV	_	_	16	cc	_	MWE=além_de
+    -->[2]	além	além	ADV	_	_	4	advmod	_	_
+    -->[3]	além	além	ADV	_	_	4	advmod	_	_
     15	de	de	ADP	_	_	16	case	_	_
     16	informações	informação	NOUN	_	Gender=Fem|Number=Plur	9	conj	_	_
+    -->[2]	informações	informação	NOUN	_	Gender=Fem|Number=Plur	14	obl	_	_
+    -->[3]	informações	informação	NOUN	_	Gender=Fem|Number=Plur	14	obl	_	_
     17	de	de	ADP	_	_	18	case	_	_
     18	agricultores	agricultor	NOUN	_	Gender=Masc|Number=Plur	16	nmod	_	SpaceAfter=No
+    -->[2]	agricultores	agricultor	NOUN	_	Gender=Masc|Number=Plur	16	nmod	_	_
+    -->[3]	agricultores	agricultor	NOUN	_	Gender=Masc|Number=Plur	16	nmod	_	_
     19	»	»	PUNCT	_	_	4	punct	_	SpaceAfter=No
+    -->[2]	»	»	PUNCT	_	_	4	punct	_	_
+    -->[3]	»	»	PUNCT	_	_	4	punct	_	_
     20	,	,	PUNCT	_	_	9	punct	_	_
+    -->[2]	,	,	PUNCT	_	_	4	punct	_	_
+    -->[3]	,	,	PUNCT	_	_	4	punct	_	_
     21	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	SpaceAfter=No
+    -->[2]	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	_
+    -->[3]	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	_
     22	.	.	PUNCT	_	_	21	punct	_	_
 
-Note que a versão do arquivo novo está logo após uma seta "-->", enquanto que a do arquivo original está acima da alteração.
+Note que a versão do arquivo golden aparece sem setas, e as demais, com uma seta e o número do arquivo UD em que elas aparecem entre colchetes.
 
-Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiais", sem seta, para deixá-las iguais às com setas e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as antigas e as alterações, sem as linhas com setas.
+Caso não houvesse nenhuma discrepância entre os três arquivos, as sentenças seriam mostradas sem nenhuma seta.
+
+Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiais", sem seta, para deixá-las iguais às com setas e, posteriormente, rodar o [revisar_UD.py](#revisar_UDpy) para deixar apenas as alterações, sem as linhas com setas.
 
 ## Como usar
 
-    >> python3 comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.conllu:utf8 <parâmetros>
+    >> python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8  <parâmetros>
 
-1) **ud1.conllu** é um dos arquivos de comparação. No caso de discrepância, ele será o considerado "mais importante".
+1) **saída.conllu** é o arquivo final de comparação, com as várias versões para todas as sentenças.
 
-2) **ud2.conllu** é o segundo arquivo de comparação. Em caso de discrepância, ele será considerado "acidental", e por isso sua versão será representada com uma seta "-->".
+2) **ud1.conllu** é um dos arquivos de comparação. No caso de discrepância, ele será o considerado "mais importante", pois não virá com seta.
 
-3) **saída.conllu** é o arquivo final de comparação, com as duas versões para todas as sentenças.
+3) **ud2.conllu** é o segundo arquivo de comparação. Em caso de discrepância, ela será considerada "acidental", e por isso sua versão será representada com uma seta "-->".
 
 **Parâmetros:**
 
@@ -162,32 +181,41 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 # revisar_UD.py
 
-Com esse código, é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode comparar dois arquivos UD para revisar qual está certo, corrigir a partir da observação das setas ('-->'), e deixar apenas as alterações feitas.
+Com esse código, é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode comparar dois ou mais arquivos UD para revisar qual está certo, corrigir a partir da observação das setas ('-->'), e deixar apenas as alterações feitas.
 
 ## Exemplo
 
 Observe a seguinte sentença gerada pelo [comparar_UD.py](#comparar_UDpy):
 
     # text = Gosto de levar a sério o meu papel de consultor encartado.
-    1	Gosto	gosto	NOUN	_	Gender=Masc|Number=Sing	0	root	_	_
+    1	Gosto	gostar	VERB	_	Mood=Ind|Number=Sing|Person=1|Tense=Pres|VerbForm=Fin	0	root	_	_
+    -->[2]	Gosto	gosto	NOUN	_	Gender=Masc|Number=Sing	0	root	_	_
+    -->[3]	Gosto	gosto	NOUN	_	Gender=Masc|Number=Sing	0	root	_	_
     2	de	de	ADP	_	_	3	mark	_	_
-    3	levar	levar	VERB	_	VerbForm=Inf	1	acl	_	_
-    4	a	o	ADP	_	_	5	case	_	_
-    --> 4	a	a	ADP	_	_	5	case	_	_
-    5	sério	sério	NOUN	_	Gender=Masc|Number=Sing	3	obl	_	_
+    3	levar	levar	VERB	_	VerbForm=Inf	1	xcomp	_	_
+    -->[2]	levar	levar	VERB	_	VerbForm=Inf	1	acl	_	_
+    -->[3]	levar	levar	VERB	_	VerbForm=Inf	1	acl	_	_
+    4	a	a	ADP	_	_	5	case	_	MWE=a_sério
+    -->[2]	a	o	ADP	_	_	5	case	_	_
+    -->[3]	a	a	ADP	_	_	5	case	_	_
+    5	sério	sério	NOUN	_	_	3	xcomp	_	_
+    -->[2]	sério	sério	NOUN	_	Gender=Masc|Number=Sing	3	obl	_	_
+    -->[3]	sério	sério	NOUN	_	Gender=Masc|Number=Sing	3	obl	_	_
     6	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	8	det	_	_
     7	meu	meu	DET	_	Gender=Masc|Number=Sing|PronType=Prs	8	det	_	_
     8	papel	papel	NOUN	_	Gender=Masc|Number=Sing	3	obj	_	_
     9	de	de	ADP	_	_	10	case	_	_
     10	consultor	consultor	NOUN	_	Gender=Masc|Number=Sing	8	nmod	_	_
-    11	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
+    11	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	SpaceAfter=No
+    -->[2]  encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
+    -->[3]	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
     12	.	.	PUNCT	_	_	1	punct	_	_
 
-O token 4, para o arquivo UD1, teria como lema "o"; para o outro (UD2), "a".
+O token 3, para o arquivo UD[1], teria como DEPREL (8a coluna) o valor "xcomp"; para o UD[2], "acl", e para o UD[3], também "acl".
 
-* Caso eu queira manter como "o", a versão do UD1, basta deixá-lo assim e rodar o **revisar_UD.py**, que então a versão com seta (UD2) será apagada.
+* Caso eu queira manter como "xcomp", a versão do UD[1], basta deixá-lo assim e rodar o **revisar_UD.py**, que então as versões com seta serão apagadas.
 
-* Caso eu queira aceitar a resposta do UD2 (versão com seta) de que o correto é "a", posso alterar o lema de "o" para "a" diretamente nesse arquivo de comparação. Assim, quando o script de revisão for executado, as linhas com seta serão apagadas, e permanecerá a versão que editei: "a".
+* Caso eu queira aceitar a resposta do UD[2] e do UD[3], de que o correto é "acl", posso alterar a versão "xcomp" para "acl" diretamente nesse arquivo de comparação. Assim, quando o script de revisão for executado, as linhas com seta serão apagadas, e permanecerá a versão que editei: "acl".
 
 ## Como usar
 

@@ -9,85 +9,91 @@ def sem_info(ud_sent_segmented):
 
 	return ud_sent_segmented
 
-#Compara 2 arquivos UD, mantendo ou não as informações de cada sentença (id_sent etc.)
-def compara(arquivo, arquivo2, texto_raw, texto2_raw, info):
+#Compara arquivos UD, mantendo ou não as informações de cada sentença (id_sent etc.)
+def compara(files_list, UD):
 	novotexto = list()
-	solitários = list()
-	solitários2 = list()
+	solitários = dict()
+	for arquivo in files_list[1:]:
+		solitários[arquivo] = list()
 
-	#Separa cada sentença no arquivo 1 e arquivo 2
-	texto = texto_raw.split('\n\n')
-	texto2 = texto2_raw.split('\n\n')
-
-	#Tira os itens em branco das listas
-	texto = [x.splitlines() for x in texto if x]
-	texto2 = [x.splitlines() for x in texto2 if x]
+	#Separa cada sentença nos arquivos UD
+	for arquivo in files_list:
+		UD[arquivo] = UD[arquivo].split('\n\n')
+		for i, sentença in enumerate(UD[arquivo]):
+			UD[arquivo][i] = UD[arquivo][i].splitlines()
 
 	#Retira os itens de informação, do tipo "# id_sent", mantendo apenas as linhas com "# text" e os tokens em si
-	if not info:
-		texto = sem_info(texto)
-		texto2 = sem_info(texto2)
+	for arquivo in files_list:
+		UD[arquivo] = sem_info(UD[arquivo])
 
-	#Início da comparação
-	for sentença in texto: #Para cada sentença do arquivo 1
-		for linha in sentença: #Para cada linha nessa sentença
-			if '# text' in linha: #Se tiver "# text" nessa linha
-				if linha in texto2_raw: #Checa se existe sentença igual no arquivo 2
-					for sentença2 in texto2: #Início da comparação com o arquivo 2
-						for linha2 in sentença2:
-							if linha2 == linha: #Alinhou o "# text" do arquivo 1 com o "# text" do arquivo 2
-								if sentença != sentença2: #Se a sentença do arquivo1 for diferente da sentença do arquivo 2 (ou seja, houver discrepância em algum token)
-									for a, line in enumerate(sentença):
-										for b, line2 in enumerate(sentença2):
-											if a == b and line == line2: #Alinha os tokens que estão iguais, então printa 1 vez só
-												novotexto.append(line)
-												break
-											elif a == b: #Alinha os tokens que estão diferentes e printa o mesmo token dos arquivos 1 e 2
-												novotexto.append(line + '\n--> ' + line2)
-												break
-									novotexto.append('')
-								else:
-									novotexto.extend(sentença)
-									novotexto.append('')
-									break
+	#Início da comparação com o 1º ARQUIVO APENAS
+	for sentença in UD[files_list[0]]: #Para cada sentença do arquivo 1
+		for a, linha in enumerate(sentença): #Para cada linha nessa sentença
+			novotexto.append(linha)
+			if '# text = ' in linha: #Se tiver "# text" nessa linha
+				text_header = linha
+			if len(linha.split('\t')) == 10:
+				for arquivo in files_list[1:]:
+					for subsentença in UD[arquivo]:
+						sentença_correta = False
+						for b, sublinha in enumerate(subsentença):
+							if sublinha == text_header and len(subsentença) == len(sentença):
+								sentença_correta = True
+							if sentença_correta and a == b and sublinha != linha:
+								novotexto.append('-->[' + str(files_list.index(arquivo) +1) + ']\t' + sublinha.split('\t', 1)[1])
+		novotexto.append('')
 
-				else: #se não tiver #text igual no arquivo2
-					solitários.append(linha)
+	#sentenças que têm em um arquivo e não no 1
+	for arquivo in files_list[1:]:
+		for sentença in UD[arquivo]:
+			for linha in sentença:
+				if '# text =' in linha:
+					tem = False
+					for sentença_master in UD[files_list[0]]:
+						if linha in sentença_master and len(sentença_master) == len(sentença): tem = True
+					if not tem: solitários[arquivo].append(linha)
 
-	#sentenças que têm no arquivo 2, e não no 1
-	for linha in texto2_raw.splitlines():
-		if '# text =' in linha and not linha in texto_raw:
-			solitários2.append(linha)
+	solitários_texto = list()
+	for solitário in solitários:
+		solitários_texto.append('#!$$ Sentenças de "' + solitário + '" [' + str(files_list.index(solitário) +1) + '] que não foram encontradas em "' + files_list[0] + '" ou que apresentavam tokenização diferente:')
+		solitários_texto.append('')
+		for item in solitários[solitário]:
+			solitários_texto.append(item)
+		solitários_texto.append('')
 
-	return "\n".join(novotexto) + '\n\n#!$$ Sentenças de "' + arquivo + '" que não foram encontradas em "' + arquivo2 + '":' + '\n\n' + '\n'.join(solitários) + '\n\n#!$$ Sentenças de "' + arquivo2 + '" que não foram encontradas em "' + arquivo + '":' + '\n\n' + '\n'.join(solitários2)
+	return "\n".join(novotexto) + '\n' + '\n'.join(solitários_texto)
 
-def main(arquivo, arquivo2, saída, opcionais = ''):
+def main(saída, arquivos):
 	#Checa os parâmetros
-	if ':' in arquivo:
-		codificação = arquivo.split(':')[1]
-		arquivo = arquivo.split(':')[0]
-	else:
-		codificação = 'utf8'
-
-	if ':' in arquivo2:
-		codificação2 = arquivo2.split(':')[1]
-		arquivo2 = arquivo2.split(':')[0]
-	else:
-		codificação2 = 'utf8'
+	files_list = list()
+	codificação = dict()
+	for arquivo in arquivos.split('!@#'):
+		if ':' in arquivo:
+			arquivo_nome = arquivo.split(':')[0]
+			codificação[arquivo_nome] = arquivo.split(':')[1]
+		else:
+			arquivo_nome = arquivo
+			codificação[arquivo_nome] = 'utf8'
+		files_list.append(arquivo_nome)
 
 	if ':' in saída:
 		codificação3 = saída.split(':')[1]
 		saída = saída.split(':')[0]
 	else:
-	    codificação3 = 'utf8'
-
-	if '--com-info' in opcionais: info = True
-	else: info = False
+	    codificação_saída = 'utf8'
 
 	#Abre os arquivos CONLLU e salva o arquivo comparado
-	texto = open(arquivo, 'r', encoding=codificação).read()
-	texto2 = open(arquivo2, 'r', encoding=codificação2).read()
-	open(saída, 'w', encoding=codificação3).write(arquivo + '\n--> ' + arquivo2 + '\n\n' + compara(arquivo, arquivo2, texto, texto2, info))
+	UD = dict()
+	for arquivo in files_list:
+		UD[arquivo] = open(arquivo, 'r', encoding=codificação[arquivo]).read()
+
+	#Cria cabeçalho
+	cabeçalho = files_list[0]
+	for i, arquivo in enumerate(files_list[1:]):
+		cabeçalho += '\n-->[' + str(i +1) + ']\t' + arquivo
+	cabeçalho = cabeçalho + '\n\n'
+
+	open(saída, 'w', encoding=codificação_saída).write(cabeçalho + compara(files_list, UD))
 
 if __name__ == "__main__":
 	#Atualizar repositório
@@ -99,14 +105,8 @@ if __name__ == "__main__":
 
 	#Checa os argumentos
 	if len(sys.argv) < 4:
-		print("uso: comparar_UD.py ud1.conllu:utf8 ud2.conllu:utf8 saída.conllu:utf8 --com-info")
-		print('O arquivo ud1.conllu será o mais importante, sendo o ud2.conllu representado apenas se houver discrepâncias, com setas "-->"')
-	elif len(sys.argv) == 4:
-		main(sys.argv[1], sys.argv[2], sys.argv[3])
+		print("uso: comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8")
+		print('O arquivo ud1.conllu será o mais importante, sendo os demais arquivos UD representados apenas se houver discrepâncias, com setas "-->"')
+	elif len(sys.argv) >= 4:
+		main(sys.argv[1], "!@#".join(sys.argv[2:]))
 		print('OK!')
-	elif len(sys.argv) == 4 or len(sys.argv) == 5:
-		main(sys.argv[1], sys.argv[2], sys.argv[3], " ".join(sys.argv[4:]))
-		print('OK!')
-	else:
-	    print('Argumentos demais')
-
