@@ -245,7 +245,7 @@ Ao comparar a coluna 4 (UPOSTAG) de dois arquivos gerados pelo UDPipe com modelo
     UD[2]: UD-Bosque/teste_tokenizado_pretrained.conllu
 
     UD[2]  ADJ   ADP  ADV  AUX  CCONJ   DET  NOUN  NUM  PRON  PROPN  PUNCT  SCONJ  SYM  VERB  X    _    All
-    UD[1]                                                                                                  
+    UD[1]
     ADJ    414     0    0    1      0     0    13    0     1      1      0      0    0     5  0    0    435
     ADP      1  1637    4    0      2     2     0    0     0      0      0      0    0     0  0    0   1646
     ADV      0     0  361    0      0     1     2    0     1      1      0      0    0     1  0    0    367
@@ -264,7 +264,7 @@ Ao comparar a coluna 4 (UPOSTAG) de dois arquivos gerados pelo UDPipe com modelo
     _        0     0    0    0      0     0     0    0     0      0      0      0    0     0  0  741    741
     All    435  1639  371  286    203  1556  1957  215   317    895   1343     90   29   861  2  741  10940
 
-Note que, caso em um dos arquivos uma sentença não esteja presente no outro ou a tokenização esteja diferente, essa sentença não será computada para gerar a matriz de confusão. No fianl do arquivo, após o identificador "#!$$", você encontra as sentenças que não foram possíveis ser computadas.
+Note que, caso em um dos arquivos uma das sentença não esteja presente no outro ou a tokenização esteja diferente, essa sentença não será computada para gerar a matriz de confusão. No fianl do arquivo, após o identificador "#!$$", você encontra as sentenças que não foram possíveis ser computadas.
 
 ## Como usar
 
