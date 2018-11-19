@@ -7,6 +7,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [revisar_UD.py](#revisar_UDpy)
+* [matriz_confusão.py](#matriz_confusãopy)
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
@@ -228,6 +229,63 @@ O token 3 (levar), para o arquivo UD[1], teria como DEPREL (8a coluna) o valor "
 2) **revisado.conllu** será o resultado final, sem as setas da comparação.
 
 A codificação é opcional, sendo o padrão *utf8*.
+
+[**↥ voltar ao topo**](#ACDC-UD)
+
+# matriz_confusão.py
+
+Com esse código é possivel gerar matrizes de confusão para qualquer coluna de dois arquivos UD.
+
+## Exemplo
+
+Ao comparar a coluna 4 (UPOSTAG) de dois arquivos gerados pelo UDPipe com modelos diferentes, teremos:
+
+    Col 4: UPOSTAG
+    UD[1]: UD-Bosque/teste_tokenizado_modelonovo.conllu
+    UD[2]: UD-Bosque/teste_tokenizado_pretrained.conllu
+
+    UD[2]  ADJ   ADP  ADV  AUX  CCONJ   DET  NOUN  NUM  PRON  PROPN  PUNCT  SCONJ  SYM  VERB  X    _    All
+    UD[1]                                                                                                  
+    ADJ    414     0    0    1      0     0    13    0     1      1      0      0    0     5  0    0    435
+    ADP      1  1637    4    0      2     2     0    0     0      0      0      0    0     0  0    0   1646
+    ADV      0     0  361    0      0     1     2    0     1      1      0      0    0     1  0    0    367
+    AUX      0     0    0  278      0     0     0    0     0      0      0      0    0     4  0    0    282
+    CCONJ    0     0    0    0    201     0     0    0     0      0      0      0    0     0  0    0    201
+    DET      0     1    1    0      0  1548     2    1     3      0      0      0    0     0  0    0   1556
+    NOUN    11     0    5    0      0     0  1923    2     0      8      0      0    0     8  0    0   1957
+    NUM      0     0    0    0      0     0     0  212     0      1      0      0    0     0  0    0    213
+    PRON     0     0    0    0      0     2     0    0   310      0      0      1    0     0  0    0    313
+    PROPN    0     0    0    0      0     2     9    0     0    884      0      0    0     2  0    0    897
+    PUNCT    0     0    0    0      0     0     0    0     0      0   1343      0    0     0  0    0   1343
+    SCONJ    0     0    0    0      0     0     0    0     2      0      0     89    0     0  0    0     91
+    SYM      0     0    0    0      0     0     0    0     0      0      0      0   29     0  0    0     29
+    VERB     9     1    0    7      0     1     6    0     0      0      0      0    0   841  0    0    865
+    X        0     0    0    0      0     0     2    0     0      0      0      0    0     0  2    0      4
+    _        0     0    0    0      0     0     0    0     0      0      0      0    0     0  0  741    741
+    All    435  1639  371  286    203  1556  1957  215   317    895   1343     90   29   861  2  741  10940
+
+Note que, caso em um dos arquivos uma sentença não esteja presente no outro ou a tokenização esteja diferente, essa sentença não será computada para gerar a matriz de confusão. No fianl do arquivo, após o identificador "#!$$", você encontra as sentenças que não foram possíveis ser computadas.
+
+## Como usar
+
+    >> python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 <coluna>
+
+Caso deseje salvar o resultado em um arquivo à parte, considere usar a estrutura de *pipe*:
+
+    cat | python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 <coluna> > saída.txt
+
+**Colunas:**
+
+    1: "ID",
+    2: "FORM",
+    3: "LEMMA",
+    4: "UPOSTAG",
+    5: "XPOSTAS",
+    6: "FEATS",
+    7: "HEAD",
+    8: "DEPREL",
+    9: "DEPS",
+    10: "MISC",
 
 [**↥ voltar ao topo**](#ACDC-UD)
 

@@ -7,6 +7,9 @@ lista_arquivos = [
     'limpar_conllu.py',
     'tokenizar_conllu.py',
     'udpipe_vertical.py',
+    'estrutura_dados.py',
+    'matriz_confusão.py',
+    'conll18_ud_eval.py',
 ]
 
 def atualizar():
