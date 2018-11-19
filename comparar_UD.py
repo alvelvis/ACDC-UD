@@ -90,7 +90,7 @@ def main(saída, arquivos):
 	#Cria cabeçalho
 	cabeçalho = files_list[0]
 	for i, arquivo in enumerate(files_list[1:]):
-		cabeçalho += '\n-->[' + str(i +1) + ']\t' + arquivo
+		cabeçalho += '\n-->[' + str(i +2) + ']\t' + arquivo
 	cabeçalho = cabeçalho + '\n\n'
 
 	open(saída, 'w', encoding=codificação_saída).write(cabeçalho + compara(files_list, UD))

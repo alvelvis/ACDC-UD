@@ -106,57 +106,56 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 Com esse código é possível comparar dois ou mais arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes e que ficarão destacadas com uma seta "-->".
 
-No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo principal.
-
 Caso deseje revisar um arquivo UD a partir das diferenças entre vários arquivos UD, veja [revisar_UD.py](#revisar_UDpy).
 
 ## Exemplo
 
-Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo golden com o novo, além de uma outra versão etiquetada com um novo modelo derivado do Bosque, teremos como resultado um arquivo de comparação em que todas essas alterações serão destacadas com uma seta "-->" seguida pelo número do arquivo em que a diferença aparece, sendo 2 = arquivo gerado a partir do [acdc_procura.py](#acdc_procurapy), e 3 = arquivo gerado com o novo modelo do UDPipe.
+Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Comparando o arquivo original com esse novo, além de uma nova versão etiquetada com um outro modelo derivado do Bosque, teremos como resultado um arquivo de comparação em que todas as diferenças serão destacadas com uma seta "-->" seguida pelo número do arquivo em que a diferença aparece, sendo \[2] = arquivo gerado a partir do [acdc_procura.py](#acdc_procurapy), e [3] = arquivo gerado com o novo modelo do UDPipe.
 
 Abaixo, um exemplo de sentença ao se comparar os 3 arquivos:
 
-    # text = «Normalmente nós utilizamos dados históricos sobre a produtividade em cada região, além de informações de agricultores», diz.
-    1	«	«	PUNCT	_	_	4	punct	_	SpaceAfter=No
-    -->[2]	«	«	PUNCT	_	_	4	punct	_	_
-    -->[3]	«	«	PUNCT	_	_	4	punct	_	_
-    2	Normalmente	normalmente	ADV	_	_	4	advmod	_	_
-    3	nós	nós	PRON	_	Case=Nom|Gender=Unsp|Number=Plur|Person=1|PronType=Prs	4	nsubj	_	_
-    4	utilizamos	utilizar	VERB	_	Mood=Ind|Number=Plur|Person=1|Tense=Pres|VerbForm=Fin	21	ccomp	_	_
-    5	dados	dado	NOUN	_	Gender=Masc|Number=Plur	4	obj	_	_
-    6	históricos	histórico	ADJ	_	Gender=Masc|Number=Plur	5	amod	_	_
-    7	sobre	sobre	ADP	_	_	9	case	_	_
-    8	a	o	DET	_	Definite=Def|Gender=Fem|Number=Sing|PronType=Art	9	det	_	_
-    9	produtividade	produtividade	NOUN	_	Gender=Fem|Number=Sing	5	nmod	_	_
-    10	em	em	ADP	_	_	12	case	_	_
-    11	cada	cada	DET	_	Gender=Fem|Number=Sing|PronType=Tot	12	det	_	_
-    12	região	região	NOUN	_	Gender=Fem|Number=Sing	9	nmod	_	SpaceAfter=No
-    -->[2]	região	região	NOUN	_	Gender=Fem|Number=Sing	9	nmod	_	_
-    -->[3]	região	região	NOUN	_	Gender=Fem|Number=Sing	9	nmod	_	_
-    13	,	,	PUNCT	_	_	16	punct	_	_
-    -->[2]	,	,	PUNCT	_	_	4	punct	_	_
-    -->[3]	,	,	PUNCT	_	_	4	punct	_	_
-    14	além	além	ADV	_	_	16	cc	_	MWE=além_de
-    -->[2]	além	além	ADV	_	_	4	advmod	_	_
-    -->[3]	além	além	ADV	_	_	4	advmod	_	_
-    15	de	de	ADP	_	_	16	case	_	_
-    16	informações	informação	NOUN	_	Gender=Fem|Number=Plur	9	conj	_	_
-    -->[2]	informações	informação	NOUN	_	Gender=Fem|Number=Plur	14	obl	_	_
-    -->[3]	informações	informação	NOUN	_	Gender=Fem|Number=Plur	14	obl	_	_
-    17	de	de	ADP	_	_	18	case	_	_
-    18	agricultores	agricultor	NOUN	_	Gender=Masc|Number=Plur	16	nmod	_	SpaceAfter=No
-    -->[2]	agricultores	agricultor	NOUN	_	Gender=Masc|Number=Plur	16	nmod	_	_
-    -->[3]	agricultores	agricultor	NOUN	_	Gender=Masc|Number=Plur	16	nmod	_	_
-    19	»	»	PUNCT	_	_	4	punct	_	SpaceAfter=No
-    -->[2]	»	»	PUNCT	_	_	4	punct	_	_
-    -->[3]	»	»	PUNCT	_	_	4	punct	_	_
-    20	,	,	PUNCT	_	_	9	punct	_	_
-    -->[2]	,	,	PUNCT	_	_	4	punct	_	_
-    -->[3]	,	,	PUNCT	_	_	4	punct	_	_
-    21	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	SpaceAfter=No
-    -->[2]	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	_
+    # text = «O importante é levantar bem o joelho, manter o ritmo e encostar o calcanhar no chão a cada movimento», diz.
+    1	«	«	PUNCT	_	_	3	punct	_	SpaceAfter=No
+    -->[3]	«	«	PUNCT	_	_	5	punct	_	_
+    2	O	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	3	det	_	_
+    3	importante	importante	ADJ	_	Gender=Masc|Number=Sing	25	ccomp	_	_
+    -->[2]	importante	importante	ADJ	_	Gender=Masc|Number=Sing	25	ccomp:parataxis!$	_	_
+    -->[3]	importante	importante	NOUN	_	Gender=Masc|Number=Sing	5	nsubj	_	_
+    4	é	ser	AUX	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	3	cop	_	_
+    -->[3]	é	ser	AUX	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	5	cop	_	_
+    5	levantar	levantar	VERB	_	VerbForm=Inf	3	csubj	_	_
+    -->[3]	levantar	levantar	VERB	_	VerbForm=Inf	25	ccomp	_	_
+    6	bem	bem	ADV	_	_	5	advmod	_	_
+    7	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	8	det	_	_
+    8	joelho	joelho	NOUN	_	Gender=Masc|Number=Sing	5	obj	_	SpaceAfter=No
+    -->[3]	joelho	joelho	NOUN	_	Gender=Masc|Number=Sing	5	obj	_	_
+    9	,	,	PUNCT	_	_	10	punct	_	_
+    -->[3]	,	,	PUNCT	_	_	5	punct	_	_
+    10	manter	manter	VERB	_	VerbForm=Inf	5	conj	_	_
+    -->[3]	manter	manter	VERB	_	VerbForm=Inf	5	xcomp	_	_
+    11	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	12	det	_	_
+    12	ritmo	ritmo	NOUN	_	Gender=Masc|Number=Sing	10	obj	_	_
+    13	e	e	CCONJ	_	_	14	cc	_	_
+    14	encostar	encostar	VERB	_	VerbForm=Inf	5	conj	_	_
+    -->[3]	encostar	encostar	VERB	_	Number=Sing|Person=3|VerbForm=Inf	10	conj	_	_
+    15	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	16	det	_	_
+    16	calcanhar	calcanhar	NOUN	_	Gender=Masc|Number=Sing	14	obj	_	_
+    17-18	no	_	_	_	_	_	_	_	_
+    17	em	em	ADP	_	_	19	case	_	_
+    18	o	o	DET	_	Definite=Def|Gender=Masc|Number=Sing|PronType=Art	19	det	_	_
+    19	chão	chão	NOUN	_	Gender=Masc|Number=Sing	16	nmod	_	_
+    -->[3]	chão	chão	NOUN	_	Gender=Masc|Number=Sing	14	obl	_	_
+    20	a	a	ADP	_	_	22	case	_	_
+    21	cada	cada	DET	_	Gender=Masc|Number=Sing|PronType=Tot	22	det	_	_
+    22	movimento	movimento	NOUN	_	Gender=Masc|Number=Sing	14	obl	_	SpaceAfter=No
+    -->[3]	movimento	movimento	NOUN	_	Gender=Masc|Number=Sing	19	nmod	_	_
+    23	»	»	PUNCT	_	_	3	punct	_	SpaceAfter=No
+    -->[3]	»	»	PUNCT	_	_	5	punct	_	_
+    24	,	,	PUNCT	_	_	14	punct	_	_
+    -->[3]	,	,	PUNCT	_	_	5	punct	_	_
+    25	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	SpaceAfter=No
     -->[3]	diz	dizer	VERB	_	Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin	0	root	_	_
-    22	.	.	PUNCT	_	_	21	punct	_	_
+    26	.	.	PUNCT	_	_	25	punct	_	_
 
 Note que a versão do arquivo golden aparece sem setas, e as demais, com uma seta e o número do arquivo UD em que elas aparecem entre colchetes.
 
@@ -175,6 +174,8 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 3) **ud2.conllu** é o segundo arquivo de comparação. Em caso de discrepância, ela será considerada "acidental", e por isso sua versão será representada com uma seta "-->[2]".
 
 4) **udX.conllu** é o arquivo de número X de comparação. Sua versão será representada por "-->[X]".
+
+No final do arquivo de comparação (**saída.conllu**), logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo principal.
 
 # revisar_UD.py
 
