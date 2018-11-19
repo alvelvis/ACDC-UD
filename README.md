@@ -112,7 +112,7 @@ Caso deseje revisar um arquivo UD a partir das diferenças entre vários arquivo
 
 ## Exemplo
 
-Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo golden com o novo, além de uma outra versão treinada com um novo modelo derivado do Bosque, teremos um novo arquivo em que todas essas alterações serão destacadas com uma seta "-->" seguida pelo número do arquivo em que a diferença aparece, sendo 2 = arquivo gerado a partir do [acdc_procura.py](#acdc_procurapy), e 3 = arquivo gerado com o novo modelo do UDPipe.
+Depois de rodar o [acdc_procura.py](#acdc_procurapy), alguns tokens de algumas sentenças, que tinham o valor "ccomp" na coluna 8, tiveram essa mesma coluna substituida por "ccomp:parataxis". Ao comparar o arquivo golden com o novo, além de uma outra versão etiquetada com um novo modelo derivado do Bosque, teremos como resultado um arquivo de comparação em que todas essas alterações serão destacadas com uma seta "-->" seguida pelo número do arquivo em que a diferença aparece, sendo 2 = arquivo gerado a partir do [acdc_procura.py](#acdc_procurapy), e 3 = arquivo gerado com o novo modelo do UDPipe.
 
 Abaixo, um exemplo de sentença ao se comparar os 3 arquivos:
 
@@ -172,12 +172,9 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 2) **ud1.conllu** é um dos arquivos de comparação. No caso de discrepância, ele será o considerado "mais importante", pois não virá com seta.
 
-3) **ud2.conllu** é o segundo arquivo de comparação. Em caso de discrepância, ela será considerada "acidental", e por isso sua versão será representada com uma seta "-->".
+3) **ud2.conllu** é o segundo arquivo de comparação. Em caso de discrepância, ela será considerada "acidental", e por isso sua versão será representada com uma seta "-->[2]".
 
-**Parâmetros:**
-
-    --com-info
-    caso esse parâmetro não seja fornecido, o programa, ao comparar, irá remover das sentenças as linhas de informação, como "# sent_id" e "# source", para que não sejam encaradas como diferenças arquivos que venham de fontes diferentes, por exemplo
+4) **udX.conllu** é o arquivo de número X de comparação. Sua versão será representada por "-->[X]".
 
 # revisar_UD.py
 
@@ -211,7 +208,7 @@ Observe a seguinte sentença gerada pelo [comparar_UD.py](#comparar_UDpy):
     -->[3]	encartado	encartar	VERB	_	Gender=Masc|Number=Sing|VerbForm=Part	10	acl	_	_
     12	.	.	PUNCT	_	_	1	punct	_	_
 
-O token 3, para o arquivo UD[1], teria como DEPREL (8a coluna) o valor "xcomp"; para o UD[2], "acl", e para o UD[3], também "acl".
+O token 3 (levar), para o arquivo UD[1], teria como DEPREL (8a coluna) o valor "xcomp"; para o UD[2], "acl", e para o UD[3], também "acl".
 
 * Caso eu queira manter como "xcomp", a versão do UD[1], basta deixá-lo assim e rodar o **revisar_UD.py**, que então as versões com seta serão apagadas.
 
