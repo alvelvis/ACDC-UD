@@ -106,7 +106,7 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
 
 Com esse código é possível comparar dois ou mais arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes e que ficarão destacadas com uma seta "-->".
 
-No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo 1 (**ud_final.conllu**).
+No final do arquivo de comparação, logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo principal.
 
 Caso deseje revisar um arquivo UD a partir das diferenças entre vários arquivos UD, veja [revisar_UD.py](#revisar_UDpy).
 
