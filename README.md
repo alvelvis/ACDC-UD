@@ -98,7 +98,7 @@ Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na r
 Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACDC e substituir a coluna X, se Y, por Z
 
     exemplo: --critério 1 8#ccomp#ccomp:parataxis
-    explicação: se a oitava coluna da palavra do UD que aponta para a palavra em negrito no ACDC estiver preenchida com a palavra "ccomp", vira "ccomp:parataxis"
+    explicação: se a oitava coluna da palavra do UD que aponta para a palavra em negrito no ACDC estiver preenchida com o valor "ccomp", vira "ccomp:parataxis"
     X = 8
     Y = ccomp
     Z = ccomp:parataxis
