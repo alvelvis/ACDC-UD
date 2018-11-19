@@ -272,20 +272,20 @@ Note que, caso em um dos arquivos uma das sentença não esteja presente no outr
 
 Caso deseje salvar o resultado em um arquivo à parte, considere usar a estrutura de *pipe*:
 
-    cat | python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 <coluna> > saída.txt
+    $ cat | python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 <coluna> > saída.txt
 
 **Colunas:**
 
-    1: "ID",
-    2: "FORM",
-    3: "LEMMA",
-    4: "UPOSTAG",
-    5: "XPOSTAS",
-    6: "FEATS",
-    7: "HEAD",
-    8: "DEPREL",
-    9: "DEPS",
-    10: "MISC",
+    1: "ID"
+    2: "FORM"
+    3: "LEMMA"
+    4: "UPOSTAG"
+    5: "XPOSTAS"
+    6: "FEATS"
+    7: "HEAD"
+    8: "DEPREL"
+    9: "DEPS"
+    10: "MISC"
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
