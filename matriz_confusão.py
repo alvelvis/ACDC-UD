@@ -21,7 +21,7 @@ feats = {
                 2: "FORM",
                 3: "LEMMA",
                 4: "UPOSTAG",
-                5: "XPOSTAS",
+                5: "XPOSTAG",
                 6: "FEATS",
                 7: "HEAD",
                 8: "DEPREL",
@@ -97,9 +97,7 @@ def get_list(conllu1, conllu2, coluna):
         return {'matriz_1': lista_coluna1, 'matriz_2': lista_coluna2, 'solitários_1': solitários1, 'solitários_2': solitários2}
 
 def relatório(lista_conllu1, lista_conllu2, conllu1, conllu2, coluna):
-                
-        
-        return 'oi'
+        pass
 
 def main(ud1, ud2, output, coluna):
 	conllu1 = LerUD(ud1)
@@ -122,8 +120,7 @@ def main(ud1, ud2, output, coluna):
 	for item in lista_conllu['solitários_2']:
 	        saída.append(item)
 
-	erros = relatório(listaconllu1, listaconllu2, conllu1, conllu2, coluna)
-        saída.append('\n')
+	erros = relatório(lista_conllu1, lista_conllu2, conllu1, conllu2, coluna)
 
         #Output
 	if ':' in output: codificação_saída = output.split(':')[1]
