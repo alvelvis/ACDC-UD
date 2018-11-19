@@ -270,11 +270,9 @@ Para computar uma sentença, não importa a ordem em que elas aparecem nos arqui
 
 ## Como usar
 
-    >> python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 <coluna>
+    >> python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <coluna>
 
-Caso deseje salvar o resultado em um arquivo à parte, considere usar a estrutura de *pipe*:
-
-    $ cat | python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 <coluna> > saída.txt
+A codificação é opcional, sendo o padrão *utf8*.
 
 **Colunas:**
 
