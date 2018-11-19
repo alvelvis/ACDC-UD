@@ -102,9 +102,11 @@ Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACD
     Y = ccomp
     Z = ccomp:parataxis
 
+[**↥ voltar ao topo**](#ACDC-UD)
+
 # comparar_UD.py
 
-Com esse código é possível comparar dois ou mais arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes e que ficarão destacadas com uma seta "-->".
+Com esse código é possível comparar dois ou mais arquivos *.conllu*, formato UD, e buscar sentenças cujas anotações sejam diferentes.
 
 Caso deseje revisar um arquivo UD a partir das diferenças entre vários arquivos UD, veja [revisar_UD.py](#revisar_UDpy).
 
@@ -177,9 +179,11 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 No final do arquivo de comparação (**saída.conllu**), logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo principal.
 
+[**↥ voltar ao topo**](#ACDC-UD)
+
 # revisar_UD.py
 
-Com esse código, é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode comparar dois ou mais arquivos UD para revisar qual está certo, corrigir a partir da observação das setas ('-->'), e deixar apenas as alterações feitas.
+Com esse código, é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode comparar dois ou mais arquivos UD para revisar qual está certo, corrigindo a partir da observação da comparação, e deixar apenas as alterações feitas.
 
 ## Exemplo
 
@@ -225,6 +229,8 @@ O token 3 (levar), para o arquivo UD[1], teria como DEPREL (8a coluna) o valor "
 
 A codificação é opcional, sendo o padrão *utf8*.
 
+[**↥ voltar ao topo**](#ACDC-UD)
+
 # limpar_conllu.py
 
 Com esse código é possível remover toda a anotação de um arquivo UD, deixando apenas o texto cru.
@@ -256,6 +262,8 @@ Após rodar o **limpar_conllu.py**, essa sentença se transformará em:
     >> python3 limpar-conllu.py ud.conllu:utf8 texto.txt:utf8
 
 A codificação é opcional, sendo o padrão *utf8*.
+
+[**↥ voltar ao topo**](#ACDC-UD)
 
 # tokenizar_conllu.py
 
@@ -340,6 +348,8 @@ Repare que alguns tokens, as MWEs, tiveram o número da tokenização misturado 
 
     >> python3 tokenizar_conllu.py ud.conllu tokenizado.conllu
 
+[**↥ voltar ao topo**](#ACDC-UD)
+
 # udpipe_vertical.py
 
 Com esse script é possível rodar o UDPipe em um arquivo já tokenizado verticalmente pelo código [tokenizar_conllu.py](#tokenizar_conllupy).
@@ -347,6 +357,8 @@ Com esse script é possível rodar o UDPipe em um arquivo já tokenizado vertica
 ## Como usar
 
     >> python3 udpipe_vertical.py modelo.udpipe tokenizado.conllu resultado.conllu
+
+[**↥ voltar ao topo**](#ACDC-UD)
 
 # atualizar_repo.py
 
