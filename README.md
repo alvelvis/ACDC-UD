@@ -167,7 +167,7 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 ## Como usar
 
-    >> python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8  <parâmetros>
+    >> python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8
 
 1) **saída.conllu** é o arquivo final de comparação, com as várias versões para todas as sentenças.
 
@@ -183,7 +183,7 @@ No final do arquivo de comparação (**saída.conllu**), logo após o identifica
 
 # revisar_UD.py
 
-Com esse código, é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode comparar dois ou mais arquivos UD para revisar qual está certo, corrigindo a partir da observação da comparação, e deixar apenas as alterações feitas.
+Com esse código é possível apagar as marcas de comparação de um arquivo gerado a partir do programa [comparar_UD.py](#comparar_UDpy). Desse modo, o usuário pode revisar um arquivo UD corrigindo-o a partir da análise da comparação com outros arquivos.
 
 ## Exemplo
 
@@ -373,3 +373,5 @@ Repare que, caso você não tenha alguma biblioteca instalada, ele instalará au
 Importante possuir instalado "python3-pip":
 
     $ sudo apt install python3-pip
+
+[**↥ voltar ao topo**](#ACDC-UD)
