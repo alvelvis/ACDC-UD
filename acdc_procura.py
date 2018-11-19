@@ -44,7 +44,7 @@ def substituiUD(ud, item, palavranegrito, critério):
 
                 #Verificar critérios
                 critério_tipo = int(critério.split()[0])
-                coluna = int(critério.split('#')[0].split()[1])
+                coluna = int(critério.split('#')[0].split()[1]) - 1
                 padrão = critério.split('#')[1]
                 substituto = critério.split('#')[2]
 
@@ -69,24 +69,24 @@ def main(códigofonte, conllu, saída, opcionais = ''):
         códigofonte = códigofonte.split(':')[0]
     else:
         codificação = 'utf8'
-    
+
     if ':' in conllu:
         codificação2 = conllu.split(':')[1]
         conllu = conllu.split(':')[0]
     else:
         codificação2 = 'utf8'
-    
+
     if ':' in saída:
         codificação3 = saída.split(':')[1]
         saída = saída.split(':')[0]
     else:
         codificação3 = 'utf8'
-    
+
     #Checa opcionais
     if '--critério' in opcionais: critério = opcionais.split('--critério')[1].split('--')[0].strip()
     else: exit()
-    if '--palavra-negrito' in opcionais: palavranegrito = int(opcionais.split('--palavra-negrito')[1].split('--')[0].strip())
-    else: palavranegrito = 0
+    if '--palavra-negrito' in opcionais: palavranegrito = int(opcionais.split('--palavra-negrito')[1].split('--')[0].strip()) - 1
+    else: palavranegrito = 1
     if not '--não-marcar' in opcionais: critério += '!$'
 
     print(códigofonte, conllu, saída, codificação, codificação2, codificação3, str(palavranegrito), critério)
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     else: print('uso: acdc_procura.py acdc.html:utf8 ud.conllu:utf8 saída.conllu:utf8 <parâmetros>'
                 + '\n\nParâmetros:'
                 + '\n--critério <tipo> <parâmetros>'
-                + '\n--palavra-negrito (para casos de negrito com mais de uma palavra, sendo a primeira palavra a de número 0)'
+                + '\n--palavra-negrito (para casos de negrito com mais de uma palavra, sendo a primeira palavra a de número 1)'
                 + '\n--não-marcar (não marcar as sentenças que foram alteradas)'
                 + '\n\nCritérios:'
                 + '\n--critério 1 X#Y#Z (procurar por palavras no UD que apontem para a palavra em negrito no ACDC e substituir a coluna X, se Y, por Z')

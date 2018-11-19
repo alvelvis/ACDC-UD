@@ -88,7 +88,7 @@ Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na r
 
     --palavra-negrito <índice>
     Qual a palavra que deverá ser procurada no UD entre as palavras da expressão em negrito no AC/DC
-    padrão: 0 (a primeira palavra)
+    padrão: 1 (a primeira palavra)
 
     --não-marcar
     Caso o parâmetro não seja fornecido, toda substituição será seguida pelo identificador "!$", de modo que seja fácil encontrar no arquivo SAÍDA.conllu as alterações feitas
@@ -97,9 +97,9 @@ Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na r
 
 Tipo 1: Procurar por palavras no UD que apontem para a palavra em negrito no ACDC e substituir a coluna X, se Y, por Z
 
-    exemplo: --critério 1 7#ccomp#ccomp:parataxis
-    explicação: se a sexta coluna (índice 7) da palavra do UD que aponta para a palavra em negrito no ACDC estiver preenchida com a palavra "ccomp", vira "ccomp:parataxis"
-    X = 7
+    exemplo: --critério 1 8#ccomp#ccomp:parataxis
+    explicação: se a oitava coluna da palavra do UD que aponta para a palavra em negrito no ACDC estiver preenchida com a palavra "ccomp", vira "ccomp:parataxis"
+    X = 8
     Y = ccomp
     Z = ccomp:parataxis
 
@@ -265,6 +265,8 @@ Ao comparar a coluna 4 (UPOSTAG) de dois arquivos gerados pelo UDPipe com modelo
     All    435  1639  371  286    203  1556  1957  215   317    895   1343     90   29   861  2  741  10940
 
 Note que, caso em um dos arquivos uma das sentença não esteja presente no outro ou a tokenização esteja diferente, essa sentença não será computada para gerar a matriz de confusão. No fianl do arquivo, após o identificador "#!$$", você encontra as sentenças que não foram possíveis ser computadas.
+
+Para computar uma sentença, não importa a ordem em que elas aparecem nos arquivos UD, mas sim que o tamanho de tokens seja igual e o metadado "# text", também.
 
 ## Como usar
 
