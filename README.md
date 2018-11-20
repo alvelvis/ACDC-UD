@@ -264,7 +264,7 @@ Ao comparar a coluna 4 (UPOSTAG) de dois arquivos gerados pelo UDPipe com modelo
     _        0     0    0    0      0     0     0    0     0      0      0      0    0     0  0  741    741
     All    435  1639  371  286    203  1556  1957  215   317    895   1343     90   29   861  2  741  10940
 
-Note que, caso em um dos arquivos uma das sentença não esteja presente no outro ou a tokenização esteja diferente, essa sentença não será computada para gerar a matriz de confusão. No fianl do arquivo, após o identificador "#!$$", você encontra as sentenças que não foram possíveis ser computadas.
+Note que, caso em um dos arquivos uma das sentença não esteja presente no outro ou a tokenização esteja diferente, essa sentença não será computada para gerar a matriz de confusão. No final do arquivo, após o identificador "#!$$", você encontra as sentenças que não foram possíveis ser computadas.
 
 Para computar uma sentença, não importa a ordem em que elas aparecem nos arquivos UD, mas sim que o tamanho de tokens seja igual e o metadado "# text", também.
 
