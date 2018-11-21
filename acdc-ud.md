@@ -9,7 +9,7 @@
 
     - [x] ponto final nas sentenças do AC/DC: corrigido
 
-    - faz procuras apenas em código fonte do AC/DC (página web)
+    - [x] faz procuras apenas em código fonte do AC/DC (página web)
        talvez fosse interessante colocar também para arquivo fonte
 
       - [ ] NÚMERO DE OCORRÊNCIAS EXCESSIVO: como lidar?
@@ -30,7 +30,7 @@
 
   - udpipe_vertical.py
 
-    - roda o udpipe em um arquivo conllu esvaziado, porém mantida a tokenização pelo tokenização pelo tokenizar_conllu.py
+    - roda o udpipe em um arquivo conllu esvaziado, porém mantida a tokenização pelo tokenizar_conllu.py
 
       - [x] procura o metadado "# text = " no arquivo original
 
@@ -40,7 +40,7 @@
 
     - [x] retira toda anotação de um arquivo UD, porém mantendo a tokenização
 
-    - ideal para pós-etiquetar com o UDPipe 
+    - ideal para pós-etiquetar com o UDPipe
 
       - [x] mantém os metadados "# text" para que o udpipe_vertical.py possa encontrar as sentenças sem tokenização
 
@@ -54,11 +54,11 @@
 
     - [x] indica os dois arquivos em questão
 
-    - [ ] RELATÓRIO DE ERROS 
+    - [ ] RELATÓRIO DE ERROS
 
   - comparar_UD.py
 
-    - comparar dois ou mais arquivos UD
+    - [x] comparar dois ou mais arquivos UD
 
       - [x] uma seta para cada discrepância
 
@@ -86,7 +86,7 @@
 
     - [x] ## Exemplo
 
-    - ## Como usar
+    - [x] ## Como usar
 
       - [x] subcategorias, como **Critérios de substituição**
 

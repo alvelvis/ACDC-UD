@@ -8,8 +8,9 @@ lista_arquivos = [
     'tokenizar_conllu.py',
     'udpipe_vertical.py',
     'estrutura_dados.py',
-    'matriz_confusão.py',
+    'confusão.py',
     'conll18_ud_eval.py',
+    'acdc-ud.md',
 ]
 
 def atualizar():
