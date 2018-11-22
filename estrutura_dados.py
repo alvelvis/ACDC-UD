@@ -13,8 +13,7 @@ def LerUD(ud_file):
 	if ':' in ud_file: codificação = ud_file.split(':')[1]
 	#Caso o usuário não forneça dois pontos, a codificação padrão é "utf8"
 	else: codificação = 'utf8'
-	#O nome do arquivo é o que vem antes de dois pontos (se não tiver dois pontos, dá no mesmo, ele não dá erro)
-	ud_file = ud_file.split(':')[0]
+	ud_file = ud_file.split(':')[0] #O nome do arquivo é o que vem antes de dois pontos (se não tiver dois pontos, tudo bem, ele não dá erro)
 
 	#Abre o arquivo no caminho fornecido e segmenta as sentenças
 	arquivo = open(ud_file, 'r', encoding=codificação).read().split('\n\n')
@@ -44,8 +43,7 @@ def EscreverUD(UD, arquivo):
 	if ':' in arquivo: codificação = arquivo.split(':')[1]
 	#Caso o usuário não forneça dois pontos, a codificação padrão é "utf8"
 	else: codificação = "utf8"
-	#O nome do arquivo é o que vem antes de dois pontos (se não tiver dois pontos, dá no mesmo, ele não dá erro)
-	arquivo = arquivo.split(':')[0]
+	arquivo = arquivo.split(':')[0] #O nome do arquivo é o que vem antes de dois pontos (se não tiver dois pontos, tudo bem, ele não dá erro)
 
 	#Para cada sentença na lista "UD",
 	for a, sentença in enumerate(UD):
@@ -53,12 +51,12 @@ def EscreverUD(UD, arquivo):
 		for b, linha in enumerate(UD[a]):
 			#Se for um token (tiver 10 colunas) e não for um metadado (contiver "# "),
 			if len(linha) == 10 and not '# ' in linha:
-				#Retunir as colunas adicionando um "\t"
+				#Reunir as colunas adicionando um "\t"
 				UD[a][b] = "\t".join(UD[a][b])
 			#Depois de reunir todos os tokens que devem ser reunidos, reunir todas as linhas com um "\n"
 			UD[a] = "\n".join(UD[a])
 	#Reunidas todas as linhas, reunir as sentenças
-	UD = "\n\n".join(UD) + '\n' #O '\n' no final é necessário pois todo arquivo UD deve ter uma linha vazia no final, é uma exigência dos códigos de comparação, avaliação, etc.
+	UD = "\n\n".join(UD) + '\n' #O "\n" no final é necessário pois todo arquivo UD deve ter uma linha vazia no final, é uma exigência dos códigos de comparação, avaliação, etc.
 
 	#Salvar :)
 	open(arquivo, 'w', encoding=codificação).write(UD)
