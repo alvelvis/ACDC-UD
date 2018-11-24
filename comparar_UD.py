@@ -10,7 +10,7 @@ def sem_info(ud_sent_segmented):
 	return ud_sent_segmented
 
 #Compara arquivos UD, mantendo ou não as informações de cada sentença (id_sent etc.)
-def compara(files_list, UD, colunas):
+def compara(files_list, UD):
 	novotexto = list()
 	solitários = dict()
 	for arquivo in files_list[1:]:
@@ -39,11 +39,8 @@ def compara(files_list, UD, colunas):
 						for b, sublinha in enumerate(subsentença):
 							if sublinha == text_header and len(subsentença) == len(sentença):
 								sentença_correta = True
-							if sentença_correta and a == b:
-								for coluna in colunas:
-									if sublinha.split('\t')[coluna-1] != linha.split('\t')[coluna-1]:
-										novotexto.append('-->[' + str(files_list.index(arquivo) +1) + ']\t' + sublinha.split('\t', 1)[1])
-										break
+							if sentença_correta and a == b and sublinha != linha:
+								novotexto.append('-->[' + str(files_list.index(arquivo) +1) + ']\t' + sublinha.split('\t', 1)[1])
 		novotexto.append('')
 
 	#sentenças que têm em um arquivo e não no 1
@@ -70,29 +67,20 @@ def main(saída, arquivos):
 	#Checa os parâmetros
 	files_list = list()
 	codificação = dict()
-	parâmetros = '--' + arquivos.split('--')[1]
-	arquivos = arquivos.split('--')[0]
 	for arquivo in arquivos.split('!@#'):
-		if arquivo.replace('!@#','').strip() != '':
-			if ':' in arquivo:
-				arquivo_nome = arquivo.split(':')[0]
-				codificação[arquivo_nome] = arquivo.split(':')[1]
-			else:
-				arquivo_nome = arquivo
-				codificação[arquivo_nome] = 'utf8'
-			files_list.append(arquivo_nome)
+		if ':' in arquivo:
+			arquivo_nome = arquivo.split(':')[0]
+			codificação[arquivo_nome] = arquivo.split(':')[1]
+		else:
+			arquivo_nome = arquivo
+			codificação[arquivo_nome] = 'utf8'
+		files_list.append(arquivo_nome)
 
 	if ':' in saída:
 		codificação3 = saída.split(':')[1]
 		saída = saída.split(':')[0]
 	else:
 	    codificação_saída = 'utf8'
-
-	if '--colunas' in parâmetros:
-		colunas = parâmetros.split('--colunas!@#')[1].split('!@#')[0].split('#')
-		for i in range(len(colunas)):
-			colunas[i] = int(colunas[i])
-	else: colunas = [1,2,3,4,5,6,7,8,9,10]
 
 	#Abre os arquivos CONLLU e salva o arquivo comparado
 	UD = dict()
@@ -103,9 +91,9 @@ def main(saída, arquivos):
 	cabeçalho = files_list[0]
 	for i, arquivo in enumerate(files_list[1:]):
 		cabeçalho += '\n-->[' + str(i +2) + ']\t' + arquivo
-	cabeçalho = 'Colunas: ' + str(colunas) + '\n' + cabeçalho + '\n\n'
+	cabeçalho = cabeçalho + '\n\n'
 
-	open(saída, 'w', encoding=codificação_saída).write(cabeçalho + compara(files_list, UD, colunas))
+	open(saída, 'w', encoding=codificação_saída).write(cabeçalho + compara(files_list, UD))
 
 if __name__ == "__main__":
 	#Atualizar repositório
@@ -117,9 +105,8 @@ if __name__ == "__main__":
 
 	#Checa os argumentos
 	if len(sys.argv) < 4:
-		print("uso: comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8 <parâmetros>")
+		print("uso: comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8")
 		print('O arquivo ud1.conllu será o mais importante, sendo os demais arquivos UD representados apenas se houver discrepâncias, com setas "-->"')
-		print('Caso deseje comparar apenas algumas colunas, adicione o parâmetro "--colunas" ao final seguido das colunas que deseja comparar entre "#". Ex: --colunas 2#4#5')
 	elif len(sys.argv) >= 4:
 		main(sys.argv[1], "!@#".join(sys.argv[2:]))
 		print('OK!')
