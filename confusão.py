@@ -195,7 +195,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         
         for combinação in sentenças:
                 html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']
-                html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>Dica: para salvar o estado da página, <u>Ctrl+S</u>.')
+                html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>Dica: Para salvar o estado da página, <u>Ctrl+S</u>.')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
                 html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1>')
@@ -205,7 +205,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                         html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[1]:</b><br>")
                         html.append(sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[2]:</b><br>")
                         html.append(sentença[3] + '</pre></div><br><hr>')
-                open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''Dica: para salvar o estado da página, <u>Ctrl+S</u>.<h3><a href="../''' + output + '''.html">Voltar</a></h3></body><script>
+                open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''Dica: Para salvar o estado da página, <u>Ctrl+S</u>.<h3><a href="../''' + output + '''.html">Voltar</a></h3></body><script>
                                                                       function ativa1(nome, botao){
                                                                       var div = document.getElementById(nome)
                                                                       if (div.style.display == 'none') {
