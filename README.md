@@ -9,7 +9,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [revisar_UD.py](#revisar_UDpy)
-* [confusão.py](#confusãopy)
+* [matriz_confusão.py](#matriz_confusãopy)
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
@@ -170,7 +170,7 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 ## Como usar
 
-    >> python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8
+    >> python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8 <parâmetros>
 
 1) **saída.conllu** é o arquivo final de comparação, com as várias versões para todas as sentenças.
 
@@ -181,6 +181,10 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 4) **udX.conllu** é o arquivo de número X de comparação. Sua versão será representada por "-->[X]".
 
 No final do arquivo de comparação (**saída.conllu**), logo após o identificador "#!$$", ficarão registradas as sentenças que estejam presentes nos arquivos de comparação, mas não no arquivo principal.
+
+**Parâmetros:**
+
+* *--colunas:* indicar as colunas que você quer comparar. Exemplo: --colunas 1#2#5#8
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
@@ -234,7 +238,7 @@ A codificação é opcional, sendo o padrão *utf8*.
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
-# confusão.py
+# matriz_confusão.py
 
 Com esse código é possivel gerar matrizes de confusão para qualquer coluna de dois arquivos UD.
 
