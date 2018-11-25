@@ -100,26 +100,29 @@ def get_list(conllu1, conllu2, coluna):
 
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
-        html = ['<meta charset="'+codificação+'" \>']
-        html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><pre>')
-
+        html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']#;font-family:Courier New
+        html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h1>Confusão</h1><pre>')
+        
+        tiposy = dict()
+        tiposx = dict()
+        for i, linha in enumerate("\n".join(matriz.split('\n\n')[1:]).split('#!$$')[0].split('\n')[2:-1]):
+                tiposy[i+2] = linha.split(' ')[0]
+        for i, coluna in enumerate("\n".join(matriz.split('\n\n')[1:]).split('#!$$')[0].split('\n')[0].split()[1:-1]):
+                tiposx[i+1] = coluna
         y = 0
-        tipos = dict()
         for linha in "\n".join(matriz.split('\n\n')[1:]).split('#!$$')[0].split('\n'):
                 if linha.strip() != '':
-                        linha_html = linha.split()[0]
-                        if y == 0:
-                                for i, coluna in enumerate(linha.split()[1:]):
-                                        tipos[i+1] = coluna
+                        linha_html = linha.split(' ')[0]
+                        if y == 0 or y == 1:
+                                for x, coluna in enumerate(linha.split()[1:]):
                                         linha_html += '&#09;' + coluna
                                 y += 1
-                        elif y < len(tipos):
+                        elif y < len(tiposy):
                                 for x, coluna in enumerate(linha.split()[1:-1]):
-                                        linha_html += '&#09;' + '<a href="' + output + '_html/' + tipos[y] + '-' + tipos[x+1] + '.html">' + coluna + '</a>'
-                                if len(linha_html.split()) > 1:
-                                        y += 1
-                                        linha_html += '&#09;' + linha.split()[-1]
-                        elif y >= len(tipos):
+                                        linha_html += '&#09;' + '<a href="' + output + '_html/' + tiposy[y] + '-' + tiposx[x+1] + '.html">' + coluna + '</a>'
+                                y += 1
+                                linha_html += '&#09;' + linha.split()[-1]
+                        elif y == len(tiposy):
                                 for x, coluna in enumerate(linha.split()[1:]):
                                         linha_html += '&#09;' + coluna
                         html.append(linha_html)
@@ -137,10 +140,13 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         
         sentenças = dict()
         for sentença in ud1:
+                sentença_id = ''
                 tamanho_sentença = 0
                 for linha in sentença:
                         if '# text = ' in linha:
                                 sentença_header = linha
+                        if '# sent_id = ' in linha:
+                                sentença_id = linha
                         if isinstance(linha, list):
                                 tamanho_sentença += 1
                 for subsentença in ud2:
@@ -149,6 +155,8 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                         for sublinha in subsentença:
                                 if '# text = ' in sublinha and sublinha == sentença_header:
                                         subsentença_correta = True
+                                if sentença_id == '' and '# sent_id = ' in sublinha:
+                                        sentença_id = sublinha
                                 if isinstance(sublinha, list):
                                         tamanho_subsentença += 1
                         if subsentença_correta and tamanho_sentença == tamanho_subsentença:
@@ -169,10 +177,10 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                         coluna2 = subsentença_limpo[k][col-1]
                                         palavra = sentença_limpo[k][1]
                                         if not coluna1 + '-' + coluna2 in sentenças:
-                                                sentenças[coluna1 + '-' + coluna2] = [(re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra +'</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>'))]
-                                        else: sentenças[coluna1+'-'+coluna2].append((re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra + '</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>')))
+                                                sentenças[coluna1 + '-' + coluna2] = [(sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra +'</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>'))]
+                                        else: sentenças[coluna1+'-'+coluna2].append((sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra + '</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>')))
 
-        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''<script>
+        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</body><script>
                                        function ativa(nome, botao){
                                        var div = document.getElementById(nome)
                                        if (div.style.display == 'none') {
@@ -186,19 +194,18 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                        </script>''')
         
         for combinação in sentenças:
-                html = ['<meta charset="'+codificação+'" \>']
-                html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
+                html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']
+                html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>Dica: para salvar o estado da página, <u>Ctrl+S</u>.')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
                 html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1>')
                 for i, sentença in enumerate(sentenças[combinação]):
-                        html.append(sentença[0])
+                        html.append(sentença[0] + '<br>' + sentença[1] + '<br><br>' + combinação.split('-')[0] + ': <input type="checkbox" id="check" value="Selecionar"> ' + combinação.split('-')[1] + ': <input type="checkbox" id="check" value="Selecionar"> Comentários: <input type="text">')
                         html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')"> <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
-                        html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><pre><b>UD[1]:</b><br>")
-                        html.append(sentença[1] + '</div></pre>')
-                        html.append("<div id='sentence2" + combinação + str(i) + "' style='display:none'><pre><b>UD[2]:</b><br>")
-                        html.append(sentença[2] + '</div></pre><hr>')
-                open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''<script>
+                        html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[1]:</b><br>")
+                        html.append(sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[2]:</b><br>")
+                        html.append(sentença[3] + '</pre></div><br><hr>')
+                open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''Dica: para salvar o estado da página, <u>Ctrl+S</u>.<h3><a href="../''' + output + '''.html">Voltar</a></h3></body><script>
                                                                       function ativa1(nome, botao){
                                                                       var div = document.getElementById(nome)
                                                                       if (div.style.display == 'none') {
@@ -227,8 +234,9 @@ def main(ud1, ud2, output, coluna):
 	lista_conllu = get_list(conllu1, conllu2, coluna)
 	lista_conllu1 = lista_conllu['matriz_1']
 	lista_conllu2 = lista_conllu['matriz_2']
-	#pd.options.display.max_rows = 1000
-	#pd.options.display.max_columns = 1000
+	pd.options.display.max_rows = None
+	pd.options.display.max_columns = None
+	pd.set_option('display.expand_frame_repr', False)
 	saída = list()
 	saída.append('Col ' + str(coluna)+': ' + feats[coluna])
 	saída.append('UD[1]: ' + ud1)
