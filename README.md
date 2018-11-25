@@ -9,7 +9,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [revisar_UD.py](#revisar_UDpy)
-* [matriz_confusão.py](#matriz_confusãopy)
+* [confusão.py](#confusãopy)
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
@@ -238,7 +238,7 @@ A codificação é opcional, sendo o padrão *utf8*.
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
-# matriz_confusão.py
+# confusão.py
 
 Com esse código é possivel gerar matrizes de confusão para qualquer coluna de dois arquivos UD.
 
@@ -276,7 +276,7 @@ Para computar uma sentença, não importa a ordem em que elas aparecem nos arqui
 
 ## Como usar
 
-    >> python3 matriz_confusão.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <coluna>
+    >> python3 confusão.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <coluna>
 
 A codificação é opcional, sendo o padrão *utf8*.
 
