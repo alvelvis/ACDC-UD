@@ -3,7 +3,7 @@ lista_arquivos = [
     'README.md',
     'acdc_procura.py',
     'comparar_UD.py',
-    'revisar_UD.py'
+    'revisar_UD.py',
     'limpar_conllu.py',
     'tokenizar_conllu.py',
     'udpipe_vertical.py',
