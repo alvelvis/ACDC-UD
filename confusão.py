@@ -101,8 +101,8 @@ def get_list(conllu1, conllu2, coluna):
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']#;font-family:Courier New
-        html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h1>Confusão</h1><pre>')
-        
+        html.append('<a id="topo"><h3>' + matriz.split('\n\n')[0] + '</h3></a><hr><h1>Confusão</h1><pre>')
+
         tiposy = dict()
         tiposx = dict()
         for i, linha in enumerate("\n".join(matriz.split('\n\n')[1:]).split('#!$$')[0].split('\n')[2:-1]):
@@ -137,7 +137,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                         if linha.strip() != '':
                                 html.append(linha)
                 html.append("</div>")
-        
+
         sentenças = dict()
         for sentença in ud1:
                 sentença_id = ''
@@ -192,15 +192,16 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                        }
                                        }
                                        </script>''')
-        
+
+        #Páginas independentes
         for combinação in sentenças:
                 html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']
-                html.append('<a id="topo"><b>' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>Dica: Para salvar o estado da página, <u>Ctrl+S</u> (Firefox).')
+                html.append('<a id="topo"><h3>' + matriz.split('\n\n')[0] + '</h3></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>Dica: Para salvar o estado da página, <u>Ctrl+S</u> (Firefox).')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
                 html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1>')
                 for i, sentença in enumerate(sentenças[combinação]):
-                        html.append(sentença[0] + '<br>' + sentença[1] + '<br><br>' + combinação.split('-')[0] + ': <input type="checkbox" id="check" value="Selecionar"> ' + combinação.split('-')[1] + ': <input type="checkbox" id="check" value="Selecionar"> Comentários: <input type="text">')
+                        html.append(str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br>' + sentença[0] + '<br>' + sentença[1] + '<br><br>' + combinação.split('-')[0] + ': <input type="checkbox" id="check" value="Selecionar"> ' + combinação.split('-')[1] + ': <input type="checkbox" id="check" value="Selecionar"> Comentários: <input type="text">')
                         html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')"> <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
                         html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[1]:</b><br>")
                         html.append(sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[2]:</b><br>")
