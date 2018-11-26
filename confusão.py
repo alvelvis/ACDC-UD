@@ -100,8 +100,8 @@ def get_list(conllu1, conllu2, coluna):
 
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
-        html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']#;font-family:Courier New
-        html.append('<a id="topo"><h3>' + matriz.split('\n\n')[0] + '</h3></a><hr><h1>Confusão</h1><pre>')
+        html = ['<html><head><meta charset="'+codificação+'" \></head><body style="background-color:#CEF6CE">']#;font-family:Courier New
+        html.append('<b>'+output+'<br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><pre>')
 
         tiposy = dict()
         tiposx = dict()
@@ -180,54 +180,98 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                                 sentenças[coluna1 + '-' + coluna2] = [(sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra +'</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>'))]
                                         else: sentenças[coluna1+'-'+coluna2].append((sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra + '</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>')))
 
-        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</body><script>
-                                       function ativa(nome, botao){
-                                       var div = document.getElementById(nome)
-                                       if (div.style.display == 'none') {
-                                       document.getElementById(botao).value='Esconder'
-                                       div.style.display = 'block'
-                                       } else {
-                                       div.style.display = 'none'
-                                       document.getElementById(botao).value='Mostrar'
-                                       }
-                                       }
-                                       </script>''')
+        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</body></html>
+
+<script>
+function ativa(nome, botao){
+var div = document.getElementById(nome)
+if (div.style.display == 'none') {
+document.getElementById(botao).value='Esconder'
+div.style.display = 'block'
+} else {
+div.style.display = 'none'
+document.getElementById(botao).value='Mostrar'
+}
+}
+</script>''')
 
         #Páginas independentes
         for combinação in sentenças:
-                html = ['<meta charset="'+codificação+'" \>','<body style="background-color:#CEF6CE">']
-                html.append('<a id="topo"><h3>' + matriz.split('\n\n')[0] + '</h3></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>Dica: Para salvar o estado da página, <u>Ctrl+S</u> (Firefox).')
+                html = ['<html><form onSubmit="return enviar()"><head><meta charset="'+codificação+'" /></head><body style="background-color:#CEF6CE" onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
+                html.append('<b>'+output+'<br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
-                html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1>')
+                html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" /><hr>')
+
+                carregamento_comment = list()
+                carregamento_check = list()
                 for i, sentença in enumerate(sentenças[combinação]):
-                        html.append(str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br>' + sentença[0] + '<br>' + sentença[1] + '<br><br>' + combinação.split('-')[0] + ': <input type="checkbox" id="check" value="Selecionar"> ' + combinação.split('-')[1] + ': <input type="checkbox" id="check" value="Selecionar"> Comentários: <input type="text">')
+                        carregamento_check.append('check1_'+str(i))
+                        carregamento_check.append('check2_'+str(i))
+                        carregamento_comment.append('comment'+str(i))
+                        html.append(str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br>' + sentença[0] + '<br>' + sentença[1] + '<br><br>' + combinação.split('-')[0] + ': <input type="checkbox" id="check1_'+str(i)+'" \> ' + combinação.split('-')[1] + ': <input type="checkbox" id="check2_'+str(i)+'" \> Comentários: <input type="text" id="comment'+str(i)+'" \>')
                         html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')"> <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
-                        html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[1]:</b><br>")
-                        html.append(sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><pre><b><br>UD[2]:</b><br>")
-                        html.append(sentença[3] + '</pre></div><br><hr>')
-                open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''Dica: Para salvar o estado da página, <u>Ctrl+S</u> (Firefox).<h3><a href="../''' + output + '''.html">Voltar</a></h3></body><script>
-                                                                      function ativa1(nome, botao){
-                                                                      var div = document.getElementById(nome)
-                                                                      if (div.style.display == 'none') {
-                                                                      document.getElementById(botao).value='Esconder UD[1]'
-                                                                      div.style.display = 'block'
-                                                                      } else {
-                                                                      div.style.display = 'none'
-                                                                      document.getElementById(botao).value='Mostrar UD[1]'
-                                                                      }
-                                                                      }
-                                                                      function ativa2(nome, botao){
-                                                                      var div = document.getElementById(nome)
-                                                                      if (div.style.display == 'none') {
-                                                                      document.getElementById(botao).value='Esconder UD[2]'
-                                                                      div.style.display = 'block'
-                                                                      } else {
-                                                                      div.style.display = 'none'
-                                                                      document.getElementById(botao).value='Mostrar UD[2]'
-                                                                      }
-                                                                      }
-                                                                      </script>''')
+                        html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b><br>")
+                        html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><b><br>UD[2]:</b><br>")
+                        html.append("<pre>" + sentença[3] + '</pre></div><br><hr>')
+
+                html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="submit" id="salvar_btn" value="Gerar link para essa versão"> <input id="link_edit" type="text" style="display:none"> <div id="gerado" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></body></form></html>
+
+<script>
+function carregar_version(){
+window.location = window.location.href.split("?")[0] + "?" + document.getElementById("carregar_edit").value.split("?")[1]
+}
+function ativa1(nome, botao){
+var div = document.getElementById(nome)
+if (div.style.display == 'none') {
+document.getElementById(botao).value='Esconder UD[1]'
+div.style.display = 'block'
+} else {
+div.style.display = 'none'
+document.getElementById(botao).value='Mostrar UD[1]'
+}
+}
+function ativa2(nome, botao){
+var div = document.getElementById(nome)
+if (div.style.display == 'none') {
+document.getElementById(botao).value='Esconder UD[2]'
+div.style.display = 'block'
+} else {
+div.style.display = 'none'
+document.getElementById(botao).value='Mostrar UD[2]'
+}
+}
+function gerado_false() {
+document.getElementById("gerado").style.display = "none"
+}
+'''
+                script_onload = ['function carregar() {','let url_href = window.location.href','let url = new URL(url_href)']
+                for item in carregamento_comment:
+                        script_onload.append('document.getElementById("'+item+'").value = url.searchParams.get("'+item+'")')
+                for item in carregamento_check:
+                        script_onload.append('if (url.searchParams.get("'+item+'") == "true") { document.getElementById("'+item+'").checked = url.searchParams.get("'+item+'") }')
+                script_onload.append('}')
+
+                link = '?'
+                script_enviar = ['''
+function enviar() {
+document.getElementById("gerado").style.display = "inline"
+setTimeout(gerado_false, 1000)
+document.getElementById("link_edit").style.display = "inline"''']
+
+                link = '?'
+                for item in carregamento_comment:
+                        link += item + '=" + document.getElementById("' + item + '").value + "&'
+                for item in carregamento_check:
+                        link += item + '=" + document.getElementById("' + item + '").checked + "&'
+
+                script_enviar.append('document.getElementById("link_edit").value = window.location.href.split("?")[0] + "' + link + '"')
+                script_enviar.append('return false }')
+
+
+                html += "\n".join(script_onload) + "\n".join(script_enviar) + '\n</script>'
+
+                open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write(html)
 
 def main(ud1, ud2, output, coluna):
 	conllu1 = LerUD(ud1)
