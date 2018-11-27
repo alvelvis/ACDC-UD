@@ -101,7 +101,7 @@ def get_list(conllu1, conllu2, coluna):
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         html = ['<html><head><meta charset="'+codificação+'" \></head><body style="background-color:#CEF6CE">']#;font-family:Courier New
-        html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><pre>')
+        html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" /><hr><pre>')
 
         tiposy = dict()
         tiposx = dict()
@@ -193,6 +193,10 @@ div.style.display = 'none'
 document.getElementById(botao).value='Mostrar'
 }
 }
+function carregar_version(){
+var link_combination = document.getElementById("carregar_edit").value.split("/")
+window.location = window.location.href.split(".html")[0] + "_html/" + link_combination[link_combination.length-1].split("?")[0] + "?" + document.getElementById("carregar_edit").value.split("?")[1]
+}
 </script>''')
 
         #Páginas independentes
@@ -201,7 +205,7 @@ document.getElementById(botao).value='Mostrar'
                 html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
-                html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" />'+''' <input type="button" onclick="enviar('2')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><hr>''')
+                html.append('<h1><a id="combination">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" />'+''' <input type="button" onclick="enviar('2')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><hr>''')
 
                 carregamento_comment = list()
                 carregamento_check = list()
@@ -219,7 +223,9 @@ document.getElementById(botao).value='Mostrar'
 
 <script>
 function carregar_version(){
+if (document.getElementById("carregar_edit").value.includes(document.getElementById("combination").innerHTML)) {
 window.location = window.location.href.split("?")[0] + "?" + document.getElementById("carregar_edit").value.split("?")[1]
+} else { window.alert("Link não é para uma página '" + document.getElementById('combination').innerHTML + "'") }
 }
 function ativa1(nome, botao){
 var div = document.getElementById(nome)
@@ -261,7 +267,7 @@ document.getElementById("link_edit"+id).style.display = "inline"''']
 
                 link = '?'
                 for item in carregamento_comment:
-                        link += item + '=" + document.getElementById("' + item + '").value.replace("?", "~").replace("&", "~") + "&'
+                        link += item + '=" + document.getElementById("' + item + '").value.replace("?", "~").replace("&", "~").replace("/","~") + "&'
                 for item in carregamento_check:
                         link += item + '=" + document.getElementById("' + item + '").checked + "&'
 
