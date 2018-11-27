@@ -101,7 +101,7 @@ def get_list(conllu1, conllu2, coluna):
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         html = ['<html><head><meta charset="'+codificação+'" \></head><body style="background-color:#CEF6CE">']#;font-family:Courier New
-        html.append('<b>'+output+'<br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><pre>')
+        html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><pre>')
 
         tiposy = dict()
         tiposx = dict()
@@ -197,8 +197,8 @@ document.getElementById(botao).value='Mostrar'
 
         #Páginas independentes
         for combinação in sentenças:
-                html = ['<html><form><head><meta charset="'+codificação+'" /></head><body style="background-color:#CEF6CE" onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
-                html.append('<b>'+output+'<br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
+                html = ['<html><form><head><meta charset="'+codificação+'" /><style>input[name=maior] { width: 400; }</style></head><body style="background-color:#CEF6CE" onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
+                html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
                 html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" />'+''' <input type="button" onclick="enviar('2')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><hr>''')
@@ -209,7 +209,7 @@ document.getElementById(botao).value='Mostrar'
                         carregamento_check.append('check1_'+str(i))
                         carregamento_check.append('check2_'+str(i))
                         carregamento_comment.append('comment'+str(i))
-                        html.append(str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br>' + sentença[0] + '<br>' + sentença[1] + '<br><br>' + combinação.split('-')[0] + ': <input type="checkbox" id="check1_'+str(i)+'" \> ' + combinação.split('-')[1] + ': <input type="checkbox" id="check2_'+str(i)+'" \> Comentários: <input type="text" id="comment'+str(i)+'" \>')
+                        html.append(str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br>' + sentença[0] + '<br>' + sentença[1] + '<br><br><input type="checkbox" id="check1_'+str(i)+'" \>' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" \>' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" \>')
                         html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')"> <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
                         html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b><br>")
                         html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><b><br>UD[2]:</b><br>")
@@ -261,7 +261,7 @@ document.getElementById("link_edit"+id).style.display = "inline"''']
 
                 link = '?'
                 for item in carregamento_comment:
-                        link += item + '=" + document.getElementById("' + item + '").value + "&'
+                        link += item + '=" + document.getElementById("' + item + '").value.replace("?", "~").replace("&", "~") + "&'
                 for item in carregamento_check:
                         link += item + '=" + document.getElementById("' + item + '").checked + "&'
 
