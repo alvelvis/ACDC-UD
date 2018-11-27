@@ -197,11 +197,11 @@ document.getElementById(botao).value='Mostrar'
 
         #Páginas independentes
         for combinação in sentenças:
-                html = ['<html><form onSubmit="return enviar()"><head><meta charset="'+codificação+'" /></head><body style="background-color:#CEF6CE" onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
+                html = ['<html><form><head><meta charset="'+codificação+'" /></head><body style="background-color:#CEF6CE" onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
                 html.append('<b>'+output+'<br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
-                html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" /><hr>')
+                html.append('<h1><a id="' + combinação + '">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" />'+''' <input type="button" onclick="enviar('2')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><hr>''')
 
                 carregamento_comment = list()
                 carregamento_check = list()
@@ -215,7 +215,7 @@ document.getElementById(botao).value='Mostrar'
                         html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><b><br>UD[2]:</b><br>")
                         html.append("<pre>" + sentença[3] + '</pre></div><br><hr>')
 
-                html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="submit" id="salvar_btn" value="Gerar link para essa versão"> <input id="link_edit" type="text" style="display:none"> <div id="gerado" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></body></form></html>
+                html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></body></form></html>
 
 <script>
 function carregar_version(){
@@ -241,8 +241,8 @@ div.style.display = 'none'
 document.getElementById(botao).value='Mostrar UD[2]'
 }
 }
-function gerado_false() {
-document.getElementById("gerado").style.display = "none"
+function gerado_false(id) {
+document.getElementById("gerado"+id).style.display = "none"
 }
 '''
                 script_onload = ['function carregar() {','let url_href = window.location.href','let url = new URL(url_href)']
@@ -254,10 +254,10 @@ document.getElementById("gerado").style.display = "none"
 
                 link = '?'
                 script_enviar = ['''
-function enviar() {
-document.getElementById("gerado").style.display = "inline"
-setTimeout(gerado_false, 1000)
-document.getElementById("link_edit").style.display = "inline"''']
+function enviar(id) {
+document.getElementById("gerado"+id).style.display = "inline"
+setTimeout("gerado_false("+id+")", 1000)
+document.getElementById("link_edit"+id).style.display = "inline"''']
 
                 link = '?'
                 for item in carregamento_comment:
@@ -265,8 +265,8 @@ document.getElementById("link_edit").style.display = "inline"''']
                 for item in carregamento_check:
                         link += item + '=" + document.getElementById("' + item + '").checked + "&'
 
-                script_enviar.append('document.getElementById("link_edit").value = window.location.href.split("?")[0] + "' + link + '"')
-                script_enviar.append('return false }')
+                script_enviar.append('document.getElementById("link_edit"+id).value = window.location.href.split("?")[0] + "' + link + '"')
+                script_enviar.append('}')
 
 
                 html += "\n".join(script_onload) + "\n".join(script_enviar) + '\n</script>'
