@@ -267,7 +267,7 @@ document.getElementById("link_edit"+id).style.display = "inline"''']
 
                 link = '?'
                 for item in carregamento_comment:
-                        link += item + '=" + document.getElementById("' + item + '").value.replace("?", "~").replace("&", "~").replace("/","~") + "&'
+                        link += item + '=" + document.getElementById("' + item + '").value.replace(/\?/g, "~").replace(/\&/g, "~").replace(/\//g,"~") + "&'
                 for item in carregamento_check:
                         link += item + '=" + document.getElementById("' + item + '").checked + "&'
 
