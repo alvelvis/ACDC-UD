@@ -100,8 +100,8 @@ def get_list(conllu1, conllu2, coluna):
 
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
-        html = ['<html><head><meta charset="'+codificação+'" \></head><body style="background-color:#CEF6CE">']#;font-family:Courier New
-        html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" /><hr><pre>')
+        html = ['<html><head><meta charset="'+codificação+'" \><link href="style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body>']
+        html.append('<div class="header"><h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</h3></span></div><div class="content"><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient orange mini" /><br><br><div class="container"><pre>')
 
         tiposy = dict()
         tiposx = dict()
@@ -126,17 +126,17 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                 for x, coluna in enumerate(linha.split()[1:]):
                                         linha_html += '&#09;' + coluna
                         html.append(linha_html)
-        html.append('</pre>')
+        html.append('</pre></div>')
 
         solitários = dict()
         for i, grupo in enumerate(matriz.split('#!$$')[1:]):
                 grupo = [x for x in grupo.splitlines() if x]
-                html.append('<b>' + grupo[0] + ' (' + str(len(grupo[1:])) + ''')</b> <input type="button" id="botao''' + str(i) + '''" value="Mostrar" onClick="ativa('solitary''' + str(i) + '''', 'botao''' + str(i) + '''')"><br>''')
+                html.append('<div class="container"><b>' + grupo[0] + ' (' + str(len(grupo[1:])) + ''')</b> <input type="button" id="botao''' + str(i) + '''" value="Mostrar" onClick="ativa('solitary''' + str(i) + '''', 'botao''' + str(i) + '''')" class="btn-gradient blue mini"><br>''')
                 html.append("<div id='solitary" + str(i) + "' style='display:none'>")
                 for linha in grupo[1:]:
                         if linha.strip() != '':
                                 html.append(linha)
-                html.append("</div>")
+                html.append("</div></div>")
 
         sentenças = dict()
         for sentença in ud1:
@@ -180,7 +180,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                                 sentenças[coluna1 + '-' + coluna2] = [(sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra +'</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>'))]
                                         else: sentenças[coluna1+'-'+coluna2].append((sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra + '</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>')))
 
-        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</body></html>
+        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</div></body></html>
 
 <script>
 function ativa(nome, botao){
@@ -201,11 +201,11 @@ window.location = window.location.href.split(".html")[0] + "_html/" + link_combi
 
         #Páginas independentes
         for combinação in sentenças:
-                html = ['<html><form><head><meta charset="'+codificação+'" /><style>input[name=maior] { width: 400; }</style></head><body style="background-color:#CEF6CE" onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
-                html.append('<b><h2>'+output+'</h2><br><a id="topo">' + matriz.split('\n\n')[0] + '</b></a><hr><h3><a href="../' + output + '.html">Voltar</a></h3>')
+                html = ['<html><form><head><meta charset="'+codificação+'" /><style>input[name=maior] { width: 400; }</style><link href="../style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body onLoad="carregar()">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
+                html.append('<div class="header"><h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</span></h3></div><div class="content"><h3><a href="../' + output + '.html">Voltar</a></h3>')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
-                html.append('<h1><a id="combination">' + combinação + '</a> (' + str(len(sentenças[combinação])) + ')</h1><hr><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" />'+''' <input type="button" onclick="enviar('2')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><hr>''')
+                html.append('<h1><span id="combination">' + combinação + '</span> (' + str(len(sentenças[combinação])) + ')</h1><hr><br><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient blue mini" />'+'''<br><input type="button" onclick="enviar('2')" id="salvar_btn" class="btn-gradient orange" style="margin-left:0px" value="Gerar link para a versão atual"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><br><br>''')
 
                 carregamento_comment = list()
                 carregamento_check = list()
@@ -213,13 +213,13 @@ window.location = window.location.href.split(".html")[0] + "_html/" + link_combi
                         carregamento_check.append('check1_'+str(i))
                         carregamento_check.append('check2_'+str(i))
                         carregamento_comment.append('comment'+str(i))
-                        html.append(str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br>' + sentença[0] + '<br>' + sentença[1] + '<br><br><input type="checkbox" id="check1_'+str(i)+'" \>' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" \>' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" \>')
-                        html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')"> <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
-                        html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b><br>")
-                        html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><b><br>UD[2]:</b><br>")
-                        html.append("<pre>" + sentença[3] + '</pre></div><br><hr>')
+                        html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + sentença[1] + '<br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" \>' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" \>' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" \>')
+                        html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" class="btn-gradient blue mini"> <input class="btn-gradient blue mini" type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
+                        html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b>")
+                        html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
+                        html.append("<pre>" + sentença[3] + '</pre></div></div>')
 
-                html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></body></form></html>
+                html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" class="btn-gradient orange" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual" style="margin-left:0px"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></div></body></form></html>
 
 <script>
 function carregar_version(){
