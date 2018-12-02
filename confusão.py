@@ -223,9 +223,7 @@ window.location = window.location.href.split(".html")[0] + "_html/" + link_combi
 
 <script>
 function carregar_version(){
-if (document.getElementById("carregar_edit").value.includes(document.getElementById("combination").innerHTML)) {
 window.location = window.location.href.split("?")[0] + "?" + document.getElementById("carregar_edit").value.split("?")[1]
-} else { window.alert("Link não é para uma página '" + document.getElementById('combination').innerHTML + "'") }
 }
 function ativa1(nome, botao){
 var div = document.getElementById(nome)
