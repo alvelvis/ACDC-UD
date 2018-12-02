@@ -11,6 +11,7 @@ lista_arquivos = [
     'confusão.py',
     'conll18_ud_eval.py',
     'acdc-ud.md',
+    'interrogar_UD.py',
 ]
 
 def atualizar():
