@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import estrutura_dados
+import re
 
 #Crio a função que vai ser chamada seja pelo HTML ou seja pelo terminal
 def main(arquivoUD, criterio, parametros):
@@ -9,6 +10,17 @@ def main(arquivoUD, criterio, parametros):
 
 	#Cria a lista que vai ser enviada seja ao terminal ou ao HTML
 	output = list()
+
+	if criterio == 2:
+		for a, sentence in enumerate(qualquercoisa):
+			sentence2 = sentence
+			for b, linha in enumerate(sentence):
+				linha2 = linha
+				if isinstance(linha2, list):
+					sentence2[b] = "\t".join(sentence2[b])
+			sentence2 = "\n".join(sentence2)
+			if re.search(parametros, sentence2):
+				output.append(sentence)
 
 	#If critério 1
 	if criterio == 1:
@@ -48,17 +60,23 @@ if __name__ == '__main__':
 	arquivoUD= input('arraste arquivo:\n').replace("'","")
 	qualquercoisa = estrutura_dados.LerUD(arquivoUD)
 	criterio=int(input('qual criterio de procura?'))
-	while criterio !=1:
+	while criterio > 2:
 	    print('em desenvolvimento')
 	    criterio=int(input('qual criterio de procura?'))
-	y=input('Se um token X marcado como: ')
-	z=int(input('Na coluna: '))
-	k=input('e nenhum outro token com valor: ')
-	w=int(input('na coluna: '))
-	nome=input('nomeie sua criação:\n')
+
+	if criterio == 2:
+		parametros = input('Expressão regular:\n')
+
+	if criterio == 1:
+		y=input('Se um token X marcado como: ')
+		z=int(input('Na coluna: '))
+		k=input('e nenhum outro token com valor: ')
+		w=int(input('na coluna: '))
+		nome=input('nomeie sua criação:\n')
+		parametros  = y + '#' + str(z) + '#' + k + '#' + str(w)
 
 	#Chama a função principal e printo o resultado, dando a ela os parâmetros dos inputs
-	print(main(arquivoUD, criterio, y + '#' + str(z) + '#' + k + '#' + str(w)))
+	print(main(arquivoUD, criterio, parametros))
 
 
 
