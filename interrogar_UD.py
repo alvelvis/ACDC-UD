@@ -23,12 +23,16 @@ def main(arquivoUD, criterio, parametros):
 			achei = 'nãoachei'
 			descarta = False
 			for linha in sentence:
-				if isinstance(linha, list): #string != list
+				if isinstance(linha, list):
 					if y in linha[z-1]: #==
 						achei = linha[0]
 			if achei != 'nãoachei':
 				for linha in sentence:
+<<<<<<< HEAD
 					if isinstance(linha, list):
+=======
+					if isinstance(linha, list): #string != list
+>>>>>>> ce0ad4a1d11ceb12c2bafad75509a27a7d1e0f51
 						if achei in linha[z-2] and k in linha[z-1]: #Z-2: atenção
 							descarta = True
 				if descarta == False:
