@@ -240,7 +240,7 @@ A codificação é opcional, sendo o padrão *utf8*.
 
 # confusão.py
 
-Com esse código é possivel gerar matrizes de confusão e relatórios de erro para quaisquer colunas de dois arquivos UD.
+Com esse código é possivel gerar matrizes de confusão e relatórios de erro para quaisquer colunas de dois arquivos UD. Além disso, junto com o *conll18_ud_eval.py*, você tem acesso às métricas oficiais de comparação entre os dois arquivos.
 
 ## Exemplo
 
@@ -274,7 +274,7 @@ Note que, caso em um dos arquivos uma das sentença não esteja presente no outr
 
 Para computar uma sentença, não importa a ordem em que elas aparecem nos arquivos UD, mas sim que o tamanho de tokens seja igual e o metadado "# text", também.
 
-Além da matriz de confusão, **confusão.py** gera um relatório de erros em HTML. Você pode conferir um exemplo clicando [aqui](http://comcorhd.tronco.me/acdc-ud/matriz/teste.html).
+Além da matriz de confusão, **confusão.py** gera um relatório de erros em HTML e as métricas oficiais de comparação. Você pode conferir um exemplo clicando [aqui](http://comcorhd.tronco.me/acdc-ud/matriz/teste.html).
 
 ## Como usar
 

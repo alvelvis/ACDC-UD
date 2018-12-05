@@ -4,6 +4,7 @@ import sys
 from estrutura_dados import LerUD
 import re
 import os
+from subprocess import call
 
 try:
         import pandas as pd
@@ -100,8 +101,12 @@ def get_list(conllu1, conllu2, coluna):
 
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
+        script = 'cat | python3 conll18_ud_eval.py -v "' + matriz.split('\n\n')[0].splitlines()[1].split(': ' ,1)[1] + '" "' + matriz.split('\n\n')[0].splitlines()[2].split(': ' ,1)[1] + '" > metrica.txt'
+        call(script, shell=True)
+        metrics = open("metrica.txt", 'r').read()
+
         html = ['<html><head><meta charset="'+codificação+'" \><link href="style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body>']
-        html.append('<div class="header"><h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</h3></span></div><div class="content"><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient orange mini" /><br><br><div class="container"><pre>')
+        html.append('<div class="header"><h1>'+output+'</h1><br><span id="topo"><h3>' + "\n".join(matriz.split('\n\n')[0].splitlines()[1:]) + '''</h3></span></div><div class="content"><div class="tab"><button class="tablinks" onclick="openCity(event, 'Dados')">Métricas oficiais</button><button class="tablinks" onclick="openCity(event, 'Matriz')">Matriz de confusão</button></div><div class="tabcontent" id="Matriz"><br><br><br><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient orange mini" /><br><br><div class="container"><pre>''')
 
         tiposy = dict()
         tiposx = dict()
@@ -180,7 +185,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                                 sentenças[coluna1 + '-' + coluna2] = [(sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra +'</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>'))]
                                         else: sentenças[coluna1+'-'+coluna2].append((sentença_id, re.sub(r'\b(' + re.escape(palavra) + r')\b', '<b>' + palavra + '</b>', sentença_header), sentença_limpo_string.replace("&#09;".join(sentença_limpo[k]), '<b>' + "&#09;".join(sentença_limpo[k]) + '</b>'), subsentença_limpo_string.replace("&#09;".join(subsentença_limpo[k]), '<b>' + "&#09;".join(subsentença_limpo[k]) + '</b>')))
 
-        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</div></body></html>
+        open(output + '.html', 'w', encoding=codificação).write("<br>".join(html).replace('\n','<br>') + '''</div><div class="tabcontent" id="Dados"><br><br><br><pre>'''+metrics+'''</pre></div></div></body></html>
 
 <script>
 function ativa(nome, botao){
@@ -196,6 +201,26 @@ document.getElementById(botao).value='Mostrar'
 function carregar_version(){
 var link_combination = document.getElementById("carregar_edit").value.split("/")
 window.location = window.location.href.split(".html")[0] + "_html/" + link_combination[link_combination.length-1].split("?")[0] + "?" + document.getElementById("carregar_edit").value.split("?")[1]
+}
+function openCity(evt, cityName) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
 }
 </script>''')
 
