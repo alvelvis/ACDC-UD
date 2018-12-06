@@ -105,8 +105,8 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         call(script, shell=True)
         metrics = open("metrica.txt", 'r').read()
 
-        html = ['<html><head><meta charset="'+codificação+'" \><link href="style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body>']
-        html.append('<div class="header"><h1>'+output+'</h1><br><span id="topo"><h3>' + "\n".join(matriz.split('\n\n')[0].splitlines()[1:]) + '''</h3></span></div><div class="content"><div class="tab"><button class="tablinks" onclick="openCity(event, 'Dados')">Métricas oficiais</button><button class="tablinks" onclick="openCity(event, 'Matriz')">Matriz de confusão</button></div><div class="tabcontent" id="Matriz"><br><br><br><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient orange mini" /><br><br><div class="container"><pre>''')
+        html = ['<html><head><meta charset="'+codificação+'" \><link href="style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body><div class="header">']
+        html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + "\n".join(matriz.split('\n\n')[0].splitlines()[1:]) + '''</h3></span></div><div class="content"><div class="tab"><button class="tablinks" onclick="openCity(event, 'Dados')">Métricas oficiais</button><button class="tablinks" onclick="openCity(event, 'Matriz')">Matriz de confusão</button></div><div class="tabcontent" id="Matriz"><br><br><br><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient orange mini" /><br><pre>''')
 
         tiposy = dict()
         tiposx = dict()
@@ -131,7 +131,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
                                 for x, coluna in enumerate(linha.split()[1:]):
                                         linha_html += '&#09;' + coluna
                         html.append(linha_html)
-        html.append('</pre></div>')
+        html.append('</pre>')
 
         solitários = dict()
         for i, grupo in enumerate(matriz.split('#!$$')[1:]):
@@ -239,7 +239,7 @@ function openCity(evt, cityName) {
                         carregamento_check.append('check2_'+str(i))
                         carregamento_comment.append('comment'+str(i))
                         html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + sentença[1] + '<br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" \>' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" \>' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" \>')
-                        html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" class="btn-gradient blue mini"> <input class="btn-gradient blue mini" type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
+                        html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
                         html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b>")
                         html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
                         html.append("<pre>" + sentença[3] + '</pre></div></div>')
