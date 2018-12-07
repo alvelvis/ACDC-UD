@@ -19,8 +19,21 @@ def main(arquivoUD, criterio, parametros):
 				if isinstance(linha2, list):
 					sentence2[b] = "\t".join(sentence2[b])
 			sentence2 = "\n".join(sentence2)
-			if re.search(parametros, sentence2):
-				output.append(sentence)
+			regex = re.search(parametros, sentence2, flags=re.IGNORECASE)
+			if regex:
+				new_sentence = re.sub('(' + parametros + ')', r'<b>\1</b>', sentence2, flags=re.IGNORECASE)
+				tokens = list()
+				header = '!@#'
+				for linha in new_sentence.splitlines():
+					if '# text = ' in linha:
+						header = linha
+					if 'b>' in linha and '\t' in linha:
+						tokens.append(linha.split('\t')[1].replace('<b>','').replace('</b>',''))
+				header2 = header
+				for token in tokens:
+					header2 = header2.replace(token, '<b>' + token + '</b>')
+				new_sentence = new_sentence.replace(header, header2)
+				output.append(new_sentence.splitlines())
 
 	#If critério 1
 	if criterio == 1:
@@ -35,13 +48,13 @@ def main(arquivoUD, criterio, parametros):
 			achei = 'nãoachei'
 			descarta = False
 			for linha in sentence:
-				if isinstance(linha, list): #string != list
-					if y in linha[z-1]: #==
+				if isinstance(linha, list):
+					if y == linha[z-1]:
 						achei = linha[0]
 			if achei != 'nãoachei':
 				for linha in sentence:
-					if isinstance(linha, list): #string != list
-						if achei in linha[z-2] and k in linha[z-1]: #Z-2: atenção
+					if isinstance(linha, list):
+						if achei == linha[6] and k == linha[z-1]:
 							descarta = True
 				if descarta == False:
 					output.append(sentence)
