@@ -62,3 +62,6 @@ def EscreverUD(UD, arquivo):
 	open(arquivo, 'w', encoding=codificação).write(UD)
 
 
+#Transforma acentos e caracteres especiais em underlines
+def slugify(value):
+	return "".join(x if x.isalnum() or x == '.' else "_" for x in value)
