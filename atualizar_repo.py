@@ -12,6 +12,7 @@ lista_arquivos = [
     'conll18_ud_eval.py',
     'acdc-ud.md',
     'interrogar_UD.py',
+    'generate_release.py',
 ]
 
 def atualizar():
