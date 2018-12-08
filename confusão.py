@@ -105,7 +105,7 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
         call(script, shell=True)
         metrics = open("metrica.txt", 'r').read()
 
-        html = ['<html><head><meta charset="'+codificação+'" \><link href="style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body><div class="header">']
+        html = ['<html><head><meta charset="'+codificação+'" name="viewport" content="width=device-width, initial-scale=1.0" \><link href="style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body><div class="header">']
         html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + "\n".join(matriz.split('\n\n')[0].splitlines()[1:]) + '''</h3></span></div><div class="content"><div class="tab"><button class="tablinks" onclick="openCity(event, 'Dados')">Métricas oficiais</button><button class="tablinks" onclick="openCity(event, 'Matriz')">Matriz de confusão</button></div><div class="tabcontent" id="Matriz"><br><br><br><label for="carregar_edit">Colar um link:</label><br><input type="text" id="carregar_edit" name="carregar_edit" /> <input type="button" id="carregarversion" onClick="carregar_version()" value="Carregar versão" class="btn-gradient orange mini" /><br><pre>''')
 
         tiposy = dict()
@@ -226,7 +226,7 @@ function openCity(evt, cityName) {
 
         #Páginas independentes
         for combinação in sentenças:
-                html = ['<html><form><head><meta charset="'+codificação+'" /><style>input[name=maior] { width: 400; }</style><link href="../style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body onLoad="carregar()"><div class="header">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
+                html = ['<html><form><head><meta charset="'+codificação+'" name="viewport" content="width=device-width, initial-scale=1.0" /><style>input[name=maior] { width: 400; }</style><link href="../style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body onLoad="carregar()"><div class="header">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
                 html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</span></h3></div><div class="content"><h3><a href="../' + output + '.html">Voltar</a></h3>')
                 if not os.path.isdir(output + '_html'):
                         os.mkdir(output + '_html')
