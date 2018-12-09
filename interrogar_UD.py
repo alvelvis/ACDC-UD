@@ -48,11 +48,18 @@ def main(arquivoUD, criterio, parametros):
 		for sentence in qualquercoisa:
 			achei = 'nãoachei'
 			descarta = False
-			for linha in sentence:
+			for i, linha in enumerate(sentence):
 				if isinstance(linha, list):
 					if y == linha[z-1]:
 						achei = linha[0]
 						token = linha[1]
+						sentence[i]='<b>'+'\t'.join(sentence[i])+'</b>'
+						sentence[i]=sentence[i].split('\t')
+						break
+			for i, linha in enumerate(sentence):
+				if '# text' in linha:
+					sentence[i]= sentence[i].replace(token, '<b>'+token+'</b>')
+
 			if achei != 'nãoachei':
 				for linha in sentence:
 					if isinstance(linha, list):
@@ -60,7 +67,7 @@ def main(arquivoUD, criterio, parametros):
 							if achei == linha[6] and k_subitem == linha[z-1]:
 								descarta = True
 				if descarta == False:
-					output.append(sentence.replace(token, '<b>' + token + '</b>'))
+					output.append(sentence)
 
 	#Transforma o output em lista de sentenças (sem splitlines e sem split no \t)
 	for a, sentence in enumerate(output):
