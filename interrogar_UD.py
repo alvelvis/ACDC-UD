@@ -20,9 +20,9 @@ def main(arquivoUD, criterio, parametros):
 				if isinstance(linha2, list):
 					sentence2[b] = "\t".join(sentence2[b])
 			sentence2 = "\n".join(sentence2)
-			regex = re.search(parametros, sentence2, flags=re.IGNORECASE)
+			regex = re.search(parametros, sentence2, flags=re.IGNORECASE|re.MULTILINE)
 			if regex:
-				new_sentence = re.sub('(' + parametros + ')', r'<b>\1</b>', sentence2, flags=re.IGNORECASE)
+				new_sentence = re.sub('(' + parametros + ')', r'<b>\1</b>', sentence2, flags=re.IGNORECASE|re.MULTILINE)
 				tokens = list()
 				header = '!@#'
 				for linha in new_sentence.splitlines():
@@ -42,7 +42,7 @@ def main(arquivoUD, criterio, parametros):
 		#Variáveis
 		y = parametros.split('#')[0]
 		z = int(parametros.split('#')[1])
-		k = parametros.split('#')[2]
+		k = parametros.split('#')[2].split('|')
 		w = int(parametros.split('#')[3])
 
 		for sentence in qualquercoisa:
@@ -52,13 +52,15 @@ def main(arquivoUD, criterio, parametros):
 				if isinstance(linha, list):
 					if y == linha[z-1]:
 						achei = linha[0]
+						token = linha[1]
 			if achei != 'nãoachei':
 				for linha in sentence:
 					if isinstance(linha, list):
-						if achei == linha[6] and k == linha[z-1]:
-							descarta = True
+						for k_subitem in k:
+							if achei == linha[6] and k_subitem == linha[z-1]:
+								descarta = True
 				if descarta == False:
-					output.append(sentence)
+					output.append(sentence.replace(token, '<b>' + token + '</b>'))
 
 	#Transforma o output em lista de sentenças (sem splitlines e sem split no \t)
 	for a, sentence in enumerate(output):
