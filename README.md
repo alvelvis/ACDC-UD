@@ -6,6 +6,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 
 **Conteúdo:**
 
+* [interrogar_UD.py](#interrogar_UDpy)
 * [acdc_procura.py](#acdc_procurapy)
 * [comparar_UD.py](#comparar_UDpy)
 * [revisar_UD.py](#revisar_UDpy)
@@ -14,6 +15,27 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
 * [atualizar_repo.py](#atualizar_repopy)
+
+#interrogar_UD.py
+Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
+O script é utilizado no site: http://comcorhd.tronco.me/interrogar-ud/interrogar.cgi
+
+##Exemplo
+
+1-Parâmetro: Expressão regular 
+Se a expressão regular for encontrada em alguma sentença, retorná-la. 
+
+	Exemplo: '1 dizer.*\n.*PROPN' 
+	Retornar sentenças com o lema "dizer" seguido de um "PROPN".
+
+2- Parâmetros: A#B#C#D 
+Se em uma sentença tiver um token marcado como A na coluna B e não tiver nenhum outro token com valor C na coluna D apontando para ele, retornar a sentença. 
+Dica: O parâmetro C aceita o operador lógico '|' (ou). 
+
+	Exemplo: '2 root#8#nsubj|csubj#8' 
+	Retornar sentenças em que o 'root' não tenha nenhum 'nsubj' ou 'csubj' apontando para ele.
+
+[**↥ voltar ao topo**](#ACDC-UD)
 
 # acdc_procura.py
 
