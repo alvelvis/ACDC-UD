@@ -11,7 +11,8 @@ def main(arquivoUD, criterio, parametros):
 	#Cria a lista que vai ser enviada seja ao terminal ou ao HTML
 	output = list()
 
-	if criterio == 2:
+	#Regex
+	if criterio == 1:
 		for a, sentence in enumerate(qualquercoisa):
 			sentence2 = sentence
 			for b, linha in enumerate(sentence):
@@ -35,8 +36,8 @@ def main(arquivoUD, criterio, parametros):
 				new_sentence = new_sentence.replace(header, header2)
 				output.append(new_sentence.splitlines())
 
-	#If critério 1
-	if criterio == 1:
+	#If critério 2
+	if criterio == 2:
 
 		#Variáveis
 		y = parametros.split('#')[0]
@@ -77,10 +78,10 @@ if __name__ == '__main__':
 	    print('em desenvolvimento')
 	    criterio=int(input('qual criterio de procura?'))
 
-	if criterio == 2:
+	if criterio == 1:
 		parametros = input('Expressão regular:\n')
 
-	if criterio == 1:
+	if criterio == 2:
 		y=input('Se um token X marcado como: ')
 		z=int(input('Na coluna: '))
 		k=input('e nenhum outro token com valor: ')
