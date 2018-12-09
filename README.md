@@ -18,21 +18,25 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 
 # interrogar_UD.py
 Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
-O script é utilizado no site: http://comcorhd.tronco.me/interrogar-ud/interrogar.cgi
+
+O script é utilizado no site: http://comcorhd.tronco.me/interrogar-ud/
 
 ## Exemplo
 
-1-Parâmetro: Expressão regular 
-Se a expressão regular for encontrada em alguma sentença, retorná-la. 
+**1- Parâmetro: Expressão regular**
 
-	Exemplo: '1 dizer.*\n.*PROPN' 
+Se a expressão regular for encontrada em alguma sentença, retorná-la.
+
+	Exemplo: '1 dizer.*\n.*PROPN'
 	Retornar sentenças com o lema "dizer" seguido de um "PROPN".
 
-2- Parâmetros: A#B#C#D 
-Se em uma sentença tiver um token marcado como A na coluna B e não tiver nenhum outro token com valor C na coluna D apontando para ele, retornar a sentença. 
-Dica: O parâmetro C aceita o operador lógico '|' (ou). 
+**2- Parâmetros: A#B#C#D**
 
-	Exemplo: '2 root#8#nsubj|csubj#8' 
+Se em uma sentença tiver um token marcado como A na coluna B e não tiver nenhum outro token com valor C na coluna D apontando para ele, retornar a sentença.
+
+Dica: O parâmetro C aceita o operador lógico '|' (ou).
+
+	Exemplo: '2 root#8#nsubj|csubj#8'
 	Retornar sentenças em que o 'root' não tenha nenhum 'nsubj' ou 'csubj' apontando para ele.
 
 [**↥ voltar ao topo**](#ACDC-UD)
@@ -96,7 +100,7 @@ Repare no identificador "!$" após "ccomp:parataxis": ele serve para ajudar na r
 
 ## Como usar
 
-    >> python3 acdc-procura.py acdc.html:utf8 ud.conllu:utf8 saída.conllu:utf8 --critério <parâmetros>
+    $ python3 acdc-procura.py acdc.html:utf8 ud.conllu:utf8 saída.conllu:utf8 --critério <parâmetros>
 
 1) **acdc.html** é o código fonte da página de resultados do AC/DC. Você pode salvar o código fonte em um *.txt*, manualmente, ou simplesmente salvar a página *.html*
 
@@ -192,7 +196,7 @@ Caso as linhas com seta sejam as corretas, você pode alterar as linhas "oficiai
 
 ## Como usar
 
-    >> python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8 <parâmetros>
+    $ python3 comparar_UD.py saída.conllu:utf8 ud1.conllu:utf8 ud2.conllu:utf8 ... udX.conllu:utf8 <parâmetros>
 
 1) **saída.conllu** é o arquivo final de comparação, com as várias versões para todas as sentenças.
 
@@ -250,7 +254,7 @@ O token 3 (levar), para o arquivo UD[1], teria como DEPREL (8a coluna) o valor "
 
 ## Como usar
 
-    >> python3 revisar_UD.py comparação.conllu:utf8 revisado.conllu:utf8
+    $ python3 revisar_UD.py comparação.conllu:utf8 revisado.conllu:utf8
 
 1) **comparação.conllu** deverá ser aquele que veio como resultado do [comparar_UD.py](#comparar_UDpy), tendo já sido revisado.
 
@@ -300,7 +304,7 @@ Além da matriz de confusão, **confusão.py** gera um relatório de erros em HT
 
 ## Como usar
 
-    >> python3 confusão.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <coluna>
+    $ python3 confusão.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 <coluna>
 
 A codificação é opcional, sendo o padrão *utf8*.
 
@@ -347,7 +351,7 @@ Após rodar o **limpar_conllu.py**, essa sentença se transformará em:
 
 ## Como usar
 
-    >> python3 limpar-conllu.py ud.conllu:utf8 texto.txt:utf8
+    $ python3 limpar-conllu.py ud.conllu:utf8 texto.txt:utf8
 
 A codificação é opcional, sendo o padrão *utf8*.
 
@@ -434,7 +438,7 @@ Repare que alguns tokens, as MWEs, tiveram o número da tokenização misturado 
 
 ## Como usar
 
-    >> python3 tokenizar_conllu.py ud.conllu tokenizado.conllu
+    $ python3 tokenizar_conllu.py ud.conllu tokenizado.conllu
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
@@ -444,7 +448,7 @@ Com esse script é possível rodar o UDPipe em um arquivo já tokenizado vertica
 
 ## Como usar
 
-    >> python3 udpipe_vertical.py modelo.udpipe tokenizado.conllu resultado.conllu
+    $ python3 udpipe_vertical.py modelo.udpipe tokenizado.conllu resultado.conllu
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
@@ -454,7 +458,7 @@ Com esse código, você pode atualizar todas as ferramentas de conversão direta
 
 ## Como usar
 
-    >> python3 atualizar_repo.py
+    $ python3 atualizar_repo.py
 
 Repare que, caso você não tenha alguma biblioteca instalada, ele instalará automaticamente e você terá de reiniciar o código.
 
