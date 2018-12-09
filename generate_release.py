@@ -12,19 +12,21 @@ arquivo_conllu = arquivo_ids.split('.txt')[0] + '.conllu'
 ids = open(arquivo_ids, 'r').read()
 
 novo_conllu = list()
-for identificador in ids.splitlines():
+for i, identificador in enumerate(ids.splitlines()):
 	if identificador.strip() != '':
 		for arquivo in os.listdir(diretorio + 'documents'):
+			achou = False
 			if os.path.isfile(diretorio + 'documents/' + arquivo):
 				conllu = open(diretorio + 'documents/' + arquivo, 'r').read().split('\n\n')
 				for sentence in conllu:
-					#if '# sent_id = ' in sentence:
-						#print(identificador, '--', sentence.split('# sent_id = ')[1].split('\n')[0])
 					if '# sent_id = ' in sentence and sentence.split('# sent_id = ')[1].split('\n')[0] == identificador:
 						novo_conllu.append(sentence)
-						print(identificador, '-', sentence.split('# sent_id = ')[1].split('\n')[0], '--> OK')
+						print(str(i) + '/' + len(ids.splitlines()) + ': ' + identificador)
+						achou = True
+					if achou:
 						break
-						break
+			if achou:
+				break
 
 open(arquivo_conllu, 'w').write("\n\n".join(novo_conllu) + '\n\n')
 
