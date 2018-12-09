@@ -16,11 +16,11 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [udpipe_vertical.py](#udpipe_verticalpy)
 * [atualizar_repo.py](#atualizar_repopy)
 
-#interrogar_UD.py
+# interrogar_UD.py
 Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
 O script é utilizado no site: http://comcorhd.tronco.me/interrogar-ud/interrogar.cgi
 
-##Exemplo
+## Exemplo
 
 1-Parâmetro: Expressão regular 
 Se a expressão regular for encontrada em alguma sentença, retorná-la. 
