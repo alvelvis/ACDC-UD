@@ -302,7 +302,7 @@ document.getElementById("link_edit"+id).style.display = "inline"''']
 
                 open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write(html)
 
-def main(ud1, ud2, output, coluna):
+def main(ud1, ud2, output, coluna = 4):
 	conllu1 = LerUD(ud1)
 	conllu2 = LerUD(ud2)
 	lista_conllu = get_list(conllu1, conllu2, coluna)
