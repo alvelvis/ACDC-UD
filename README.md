@@ -14,6 +14,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
+* [generate_release.py](#generate_releasepy)
 
 # interrogar_UD.py
 Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
@@ -450,5 +451,17 @@ Com esse script é possível rodar o UDPipe em um arquivo já tokenizado vertica
     $ python3 udpipe_vertical.py modelo.udpipe tokenizado.conllu resultado.conllu
 
 [**↥ voltar ao topo**](#ACDC-UD)
+
+# generate_release.py
+
+A partir de um arquivo *.txt* com IDs de sentenças e uma pasta "documents" com arquivos CoNLLU, criar o arquivo *.conllu* unindo as sentenças na ordem em que os IDs aparecem no arquivo de texto.
+
+## Como usar
+
+    $ python3 generate_release.py
+
+Você será interrogado sobre o caminho do arquivo de IDs. Basta arrastá-lo para o terminal.
+
+Então, **generate_release.py** criará um arquivo *.conllu* com o mesmo nome do arquivo de IDs e na mesma pasta que ele, unindo as sentenças dos arquivos da pasta "documents" na ordem em que aparecem no arquivo de IDs.
 
 

@@ -58,10 +58,10 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	html_original = open('resultados/' + form['html'].value + '.html', 'r').read().replace('<div class="content">','<div class="content"> > <a href="' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html">' + nome + ' (' + ocorrencias  + ')</a>&nbsp;<a class="close-thik" alt="Desfazer filtro" href="../filtrar.cgi?action=desfazer&html=' + link + '_anterior&original=' + form['html'].value + '"></a>&nbsp;')
 	if not 'Com filtros: ' in html_original:
 		ocorrencias_anterior = int(re.search(r'\((.*)\)\</h1\>', html_original).group(1))
-		html_original = re.sub(r'\(.*\)\</h1\>', '(\1)</h1><br>Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias), html_original)
+		html_original = re.sub(r'\((.*)\)\</h1\>', '(\1)</h1><br>Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
 	else:
 		ocorrencias_anterior = int(re.search(r'Com filtros: (\d+)', html_original).group(1))
-		html_original = re.sub(r'Com filtros: \d+', 'Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias), html_original)
+		html_original = re.sub(r'Com filtros: \d+', 'Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
 
 	for i, ocorrencia in enumerate(lista_ocorrencias):
 		ocorrencia = ocorrencia.replace('<b>','BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;')
@@ -79,7 +79,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	<p>'''+sentid.replace('/BOLD','</b>').replace('BOLD','<b>')+''' <input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"></p>
 	<p>'''+text.replace('/BOLD','</b>').replace('BOLD','<b>')+'''</p>
 	<p>Comentários: &nbsp;<input id="comment_'''+str(i+1)+'''" size="40px" type="text"></p><p><input id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"></p>
-	<pre id="div_'''+str(i+1)+'''" style="display:none">'''+ocorrencia.replace('/BOLD','</b>').replace('BOLD','<b>')''''
+	<pre id="div_'''+str(i+1)+'''" style="display:none">'''+ocorrencia.replace('/BOLD','</b>').replace('BOLD','<b>')+'''
 	</pre><p><a href="#">Voltar ao topo</a></p></div>\n'''
 		html1 = html1 + novo
 

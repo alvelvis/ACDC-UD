@@ -1,3 +1,7 @@
+resultados/stats_2018-12-11_15:56:46.html	stats	3	1	grande.*ADP	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_15:56:46
+resultados/tudo_2018-12-11_12:17:51.html	tudo	159	1	.*	teste.txt	2018-12-11_12:17:51
+resultados/det_verb_2018-12-11_12:15:14.html	det verb	18	1	DET.*\n.*VERB	teste.txt	2018-12-11_12:15:14
+resultados/dizer_alguém_2018-12-11_12:02:59.html	dizer alguém	75	1	dizer.*\n.*PROPN	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_12:02:59
 resultados/j_2018-12-11_09:50:30.html	j	75	1	dizer.*\n.*PROPN	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:50:30
 resultados/adp_verb_2018-12-11_09:42:24.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:42:24
 resultados/adp_verb_2018-12-11_09:39:02.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:39:02
