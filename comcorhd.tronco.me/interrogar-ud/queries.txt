@@ -1,3 +1,7 @@
+resultados/amor_2018-12-12_10:11:53.html	amor	37	1	amor	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:53
+resultados/gomes_2018-12-12_10:11:26.html	gomes	25	1	gomes	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:26
+resultados/mkt_2018-12-12_10:11:16.html	mkt	11	1	marketing	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:16
+resultados/mkt_2018-12-12_10:10:31.html	mkt	11	1	marketing	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:10:31
 resultados/stats_2018-12-11_15:56:46.html	stats	3	1	grande.*ADP	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_15:56:46
 resultados/tudo_2018-12-11_12:17:51.html	tudo	159	1	.*	teste.txt	2018-12-11_12:17:51
 resultados/det_verb_2018-12-11_12:15:14.html	det verb	18	1	DET.*\n.*VERB	teste.txt	2018-12-11_12:15:14

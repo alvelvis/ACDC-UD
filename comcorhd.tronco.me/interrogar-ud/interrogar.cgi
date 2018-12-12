@@ -78,29 +78,11 @@ else:
 				break
 		html1 = html1 + '''<div class="container">
 <p>'''+str(i+1)+''' / '''+ocorrencias+'''</p>
-<p>'''+sentid.replace('/BOLD','</b>').replace('BOLD','<b>')+''' <input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"></p>
+<p><input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('BOLD','<b>')+'''</p>
 <p id="text_'''+str(i+1)+'''">'''+text.replace('/BOLD','</b>').replace('BOLD','<b>')+'''</p>
-<p>Comentários: &nbsp;<input id="comment_'''+str(i+1)+'''" type="text"></p><p><input id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"></p><p></p>
+<p><input id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"></p>
 <pre id="div_'''+str(i+1)+'''" style="display:none">'''+ocorrencia.replace('/BOLD','</b>').replace('BOLD','<b>')+'''
 </pre><p><a href="#">Voltar ao topo</a></p></div>\n'''
-
-	html = html1 + html2
-
-	html1 = html.split('//COMMENT')[0]
-	html2 = html2.split('//COMMENT')[1]
-	for i, ocorrencia in enumerate(lista_ocorrencias):
-		html1 = html1 + '\nif (document.getElementById("comment_'+str(i+1)+'")) { document.getElementById("comment_'+str(i+1)+'").value = url.searchParams.get("comment_'+str(i+1)+'") }'
-		html1 = html1 + '\nif (document.getElementById("checkbox_'+str(i+1)+'")) { if (url.searchParams.get("checkbox_'+str(i+1)+'") == "true") { document.getElementById("checkbox_'+str(i+1)+'").checked = url.searchParams.get("checkbox_'+str(i+1)+'") } }'
-
-	html = html1 + html2
-
-	html1 = html.split('//ENVIAR')[0]
-	html2 = html.split('//ENVIAR')[1]
-	html1 += 'link_query = ""\n'
-	for i, ocorrencia in enumerate(lista_ocorrencias):
-		html1 += 'if (document.getElementById("comment_'+str(i+1)+'")) { link_query = link_query + "comment_'+str(i+1)+'=" + document.getElementById("comment_'+str(i+1)+'").value.replace(/\?/g, "~").replace(/\&/g, "~").replace(/\//g,"~") + "&" }\n'
-		html1 += 'if (document.getElementById("checkbox_'+str(i+1)+'")) { link_query = link_query + "checkbox_'+str(i+1)+'=" + document.getElementById("checkbox_'+str(i+1)+'").checked + "&" }\n'
-	html1 = html1 + 'document.getElementById("link_edit"+id).value = window.location.href.split("?")[0] + "?" + link_query'
 
 	html = html1 + html2
 
@@ -121,7 +103,7 @@ else:
 
 
 	#title
-	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogar UD</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogar UD</title>', html)
+	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
 
 	#h1
 	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome + '</span> (' + ocorrencias + ')</h1>', novo_html)
