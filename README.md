@@ -14,7 +14,6 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [limpar_conllu.py](#limpar_conllupy)
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
-* [atualizar_repo.py](#atualizar_repopy)
 
 # interrogar_UD.py
 Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
@@ -452,18 +451,4 @@ Com esse script é possível rodar o UDPipe em um arquivo já tokenizado vertica
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
-# atualizar_repo.py
 
-Com esse código, você pode atualizar todas as ferramentas de conversão diretamente deste repositório.
-
-## Como usar
-
-    $ python3 atualizar_repo.py
-
-Repare que, caso você não tenha alguma biblioteca instalada, ele instalará automaticamente e você terá de reiniciar o código.
-
-Importante possuir instalado "python3-pip":
-
-    $ sudo apt install python3-pip
-
-[**↥ voltar ao topo**](#ACDC-UD)
