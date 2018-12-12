@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" http-equiv="content-type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0">
+    <title>Interrogações recentes: Interrogar UD</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="header">
+      <h1>Interrogar UD</h1>
+      <h2>interrogações recentes - <a href="interrogar.cgi">nova
+          interrogação</a></h2>
+    </div>
+    <div class="content">
+      <!--SPLIT--> </div>
+    <script>
+function carregar_version(){
+        var link_combination = document.getElementById("carregar_edit").value.split("/")
+        window.location = "resultados/" + link_combination[link_combination.length-1].split("?")[0] + "?" + document.getElementById("carregar_edit").value.split("?")[1]
+}
+function apagar(url) {
+if (confirm('Apagar interrogação "' + url + '"?')) {
+window.location = "apagar.cgi?query="+url
+}
+}
+</script>
+  </body>
+</html>

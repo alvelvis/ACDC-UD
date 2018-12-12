@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" http-equiv="content-type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0">
+    <title>Nova interrogação: Interrogar UD</title>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="header">
+      <h1>Interrogar UD</h1>
+      <h2><a href="index.cgi">interrogações recentes</a> - nova interrogação</h2>
+    </div>
+    <div class="content">
+      <form action="interrogar.cgi" method="post">
+        <p>Pesquisa:<br>
+          <input name="pesquisa" required="required" type="text"></p>
+        <p>Nome da pesquisa:<br>
+          <input name="nome" required="required" type="text"></p>
+          <p><select name="conllu">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </p>
+        <p><input name="enviar" value="Pesquisar" class="btn-gradient orange" style="margin:0px"
+type="submit"></p>
+        <br>
+      </form>
+      <p><strong>Sintaxe da pesquisa:</strong></p>
+      <pre>critério [parâmetros específicos do critério]</pre>
+      <p><strong><br>
+        </strong></p>
+      <p><strong>Critérios de pesquisa:</strong></p>
+      <!--SPLIT-->
+      <br>
+      <h3>Links úteis:</h3>
+      <div class="container">
+        <p><a href="arquivo_ud.cgi">Acessar repositório dos arquivos UD</a></p>
+        <p><a href="http://github.com/alvelvis/ACDC-UD" target="_blank">Acessar GitHub do projeto</a></p>
+      </div>
+    </div>
+  </body>
+</html>

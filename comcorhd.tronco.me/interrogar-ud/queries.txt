@@ -1,0 +1,16 @@
+resultados/j_2018-12-11_09:50:30.html	j	75	1	dizer.*\n.*PROPN	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:50:30
+resultados/adp_verb_2018-12-11_09:42:24.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:42:24
+resultados/adp_verb_2018-12-11_09:39:02.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:39:02
+resultados/adp_verb_2018-12-11_09:38:07.html	adp verb	1834	1	ADP.*\n.*VERB	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:38:07
+resultados/adp_verb_2018-12-11_09:31:58.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:31:58
+resultados/noun_adv_2018-12-11_09:21:37.html	noun adv	25	1	NOUN.*\n.*ADV	teste.txt	2018-12-11_09:21:37
+resultados/pronome_relativo_2018-12-11_09:16:23.html	pronome relativo	2229	1	(que|qual|cujo).*PRON.*PronType=Rel	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:16:23
+resultados/a_2018-12-11_09:15:49.html	a	0	1	(que|qual|cujo).*PRON.*PronType=Rel.*\t.*\t(?!nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:15:49
+resultados/pron_rel_não_é_sujeito_2018-12-11_09:13:50.html	pron rel não é sujeito	2229	1	(que|qual|cujo).*PRON.*PronType=Rel.*\t.*\t(?!nsubj)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:13:50
+resultados/sujeito_oculto_2018-12-10_15:35:45.html	sujeito oculto	2774	2	root#8#csubj|nsubj|nsubj:pass#8	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_15:35:45
+resultados/teste_2018-12-10_14:39:22.html	teste	0	1	(?=\d+\t.*\tque|qual|cujo\tPRON\t.*\t.*PronType=Rel.*\t.*\t)(?!nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:39:22
+resultados/teste_2018-12-10_14:38:07.html	teste	4062	1	que|qual|cujo\tPRON\t.*\t.*PronType=Rel.*\t.*\t(?!<nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:38:07
+resultados/pronomes_relativos_que_não_são_subj_2018-12-10_14:36:52.html	pronomes relativos que não são subj	4062	1	que|qual|cujo\tPRON\t.*\t.*PronType=Rel.*\t.*\t(?!nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:36:52
+resultados/pronomes_relativos_que_não_são_subj_2018-12-10_14:34:46.html	pronomes relativos que não são subj	4062	1	que|qual|cujo\tPRON\t.*\tPronType=Rel\t.*\t(?!nsubj)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:34:46
+resultados/pronomes_relativos_que_não_são_subj_nem_obj_2018-12-10_14:32:02.html	pronomes relativos que não são subj nem obj	4062	1	que|qual|cujo\tPRON\t.*\tPronType=Rel\t.*\t(?!nsubj|obj)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:32:02
+resultados/teste4_2018-12-09_17:38:31.html	teste4	3296	2	root#8#nsubj|csubj#8	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-09_17:38:31

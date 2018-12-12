@@ -1,0 +1,11 @@
+!@#<h3>Critério 1:</h3>
+Parâmetro: Expressão regular
+<br>Se a expressão regular for encontrada em alguma sentença, retorná-la.
+<br><br>Exemplo: '1 dizer.*\n.*PROPN'
+<br>Retornar sentenças com o lema "dizer" seguido de um "PROPN".
+!@#<h3>Critério 2:</h3>
+Parâmetros: A#B#C#D
+<br>Se em uma sentença tiver um token marcado como A na coluna B e não tiver nenhum outro token com valor C na coluna D apontando para ele, retornar a sentença.
+<br><br>Dica: O parâmetro C aceita o operador lógico '|' (ou).
+<br><br>Exemplo: '2 root#8#nsubj|csubj#8'
+<br>Retornar sentenças em que o 'root' não tenha nenhum 'nsubj' ou 'csubj' apontando para ele.
