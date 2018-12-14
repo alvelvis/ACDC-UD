@@ -86,7 +86,7 @@ border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 /* Tooltip text */
 .tooltip .tooltiptext {
 visibility: hidden;
-width: 300px;
+width: 600px;
 background-color: black;
 color: #fff;
 text-align: left;
@@ -154,7 +154,7 @@ h2 {
   margin: 40px auto;
 }
 .content {
-  width: 90%;
+  width: 70%;
   //max-width: 700px;
 }
 .content-3d {
@@ -165,7 +165,8 @@ pre {
     width: auto;
     max-height: 500px;
     padding: 30px 30px 30px 30px;
-    background-color: #303030;
+    //background-color: #303030;
+    background-color: #080808;
     //background-color: rgba(0, 0, 0, 0.72);
     color: #f8f8f2;
     border-radius: 0 0 4px 4px;

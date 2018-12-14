@@ -1,4 +1,5 @@
-resultados/amor_2018-12-12_10:11:53.html	amor	37	1	amor	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:53
+resultados/amor_2018-12-14_01:46:08.html	amor	37	1	amor	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-14_01:46:08
+resultados/sujeitos_ocultos_no_dhbb_2018-12-12_10:16:57.html	sujeitos ocultos no dhbb	142476	2	root#8#nsubj|csubj|nsubj:pass#8	dhbb.conllu	2018-12-12_10:16:57
 resultados/gomes_2018-12-12_10:11:26.html	gomes	25	1	gomes	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:26
 resultados/mkt_2018-12-12_10:11:16.html	mkt	11	1	marketing	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:16
 resultados/mkt_2018-12-12_10:10:31.html	mkt	11	1	marketing	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:10:31

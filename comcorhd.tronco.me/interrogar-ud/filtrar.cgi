@@ -58,7 +58,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	html_original = open('resultados/' + form['html'].value + '.html', 'r').read().replace('<div class="content">','<div class="content"> > <a href="' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html">' + nome + ' (' + ocorrencias  + ')</a>&nbsp;<a class="close-thik" alt="Desfazer filtro" href="../filtrar.cgi?action=desfazer&html=' + link + '_anterior&original=' + form['html'].value + '"></a>&nbsp;')
 	if not 'Com filtros: ' in html_original:
 		ocorrencias_anterior = int(re.search(r'\((.*)\)\</h1\>', html_original).group(1))
-		html_original = re.sub(r'\((.*)\)\</h1\>', '(\1)</h1><br>Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
+		html_original = re.sub(r'(\(.*?\)\</h1\>)', r'\1<br>Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
 	else:
 		ocorrencias_anterior = int(re.search(r'Com filtros: (\d+)', html_original).group(1))
 		html_original = re.sub(r'Com filtros: \d+', 'Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
@@ -76,16 +76,16 @@ if not 'action' in form or form['action'].value != 'desfazer':
 				break
 		novo =  '''<div class="container">
 	<p>'''+str(i+1)+''' / '''+ocorrencias+'''</p>
-	<p>'''+sentid.replace('/BOLD','</b>').replace('BOLD','<b>')+''' <input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"></p>
+	<p><input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('BOLD','<b>')+'''</p>
 	<p>'''+text.replace('/BOLD','</b>').replace('BOLD','<b>')+'''</p>
-	<p>Comentários: &nbsp;<input id="comment_'''+str(i+1)+'''" size="40px" type="text"></p><p><input id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"></p>
+	<p><input id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"></p>
 	<pre id="div_'''+str(i+1)+'''" style="display:none">'''+ocorrencia.replace('/BOLD','</b>').replace('BOLD','<b>')+'''
 	</pre><p><a href="#">Voltar ao topo</a></p></div>\n'''
 		html1 = html1 + novo
 
 		html_original = html_original.split('<div class="container">')
 		for i, sentence in enumerate(html_original):
-			if text.replace('<b>','').replace('</b>','') in sentence.replace('<b>','').replace('</b>',''):
+			if text.replace('<b>','').replace('</b>','').replace('/BOLD','').replace('BOLD','') in sentence.replace('<b>','').replace('</b>','').replace('/BOLD','').replace('BOLD',''):
 				if len(html_original[i].split('</div>')) > 1:
 					html_original[i] = '</div>' + html_original[i].split('</div>', 1)[1]
 				else:
@@ -93,23 +93,6 @@ if not 'action' in form or form['action'].value != 'desfazer':
 		html_original = '<div class="container">'.join(html_original)
 
 	os.remove('conllu/tmp.conllu')
-
-	html = html1 + html2
-	html1 = html.split('//COMMENT')[0]
-	html2 = html2.split('//COMMENT')[1]
-	for i, ocorrencia in enumerate(lista_ocorrencias):
-		html1 = html1 + '\ndocument.getElementById("comment_'+str(i+1)+'").value = url.searchParams.get("comment_'+str(i+1)+'")'
-		html1 = html1 + '\nif (url.searchParams.get("checkbox_'+str(i+1)+'") == "true") { document.getElementById("checkbox_'+str(i+1)+'").checked = url.searchParams.get("checkbox_'+str(i+1)+'") }'
-
-	html = html1 + html2
-
-	html1 = html.split('//ENVIAR')[0]
-	html2 = html.split('//ENVIAR')[1]
-	link_query = ''
-	for i, ocorrencia in enumerate(lista_ocorrencias):
-		link_query += ' + "comment_'+str(i+1)+'=" + document.getElementById("comment_'+str(i+1)+'").value.replace(/\?/g, "~").replace(/\&/g, "~").replace(/\//g,"~") + "&"'
-		link_query += ' + "checkbox_'+str(i+1)+'=" + document.getElementById("checkbox_'+str(i+1)+'").checked + "&"'
-	html1 = html1 + 'document.getElementById("link_edit"+id).value = window.location.href.split("?")[0] + "?"' + link_query
 
 	html = html1 + html2
 
@@ -129,7 +112,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	html = html1 + html2
 
 	#title
-	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogar UD</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogar UD</title>', html)
+	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
 
 	#h1
 	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome.replace('\\','\\\\') + '</span> (' + ocorrencias + ')</h1>', novo_html)

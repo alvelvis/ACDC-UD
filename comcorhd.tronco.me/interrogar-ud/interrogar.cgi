@@ -31,6 +31,14 @@ if os.environ['REQUEST_METHOD'] != "POST":
 		html1 += '<div class="container-lr">' + criterio + '</div>\n'
 	html = html1 + html2
 
+	html1 = html.split('<!--SPLIT2-->')[0]
+	html2 = html.split('<!--SPLIT2-->')[1]
+
+	criterios = open('criterios.txt', 'r').read().split('!@#')
+	for criterio in criterios[1:]:
+		html1 += "\n".join(criterio.splitlines()[0:3]) + '\n'
+	html = html1 + html2
+
 	print(html.split('<select name="conllu">')[0] + '<select name="conllu">' + "\n".join(arquivos) + '</select>' + html.split('</select>')[1])
 
 
