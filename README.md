@@ -465,6 +465,8 @@ Você será interrogado sobre o caminho do arquivo de IDs. Basta arrastá-lo par
 
 Então, **generate_release.py** criará um arquivo *.conllu* com o mesmo nome do arquivo de IDs e na mesma pasta que ele, unindo as sentenças dos arquivos da pasta "documents" na ordem em que aparecem no arquivo de IDs.
 
+[**↥ voltar ao topo**](#ACDC-UD)
+
 # split_conllu.py
 
 A partir de arquivos *train, dev e teste*, **split_conllu.py** gera uma pasta *documents* com os arquivos unitários retirados do metadado "sent_id".
@@ -476,3 +478,5 @@ A partir de arquivos *train, dev e teste*, **split_conllu.py** gera uma pasta *d
 Você será interrogado sobre o caminho do arquivo *.conllu*. Basta arrastar a pasta para o terminal.
 
 Então, **split_conllu.py** criará uma pasta "documents" com todos os arquivos unitários retirados dos metadados "sent_id", na ordem das sentenças original.
+
+[**↥ voltar ao topo**](#ACDC-UD)
