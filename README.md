@@ -15,6 +15,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [tokenizar_conllu.py](#tokenizar_conllupy)
 * [udpipe_vertical.py](#udpipe_verticalpy)
 * [generate_release.py](#generate_releasepy)
+* [split_conllu.py](#split_conllupy)
 
 # interrogar_UD.py
 Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
@@ -464,4 +465,14 @@ Você será interrogado sobre o caminho do arquivo de IDs. Basta arrastá-lo par
 
 Então, **generate_release.py** criará um arquivo *.conllu* com o mesmo nome do arquivo de IDs e na mesma pasta que ele, unindo as sentenças dos arquivos da pasta "documents" na ordem em que aparecem no arquivo de IDs.
 
+# split_conllu.py
 
+A partir de arquivos *train, dev e teste*, **split_conllu.py** gera uma pasta *documents* com os arquivos unitários retirados do metadado "sent_id".
+
+## Como usar
+
+    $ python3 split_conllu.py
+
+Você será interrogado sobre o caminho do arquivo *.conllu*. Basta arrastar a pasta para o terminal.
+
+Então, **split_conllu.py** criará uma pasta "documents" com todos os arquivos unitários retirados dos metadados "sent_id", na ordem das sentenças original.
