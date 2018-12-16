@@ -35,13 +35,13 @@ def main(arquivoUD, criterio, parametros):
 						tokens.append(linha.split('\t')[1].replace('<b>','').replace('</b>',''))
 				header2 = header
 				for token in tokens:
-					header2 = re.sub(r'\b' + token + r'\b', '<b>' + token + '</b>', header2)
+					header2 = re.sub(r'\b' + re.escape(token) + r'\b', '<b>' + token + '</b>', header2)
 				for i in range(cores):
 					if regex[i+1] != None and i <= len(tabela):
 						token = regex[i+1]
 						if '\t' in regex[i+1]:
 							token = regex[i+1].split('\t')[1]
-						header2 = re.sub(r'\b' + token + r'\b', tabela[i] + token + '/FONT', header2)
+						header2 = re.sub(r'\b' + re.escape(token) + r'\b', tabela[i] + token + '/FONT', header2)
 				new_sentence = new_sentence.replace(header, header2)
 				output.append(new_sentence.splitlines())
 
@@ -108,7 +108,7 @@ def main(arquivoUD, criterio, parametros):
 						tokens.append((linha.split('\t')[1].replace('<b>','').replace('</b>','').replace('@' + linha.split('@')[1].split('/')[0] + '/', ''), '@' + linha.split('@')[1].split('/')[0] + '/'))
 				header2 = header
 				for token in tokens:
-					header2 = re.sub(r'\b' + token[0] + r'\b', token[1] + '<b>' + token[0] + '</b>/FONT', header2)
+					header2 = re.sub(r'\b' + re.escape(token[0]) + r'\b', token[1] + '<b>' + token[0] + '</b>/FONT', header2)
 				sentence2 = sentence2.replace(header, header2)
 				output.append(sentence2.splitlines())
 
