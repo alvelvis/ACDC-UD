@@ -9,11 +9,11 @@ def limpar(texto):
 	for a, linha in enumerate(texto.splitlines()):
 
 		#Com MWE
-		if len(linha.split('\t')) == 10 and '-' in linha.split('\t')[0]:
+		if '\t' in linha and '-' in linha.split('\t')[0]:
 			novotexto.append(re.sub(r'^(.*?)\t(.*?)\t.*$', r'\1-=\2\t_\t_\t_\t_\t_\t_\t_\t_\t_', linha))
 
 		#Sem MWE
-		elif len(linha.split('\t')) == 10:
+		elif '\t' in linha:
 			#Mantém a palavra e nas outras 9 colunas adiciona uma underline
 			novotexto.append(re.sub(r'^(.*?)\t(.*?)\t.*$', r'\2\t_\t_\t_\t_\t_\t_\t_\t_\t_', linha))
 

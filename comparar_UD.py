@@ -32,7 +32,7 @@ def compara(files_list, UD, colunas):
 			novotexto.append(linha)
 			if '# text = ' in linha: #Se tiver "# text" nessa linha
 				text_header = linha
-			if len(linha.split('\t')) == 10:
+			if '\t' in linha:
 				for arquivo in files_list[1:]:
 					for subsentença in UD[arquivo]:
 						sentença_correta = False

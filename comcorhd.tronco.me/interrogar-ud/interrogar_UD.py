@@ -12,6 +12,8 @@ def main(arquivoUD, criterio, parametros):
 	output = list()
 
 	#Regex
+	tabela = ['@YELLOW/','@PURPLE/','@BLUE/','@RED/','@CYAN/']
+	
 	if criterio == 1:
 		for a, sentence in enumerate(qualquercoisa):
 			sentence2 = sentence
@@ -22,6 +24,7 @@ def main(arquivoUD, criterio, parametros):
 			sentence2 = "\n".join(sentence2)
 			regex = re.search(parametros, sentence2, flags=re.IGNORECASE|re.MULTILINE)
 			if regex:
+				cores = len(regex.groups())
 				new_sentence = re.sub('(' + parametros + ')', r'<b>\1</b>', sentence2, flags=re.IGNORECASE|re.MULTILINE)
 				tokens = list()
 				header = '!@#'
@@ -32,7 +35,13 @@ def main(arquivoUD, criterio, parametros):
 						tokens.append(linha.split('\t')[1].replace('<b>','').replace('</b>',''))
 				header2 = header
 				for token in tokens:
-					header2 = header2.replace(token, '<b>' + token + '</b>')
+					header2 = re.sub(r'\b' + token + r'\b', '<b>' + token + '</b>', header2)
+				for i in range(cores):
+					if regex[i+1] != None and i <= len(tabela):
+						token = regex[i+1]
+						if '\t' in regex[i+1]:
+							token = regex[i+1].split('\t')[1]
+						header2 = re.sub(r'\b' + token + r'\b', tabela[i] + token + '/FONT', header2)
 				new_sentence = new_sentence.replace(header, header2)
 				output.append(new_sentence.splitlines())
 
@@ -53,12 +62,12 @@ def main(arquivoUD, criterio, parametros):
 					if y == linha[z-1]:
 						achei = linha[0]
 						token = linha[1]
-						sentence[i]='<b>'+'\t'.join(sentence[i])+'</b>'
-						sentence[i]=sentence[i].split('\t')
+						sentence[i] = '<b>' + '\t'.join(sentence[i]) + '</b>'
+						sentence[i] = sentence[i].split('\t')
 						break
 			for i, linha in enumerate(sentence):
 				if '# text' in linha:
-					sentence[i]= sentence[i].replace(token, '<b>'+token+'</b>')
+					sentence[i] = re.sub(r'\b' + token + r'\b', '<b>' + token + '</b>', sentence[i])
 
 			if achei != 'nãoachei':
 				for linha in sentence:
@@ -68,6 +77,40 @@ def main(arquivoUD, criterio, parametros):
 								descarta = True
 				if descarta == False:
 					output.append(sentence)
+					
+	#Regex Livre
+	if criterio == 3:
+		regras = parametros.split('#')
+		for a, sentence in enumerate(qualquercoisa):
+			sentence2 = sentence
+			for b, linha in enumerate(sentence):
+				linha2 = linha
+				if isinstance(linha2, list):
+					sentence2[b] = "\t".join(sentence2[b])
+			sentence2 = "\n".join(sentence2)
+			descarta = False
+			for regranum, regra in enumerate(regras):
+				if regra[0] == '!':
+					regex = re.search(regra[1:], sentence2, flags=re.IGNORECASE|re.MULTILINE)
+				else:
+					regex = re.search(regra, sentence2, flags=re.IGNORECASE|re.MULTILINE)
+				if (regra[0] == '!' and regex) or (regra[0] != '!' and not regex):
+					descarta = True
+					break
+				sentence2 = re.sub('(' + regra + ')', tabela[regranum] + r'<b>\1</b>/FONT', sentence2, flags=re.IGNORECASE|re.MULTILINE)
+			if not descarta:
+				tokens = list()
+				header = '!@#'
+				for linha in sentence2.splitlines():
+					if '# text = ' in linha:
+						header = linha
+					if 'b>' in linha and '\t' in linha:
+						tokens.append((linha.split('\t')[1].replace('<b>','').replace('</b>','').replace('@' + linha.split('@')[1].split('/')[0] + '/', ''), '@' + linha.split('@')[1].split('/')[0] + '/'))
+				header2 = header
+				for token in tokens:
+					header2 = re.sub(r'\b' + token[0] + r'\b', token[1] + '<b>' + token[0] + '</b>/FONT', header2)
+				sentence2 = sentence2.replace(header, header2)
+				output.append(sentence2.splitlines())
 
 	#Transforma o output em lista de sentenças (sem splitlines e sem split no \t)
 	for a, sentence in enumerate(output):
@@ -80,14 +123,14 @@ def main(arquivoUD, criterio, parametros):
 
 #Ele só pede os inputs se o script for executado pelo terminal. Caso contrário (no caso do código ser chamado por uma página html), ele não pede os inputs, pois já vou dar a ele os parâmetros por meio da página web
 if __name__ == '__main__':
-	arquivoUD= input('arraste arquivo:\n').replace("'","")
+	arquivoUD= input('arraste arquivo:\n').replace("'","").replace('"','').strip()
 	qualquercoisa = estrutura_dados.LerUD(arquivoUD)
 	criterio=int(input('qual criterio de procura?'))
-	while criterio > 2:
+	while criterio > 3:
 	    print('em desenvolvimento')
 	    criterio=int(input('qual criterio de procura?'))
 
-	if criterio == 1:
+	if criterio == 1 or criterio == 3:
 		parametros = input('Expressão regular:\n')
 
 	if criterio == 2:
@@ -99,7 +142,17 @@ if __name__ == '__main__':
 		parametros  = y + '#' + str(z) + '#' + k + '#' + str(w)
 
 	#Chama a função principal e printo o resultado, dando a ela os parâmetros dos inputs
-	print(main(arquivoUD, criterio, parametros))
+	printar = main(arquivoUD, criterio, parametros)
+	
+	for a, sentence in enumerate(printar):
+		printar[a] = printar[a].splitlines()
+		for i, linha in enumerate(printar[a]):
+			if isinstance(linha, list):
+				printar[a][i] = '\t'.join(printar[a][i])
+		printar[a] = '\n'.join(printar[a])
+	printar = '\n\n'.join(printar) 
+	
+	print(printar)
 
 
 

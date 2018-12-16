@@ -27,7 +27,7 @@ def LerUD(ud_file):
 		#Para cada linha já segmentada nessa dada sentença (arquivo[a]),
 		for b, linha in enumerate(arquivo[a]):
 			#Se a quantidade de colunas for 10, (ou seja, garante que estou lidando com tokens, e não com metadados)
-			if len(linha.split('\t')) == 10:
+			if '\t' in linha:
 				#Essa linha, que na verdade é um token, (sentença arquivo[a], token[b]), vai ser dividida em colunas
 				arquivo[a][b] = arquivo[a][b].split('\t')
 
@@ -50,7 +50,7 @@ def EscreverUD(UD, arquivo):
 		#Para cada linha dentro dessa sentença,
 		for b, linha in enumerate(UD[a]):
 			#Se for um token (tiver 10 colunas) e não for um metadado (contiver "# "),
-			if len(linha) == 10 and not '# ' in linha:
+			if isinstance(linha, list) and not '# ' in linha:
 				#Reunir as colunas adicionando um "\t"
 				UD[a][b] = "\t".join(UD[a][b])
 			#Depois de reunir todos os tokens que devem ser reunidos, reunir todas as linhas com um "\n"

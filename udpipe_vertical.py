@@ -19,7 +19,7 @@ def adiciona_text(arquivo, tokenizado):
     for i, sentença in enumerate(novoarquivo):
         novoarquivo[i] = novoarquivo[i].splitlines()
         for a, linha in enumerate(tokenizado[i].splitlines()):
-            if len(linha.split('\t')) == 10 and '-=' in linha.split('\t')[0]:
+            if '\t' in linha and '-=' in linha.split('\t')[0]:
                 novoarquivo[i].insert(a + 1, linha.split('\t')[0].split('-=')[0] + '\t' + linha.split('\t')[0].split('-=')[1] + '\t_\t_\t_\t_\t_\t_\t_\t_')
         novoarquivo[i] = "\n".join(novoarquivo[i])
 
@@ -32,7 +32,7 @@ def apagar_text(arquivo):
     novo_arquivo = list()
     for i, linha in enumerate(arquivo):
         #Retira as hashtags e as MWES
-        if len(linha.split('\t')) == 10 and not '-=' in linha.split('\t')[0]:
+        if '\t' in linha and not '-=' in linha.split('\t')[0]:
             novo_arquivo.append(linha)
         elif linha.strip() == '':
             novo_arquivo.append('')

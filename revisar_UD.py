@@ -20,7 +20,7 @@ def main(comparação, revisado):
 	conllu_comparação = conllu_comparação.split('#!$$')[0].splitlines()
 	novo_conllu = list()
 	for i, linha in enumerate(conllu_comparação):
-		if not '-->' in linha or len(linha.split('\t')) != 10:
+		if not '-->' in linha or '\t' in linha:
 			novo_conllu.append(linha)
 
 	open(revisado, 'w', encoding=codificação2).write("\n".join(novo_conllu))

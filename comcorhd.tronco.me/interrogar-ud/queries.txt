@@ -1,25 +1,40 @@
-resultados/amor_2018-12-14_01:46:08.html	amor	37	1	amor	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-14_01:46:08
-resultados/sujeitos_ocultos_no_dhbb_2018-12-12_10:16:57.html	sujeitos ocultos no dhbb	142476	2	root#8#nsubj|csubj|nsubj:pass#8	dhbb.conllu	2018-12-12_10:16:57
-resultados/gomes_2018-12-12_10:11:26.html	gomes	25	1	gomes	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:26
-resultados/mkt_2018-12-12_10:11:16.html	mkt	11	1	marketing	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:11:16
-resultados/mkt_2018-12-12_10:10:31.html	mkt	11	1	marketing	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-12_10:10:31
-resultados/stats_2018-12-11_15:56:46.html	stats	3	1	grande.*ADP	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_15:56:46
-resultados/tudo_2018-12-11_12:17:51.html	tudo	159	1	.*	teste.txt	2018-12-11_12:17:51
-resultados/det_verb_2018-12-11_12:15:14.html	det verb	18	1	DET.*\n.*VERB	teste.txt	2018-12-11_12:15:14
-resultados/dizer_alguém_2018-12-11_12:02:59.html	dizer alguém	75	1	dizer.*\n.*PROPN	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_12:02:59
-resultados/j_2018-12-11_09:50:30.html	j	75	1	dizer.*\n.*PROPN	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:50:30
-resultados/adp_verb_2018-12-11_09:42:24.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:42:24
-resultados/adp_verb_2018-12-11_09:39:02.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:39:02
-resultados/adp_verb_2018-12-11_09:38:07.html	adp verb	1834	1	ADP.*\n.*VERB	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:38:07
-resultados/adp_verb_2018-12-11_09:31:58.html	adp verb	24	1	ADP.*\n.*VERB	teste.txt	2018-12-11_09:31:58
-resultados/noun_adv_2018-12-11_09:21:37.html	noun adv	25	1	NOUN.*\n.*ADV	teste.txt	2018-12-11_09:21:37
-resultados/pronome_relativo_2018-12-11_09:16:23.html	pronome relativo	2229	1	(que|qual|cujo).*PRON.*PronType=Rel	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:16:23
-resultados/a_2018-12-11_09:15:49.html	a	0	1	(que|qual|cujo).*PRON.*PronType=Rel.*\t.*\t(?!nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:15:49
-resultados/pron_rel_não_é_sujeito_2018-12-11_09:13:50.html	pron rel não é sujeito	2229	1	(que|qual|cujo).*PRON.*PronType=Rel.*\t.*\t(?!nsubj)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-11_09:13:50
-resultados/sujeito_oculto_2018-12-10_15:35:45.html	sujeito oculto	2774	2	root#8#csubj|nsubj|nsubj:pass#8	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_15:35:45
-resultados/teste_2018-12-10_14:39:22.html	teste	0	1	(?=\d+\t.*\tque|qual|cujo\tPRON\t.*\t.*PronType=Rel.*\t.*\t)(?!nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:39:22
-resultados/teste_2018-12-10_14:38:07.html	teste	4062	1	que|qual|cujo\tPRON\t.*\t.*PronType=Rel.*\t.*\t(?!<nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:38:07
-resultados/pronomes_relativos_que_não_são_subj_2018-12-10_14:36:52.html	pronomes relativos que não são subj	4062	1	que|qual|cujo\tPRON\t.*\t.*PronType=Rel.*\t.*\t(?!nsubj.*)$	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:36:52
-resultados/pronomes_relativos_que_não_são_subj_2018-12-10_14:34:46.html	pronomes relativos que não são subj	4062	1	que|qual|cujo\tPRON\t.*\tPronType=Rel\t.*\t(?!nsubj)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:34:46
-resultados/pronomes_relativos_que_não_são_subj_nem_obj_2018-12-10_14:32:02.html	pronomes relativos que não são subj nem obj	4062	1	que|qual|cujo\tPRON\t.*\tPronType=Rel\t.*\t(?!nsubj|obj)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-10_14:32:02
-resultados/teste4_2018-12-09_17:38:31.html	teste4	3296	2	root#8#nsubj|csubj#8	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-09_17:38:31
+resultados/sujeito_verbo_adj_2018-12-16_13:57:39.html	sujeito verbo adj	5032	3	subj#VERB#ADJ	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_13:57:39
+resultados/gomes__2018-12-16_04:23:24.html	gomes!	25	1	gomes	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_04:23:24
+resultados/pronome_relativo_não_sujeito_2018-12-16_04:09:04.html	pronome relativo não sujeito	549	3	(que|qual|cujo|cuja).*PRON.*PronType=Rel#!(que|qual|cujo|cuja).*PRON.*PronType=Rel.*subj	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_04:09:04
+resultados/pronome_relativo_não_sujeito_2018-12-16_04:04:35.html	pronome relativo não sujeito	549	3	(que|qual|cujo|cuja).*PRON.*PronType=Rel#!(que|qual|cujo|cuja).*PRON.*PronType=Rel.*subj	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_04:04:35
+resultados/verbo_root_sem_subj_2018-12-16_03:56:59.html	verbo root sem subj	6069	3	\t.*\t.*\t.*subj.*#VERB.*root	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:56:59
+resultados/verbo_root_sem_subj_2018-12-16_03:57:10.html	verbo root sem subj	719	3	!\t.*\t.*\t.*subj.*#VERB.*root	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:57:10
+resultados/verbo_root_sem_subj_2018-12-16_03:44:28.html	verbo root sem subj	6787	3	!.*nsubj.*#!.*csubj.*#.*VERB.*root.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:44:28
+resultados/verbo_root_sem_subj_2018-12-16_03:44:07.html	verbo root sem subj	182	3	!.*nsubj.*#.*csubj.*#.*VERB.*root.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:44:07
+resultados/quem_sabe_2018-12-16_03:41:31.html	quem sabe	12	3	.*quem.*#.*sabe.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:41:31
+resultados/quem_sabe_2018-12-16_03:40:56.html	quem sabe	5	3	\bquem\b#\bsabe\b	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:40:56
+resultados/relativo_não_sujeito_2018-12-16_03:37:08.html	relativo não sujeito	2229	3	(que|qual|cujo|cuja).*PRON.*PronType=Rel#!(que|qual|cujo|cuja).*PRON.*PronType=Rel.*subj	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:37:08
+resultados/subj_verb_adj_2018-12-16_03:33:54.html	subj verb adj	5032	3	.*subj.*#.*VERB.*#.*ADJ.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:33:54
+resultados/dddd_2018-12-16_03:24:42.html	dddd	0	3	.*subj.*#.*VERB.*#.*ADJ.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:24:42
+resultados/dd_2018-12-16_03:24:24.html	dd	0	3	.*subj.*#.*VERB.*#.*ADJ.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:24:24
+resultados/sujeito_verbo_adjetivo_2018-12-16_03:22:29.html	sujeito verbo adjetivo	0	3	.*subj.*#.*VERB.*#.*ADJ.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:22:29
+resultados/sujeito_verbo_adjetivo_2018-12-16_03:22:20.html	sujeito verbo adjetivo	0	3	.*subj.*#.*VERB.*#.*ADJ.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:22:20
+resultados/subj_verb_adj_2018-12-16_03:21:12.html	subj verb adj	0	3	.*subj.*#.*VERB.*#.*ADJ.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_03:21:12
+resultados/sujeito_verbo_2018-12-16_01:22:23.html	sujeito verbo	7233	1	(.*subj.*)(\n.*)*(.*VERB.*)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:22:23
+resultados/dizer_alguém_2018-12-16_01:08:46.html	dizer alguém	75	1	dizer.*\n.*PROPN	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:08:46
+resultados/ea_2018-12-16_01:07:30.html	ea	1	1	(«Estamos a dotar os computadores de um novo sentido» disse Steve d'Averio, director de marketing para a Europa da Logitech\.)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:07:30
+resultados/a_2018-12-16_01:07:17.html	a	1	1	(«Estamos a dotar os computadores de um novo sentido» disse Steve d'Averio, director de marketing para a Europa da Logitech\.)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:07:17
+resultados/seleção_2018-12-16_01:05:22.html	seleção	1	1	(«Estamos a dotar os computadores de um novo sentido» disse Steve d'Averio, director de marketing para a Europa da Logitech\.)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:05:22
+resultados/dizer_2018-12-16_01:04:30.html	dizer	500	1	dizer	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:04:30
+resultados/dizer_alguém_2018-12-16_01:02:30.html	dizer alguém	75	1	(.*dizer.*)\n(.*PROPN.*)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_01:02:30
+resultados/ell_verb_2018-12-16_00:43:42.html	ell verb	16	1	(.*ell.*)\n(.*VERB.*)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_00:43:42
+resultados/dizer_2018-12-16_00:31:26.html	dizer	500	1	dizer	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_00:31:26
+resultados/dizer_alguém_2018-12-16_00:23:09.html	dizer alguém	75	1	.*dizer.*\n.*PROPN.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-16_00:23:09
+resultados/dizer_2018-12-15_23:58:39.html	dizer	500	1	.*dizer.*	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_23:58:39
+resultados/dd_2018-12-15_23:57:58.html	dd	500	1	dizer	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_23:57:58
+resultados/dd_2018-12-15_23:58:00.html	dd	12	1	dizer	POR_5000.txt	2018-12-15_23:58:00
+resultados/dizer_alguém_2018-12-15_23:48:18.html	dizer alguém	75	1	(.*dizer.*)\n(.*PROPN.*)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_23:48:18
+resultados/dizer_contexto_2018-12-15_23:46:23.html	dizer contexto	500	1	dizer	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_23:46:23
+resultados/diz_2018-12-15_22:09:33.html	diz	510	1	diz	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_22:09:33
+resultados/joão_2018-12-15_22:04:23.html	joão	80	1	joão	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_22:04:23
+resultados/a_2018-12-15_21:51:39.html	a	500	1	dizer	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_21:51:39
+resultados/dizer_alguém_ponto_2018-12-15_16:54:08.html	dizer alguém ponto	35	1	(.*dizer.*)\n(.*PROPN.*)\n(.*PUNCT.*)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_16:54:08
+resultados/dizer_alguéns_2018-12-15_16:51:41.html	dizer alguéns	75	1	(.*dizer.*)(\n\d+\t(.*?)\t.*PROPN.*){1,5}	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_16:51:41
+resultados/dizer_alguéns_2018-12-15_16:50:53.html	dizer alguéns	75	1	(.*dizer.*)(\n.*PROPN.*){1,5}	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_16:50:53
+resultados/dizer_alguém_2018-12-15_16:46:15.html	dizer alguém	75	1	(.*dizer.*)\n(.*PROPN.*)	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-15_16:46:15
+resultados/que__2018-12-14_23:34:35.html	que 	2229	1	(que|qual|cujo|cuja).*PRON.*PronType=Rel.	bosque2.3_golden_train_dev_e_teste.conllu	2018-12-14_23:34:35
