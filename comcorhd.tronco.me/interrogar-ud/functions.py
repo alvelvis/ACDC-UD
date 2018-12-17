@@ -1,4 +1,4 @@
-tabela = {	'yellow': '#FF4500',
+tabela = {	'yellow': 'green',
 			'purple': 'purple',
 			'blue': 'blue',
 			'red': 'red',

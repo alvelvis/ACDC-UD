@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0"
+      name="viewport">
+    <link href="http://comcorhd.tronco.me/interrogar-ud/style_inquerito.css" rel="stylesheet"
+      type="text/css">
+    <title>Sistema de inquéritos - Interrogatório</title>
+  </head>
+  <body>
+    <div class="header">
+      <form action="inquerito.py" method="POST">
+        <p> <label for="textheader"></label></p>
+        <div class="tooltip">Novo inquérito (?):<span class="tooltiptext">Insira o
+            "# sent_id" ou "# text" da sentença para a qual deseja abrir
+            inquérito, sem a identificação do metadado.</span></div>
+        <br>
+        <input name="textheader" id="textheader" type="text" required>
+        <p></p>
+        <p>
+          <select name="conllu">
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </p>
+        <p><input value="Abrir inquérito" class="btn-gradient blue" style="margin-left:0px"
+type="submit"> </p>
+      </form>
+    </div>
+    <div class="content">
+    <!--SPLIT-->
+    </div>
+  </body>
+</html>

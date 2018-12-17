@@ -53,13 +53,39 @@ def EscreverUD(UD, arquivo):
 			if isinstance(linha, list) and not '# ' in linha:
 				#Reunir as colunas adicionando um "\t"
 				UD[a][b] = "\t".join(UD[a][b])
+		#Depois de reunir todos os tokens que devem ser reunidos, reunir todas as linhas com um "\n"
+		UD[a] = "\n".join(UD[a])
+	#Reunidas todas as linhas, reunir as sentenças
+	UD = "\n\n".join(UD) + '\n\n' #O "\n" no final é necessário pois todo arquivo UD deve ter uma linha vazia no final, é uma exigência dos códigos de comparação, avaliação, etc.
+
+	#Salvar :)
+	open(arquivo, 'w', encoding=codification).write(UD)
+
+#Depois de feitas as alterações em um arquivo UD (variável "UD"), essa função retorna o conjunto de listas para o formato "string" normal para ser salvo em um arquivo (variável "arquivo")
+def PrintarUD(UD, arquivo):
+
+	#Determina a codificação do arquivo caso o usuário forneça a codificação (depois de dois pontos)
+	#Exemplo: "meu_arquivo.conllu:utf8"
+	if ':' in arquivo: codification = arquivo.split(':')[1]
+	#Caso o usuário não forneça dois pontos, a codificação padrão é "utf8"
+	else: codification = "utf8"
+	arquivo = arquivo.split(':')[0] #O nome do arquivo é o que vem antes de dois pontos (se não tiver dois pontos, tudo bem, ele não dá erro)
+
+	#Para cada sentença na lista "UD",
+	for a, sentence in enumerate(UD):
+		#Para cada linha dentro dessa sentença,
+		for b, linha in enumerate(UD[a]):
+			#Se for um token (tiver 10 colunas) e não for um metadado (contiver "# "),
+			if isinstance(linha, list) and not '# ' in linha:
+				#Reunir as colunas adicionando um "\t"
+				UD[a][b] = "\t".join(UD[a][b])
 			#Depois de reunir todos os tokens que devem ser reunidos, reunir todas as linhas com um "\n"
 			UD[a] = "\n".join(UD[a])
 	#Reunidas todas as linhas, reunir as sentenças
 	UD = "\n\n".join(UD) + '\n' #O "\n" no final é necessário pois todo arquivo UD deve ter uma linha vazia no final, é uma exigência dos códigos de comparação, avaliação, etc.
 
 	#Salvar :)
-	open(arquivo, 'w', encoding=codification).write(UD)
+	return UD
 
 #Transforma acentos e caracteres especiais em underlines
 def slugify(value):

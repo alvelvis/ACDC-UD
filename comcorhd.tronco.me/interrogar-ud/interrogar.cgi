@@ -54,7 +54,7 @@ else:
 	if not re.match('^\d+$', form['pesquisa'].value.split(' ')[0]):
 		criterio = '1'
 		parametros = form['pesquisa'].value
-		print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1)")</script>')
+		print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1).")</script>')
 	else:
 		criterio = form['pesquisa'].value.split(' ')[0]
 
@@ -81,7 +81,7 @@ else:
 
 	#Abre o arquivo LINK1 e dá replace no FILTRAR e CONLLU
 	html = open('resultados/link1.html', 'r').read()
-	html = html.replace('filtrar.cgi', 'filtrar.cgi?html=' + slugify(nome) + '_' + data + '&originalud=' + ud)
+	html = html.replace('filtrar.cgi', 'filtrar.cgi?html=' + slugify(nome) + '_' + data + '&originalud=' + ud + '&udoriginal=' + ud)
 	html = html.replace('conllu.cgi', 'conllu.cgi?html=resultados/' + slugify(nome) + '_' + data + '.html')
 	html1 = html.split('<!--SPLIT-->')[0]
 	html2 = html.split('<!--SPLIT-->')[1]
@@ -102,7 +102,7 @@ else:
 		html1 = html1 + '''<div class="container">
 <p>'''+str(i+1)+''' / '''+ocorrencias+'''</p>'''
 		if sentid != '': html1 += '''<p><input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
-		html1 += '''<p id="text_'''+str(i+1)+'''">''' + text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</p>
+		html1 += '''<form action="../inquerito.py?conllu='''+ud+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''<input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></p>
 <p>'''
 
 		#CONTEXTO
@@ -135,7 +135,7 @@ else:
 		html1 += '''<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
 
 		#Fim contexto e anotação
-		html1 += '''<p><a href="#">Voltar ao topo</a></p></div>\n'''
+		html1 += '''<p><a href="#">Voltar ao topo</a> &nbsp; <a href="#" onclick='inquerito("form_'''+str(i+1)+'''")'>Abrir inquérito</a></p></form></div>\n'''
 
 	html = html1 + html2
 
@@ -146,7 +146,7 @@ else:
 	html1 = html.split('//SELECTION')[0]
 	html2 = html.split('//SELECTION')[1]
 	for i, ocorrencia in enumerate(lista_ocorrencias):
-		html1 += 'if (document.getElementById("checkbox_'+str(i+1)+'")) {\n if (document.getElementById("checkbox_'+str(i+1)+'").checked == true) {\n document.getElementById("pesquisa").value = document.getElementById("pesquisa").value + "^# text = (" + escapeRegExp(document.getElementById("text_'+str(i+1)+'").innerHTML) + ")$|"; \n} \n}\n'
+		html1 += 'if (document.getElementById("checkbox_'+str(i+1)+'")) {\n if (document.getElementById("checkbox_'+str(i+1)+'").checked == true) {\n document.getElementById("pesquisa").value = document.getElementById("pesquisa").value + "^# text = " + escapeRegExp(document.getElementById("text_'+str(i+1)+'").innerHTML) + "$|"; \n} \n}\n'
 
 	html = html1 + html2
 

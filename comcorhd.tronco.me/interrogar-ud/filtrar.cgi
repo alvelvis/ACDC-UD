@@ -26,7 +26,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	if not re.match('^\d+$', form['pesquisa'].value.split(' ')[0]):
 		criterio = '1'
 		parametros = form['pesquisa'].value.replace('<b>','').replace('<\\/b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('<\\/font>','')
-		print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1)")</script>')
+		print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1).")</script>')
 	else:
 		criterio = form['pesquisa'].value.split(' ')[0]
 
@@ -40,6 +40,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 		html = [x.split('</pre>')[0] for x in html[1:]]
 		open('conllu/tmp.conllu', 'w').write("\n\n".join(html).replace('<b>','').replace('</b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('</font>',''))
 
+	udoriginal = form['udoriginal'].value
 	arquivo_ud = 'conllu/tmp.conllu'
 	ud = "tmp.conllu"
 	if not 'nome_pesquisa' in form:
@@ -81,8 +82,8 @@ if not 'action' in form or form['action'].value != 'desfazer':
 		novo =  '''<div class="container">
 	<p>'''+str(i+1)+''' / '''+ocorrencias+'''</p>'''
 		if sentid != '': novo += '''<p><input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
-		novo += '''<p>'''+text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + functions.tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + functions.tabela['purple'] + '">').replace('@BLUE/', '<font color="' + functions.tabela['blue'] + '">').replace('@RED/', '<font color="' + functions.tabela['red'] + '">').replace('@CYAN/', '<font color="' + functions.tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</p>
-	<p>'''
+		novo += '''<form action="../../inquerito.py?conllu='''+udoriginal+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''<input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></p>
+<p>'''
 
 		#CONTEXTO
 		if sentid != '' and text != '':
@@ -114,14 +115,14 @@ if not 'action' in form or form['action'].value != 'desfazer':
 		novo += '''<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
 
 		#Fim contexto e anotação
-		novo += '''<p><a href="#">Voltar ao topo</a></p></div>\n'''
+		novo += '''<p><a href="#">Voltar ao topo</a> &nbsp; <a href="#" onclick='inquerito("form_'''+str(i+1)+'''")'>Abrir inquérito</a></p></form></div>\n'''
 
 		html1 = html1 + novo
 
 		html_original = html_original.split('<div class="container">')
 		for i, sentence in enumerate(html_original):
 			if i != 0:
-				if text.replace('<b>', '').replace('</b>', '').replace('/BOLD', '').replace('@BOLD', '').replace('<font color="' + tabela['yellow'] + '">', '').replace('<font color="' + tabela['red'] + '">', '').replace('<font color="' + tabela['cyan'] + '">', '').replace('<font color="' + tabela['blue'] + '">', '').replace('<font color="' + tabela['purple'] + '">', '').replace('</font>', '').replace('@YELLOW/', '').replace('@RED/', '').replace('@CYAN/','').replace('@BLUE/', '').replace('@PURPLE/', '').replace('/FONT', '') in sentence.replace('<b>', '').replace('</b>', '').replace('/BOLD', '').replace('@BOLD', '').replace('<font color="' + tabela['yellow'] + '">', '').replace('<font color="' + tabela['red'] + '">', '').replace('<font color="' + tabela['cyan'] + '">', '').replace('<font color="' + tabela['blue'] + '">', '').replace('<font color="' + tabela['purple'] + '">', '').replace('</font>', '').replace('@YELLOW/', '').replace('@RED/', '').replace('@CYAN/', '').replace('@BLUE/', '').replace('@PURPLE/', '').replace('/FONT', ''):
+				if '# text = ' + text.replace('<b>', '').replace('</b>', '').replace('/BOLD', '').replace('@BOLD', '').replace('<font color="' + tabela['yellow'] + '">', '').replace('<font color="' + tabela['red'] + '">', '').replace('<font color="' + tabela['cyan'] + '">', '').replace('<font color="' + tabela['blue'] + '">', '').replace('<font color="' + tabela['purple'] + '">', '').replace('</font>', '').replace('@YELLOW/', '').replace('@RED/', '').replace('@CYAN/','').replace('@BLUE/', '').replace('@PURPLE/', '').replace('/FONT', '') in sentence.replace('<b>', '').replace('</b>', '').replace('/BOLD', '').replace('@BOLD', '').replace('<font color="' + tabela['yellow'] + '">', '').replace('<font color="' + tabela['red'] + '">', '').replace('<font color="' + tabela['cyan'] + '">', '').replace('<font color="' + tabela['blue'] + '">', '').replace('<font color="' + tabela['purple'] + '">', '').replace('</font>', '').replace('@YELLOW/', '').replace('@RED/', '').replace('@CYAN/', '').replace('@BLUE/', '').replace('@PURPLE/', '').replace('/FONT', ''):
 					if len(html_original[i].split('</div>')) > 1:
 						html_original[i] = '</div>' + html_original[i].split('</div>', 1)[1]
 					else:
