@@ -26,7 +26,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	if not re.match('^\d+$', form['pesquisa'].value.split(' ')[0]):
 		criterio = '1'
 		parametros = form['pesquisa'].value.replace('<b>','').replace('<\\/b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('<\\/font>','')
-		print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1).")</script>')
+		if not '^# text = ' in form['pesquisa'].value: print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1).")</script>')
 	else:
 		criterio = form['pesquisa'].value.split(' ')[0]
 
@@ -44,7 +44,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 	arquivo_ud = 'conllu/tmp.conllu'
 	ud = "tmp.conllu"
 	if not 'nome_pesquisa' in form:
-		nome = form['pesquisa'].value
+		nome = form['pesquisa'].value.replace('<b>','').replace('</b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('</font>','')
 	else:
 		nome = form['nome_pesquisa'].value
 	if not os.path.isdir('resultados/' + form['html'].value): os.mkdir('resultados/' + form['html'].value)
@@ -81,7 +81,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 
 		novo =  '''<div class="container">
 	<p>'''+str(i+1)+''' / '''+ocorrencias+'''</p>'''
-		if sentid != '': novo += '''<p><input id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
+		if sentid != '': novo += '''<p>'''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		novo += '''<form action="../../inquerito.py?conllu='''+udoriginal+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''<input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></p>
 <p>'''
 
@@ -129,7 +129,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 						html_original[i] = '</div>'
 		html_original = '<div class="container">'.join(html_original)
 
-	os.remove('conllu/tmp.conllu')
+	#os.remove('conllu/tmp.conllu')
 
 	html = html1 + html2
 

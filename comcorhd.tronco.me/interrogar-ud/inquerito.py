@@ -39,7 +39,7 @@ if os.environ['REQUEST_METHOD'] == 'POST' and not 'action' in form.keys():
 		sentence2 = '\n'.join(sentence2)
 		if '# text = ' in form['textheader'].value or '# sent_id = ' in form['textheader'].value:
 			form['textheader'].value = form['textheader'].value.split(' = ', 1)[1]
-		if '# text = ' + form['textheader'].value in sentence2 or '# sent_id = ' + form['textheader'].value in sentence2:
+		if '# text = ' + form['textheader'].value + '\n' in sentence2 or '# sent_id = ' + form['textheader'].value + '\n' in sentence2:
 			html1 += '<h3>' + form['textheader'].value + '</h3><hr><br><form action="inquerito.py?sentnum='+str(i)+'&conllu=' + ud + '&action=alterar" method="POST"><label>Dados do inquérito:<br><div class="tooltip"><input style="display: inline-block;" placeholder="Número da linha" name="token" required><span class="tooltiptextfix" style="max-width:80%">'+'<br>'.join(linhas)+'</span></div> <div style="display: inline-block;" class="tooltip"><input style="display: inline-block;" placeholder="Número da coluna" name="coluna"><span style="display: inline-block;" class="tooltiptext">Caso seja um metadado, não há coluna.<br><br>1: ID | 2: WORD | 3: LEMMA | 4: UPOS | 5: XPOS | 6: FEATS | 7: DEPHEAD | 8: DEPREL | 9: DEPS | 10: MISC</span></div> <input name="valor" placeholder="Novo valor" required> <input style="display: inline-block;" style="display: inline-block;" type="submit" value="Finalizar inquérito"><pre>' + sentence2 + '</pre><input type="hidden" name="textheader" value="' + form['textheader'].value + '"></label></form>'
 			achou = True
 			break
