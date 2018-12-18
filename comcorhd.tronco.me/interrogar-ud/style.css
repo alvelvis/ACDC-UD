@@ -35,6 +35,8 @@ input[type=text] {
 }
 a {
         color: #638C28;
+        //color: green;
+        //color: red;
         text-decoration: none;
 }
 

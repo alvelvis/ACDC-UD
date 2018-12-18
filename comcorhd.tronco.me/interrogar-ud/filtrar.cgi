@@ -115,7 +115,7 @@ if not 'action' in form or form['action'].value != 'desfazer':
 		novo += '''<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
 
 		#Fim contexto e anotação
-		novo += '''<p><a href="#">Voltar ao topo</a> &nbsp; <a href="#" onclick='inquerito("form_'''+str(i+1)+'''")'>Abrir inquérito</a></p></form></div>\n'''
+		novo += '''<p><a href="#">Voltar ao topo</a> &nbsp; <a style="cursor:pointer" onclick='inquerito("form_'''+str(i+1)+'''")'>Abrir inquérito</a></p></form></div>\n'''
 
 		html1 = html1 + novo
 
