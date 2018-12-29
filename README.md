@@ -16,27 +16,11 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [split_conllu.py](#split_conllupy)
 
 # interrogar_UD.py
-Com esse código é possível realizar pesquisas em arguivos UD de acordo com dois critérios: 1- expressão regular; 2- pesquisa especifica.
+Com esse código é possível realizar pesquisas em arquivos UD de acordo com diferentes critérios.
 
-O script é utilizado no site: http://comcorhd.tronco.me/interrogar-ud/
+O script é utilizado no Interrogatório: http://comcorhd.tronco.me/interrogar-ud/
 
-## Exemplo
-
-**1- Parâmetro: Expressão regular**
-
-Se a expressão regular for encontrada em alguma sentença, retorná-la.
-
-	Exemplo: '1 dizer.*\n.*PROPN'
-	Retornar sentenças com o lema "dizer" seguido de um "PROPN".
-
-**2- Parâmetros: A#B#C#D**
-
-Se em uma sentença tiver um token marcado como A na coluna B e não tiver nenhum outro token com valor C na coluna D apontando para ele, retornar a sentença.
-
-Dica: O parâmetro C aceita o operador lógico '|' (ou).
-
-	Exemplo: '2 root#8#nsubj|csubj#8'
-	Retornar sentenças em que o 'root' não tenha nenhum 'nsubj' ou 'csubj' apontando para ele.
+Os critérios de pesquisa são explicados na página de [interrogação](http://comcorhd.tronco.me/cgi-bin/interrogar.cgi).
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
