@@ -1,19 +1,33 @@
 !@#<h3>Critério 1: Regex</h3>
-Parâmetro: Expressão regular
-<br>Se a expressão regular for encontrada em alguma sentença, retorná-la.
+Se a expressão regular for encontrada em alguma sentença, retorná-la.
 <br><br>Dica: Cada grupo da expressão regular será mostrado com uma cor diferente.
-<br> Dica 2: Caso nenhum critério seja especificado, este será o escolhido.
-<br><br>Exemplo: dizer.*\n.*PROPN
-<br>Retornar sentenças com o lema "dizer" seguido de um "PROPN".
+<br>Dica 2: Em um arquivo <i>.conllu</i>, "\t" separa as colunas, e "\n", as palavras.
+<h4>Exemplos:</h4>
+1) Retornar sentenças com o lema "dizer" seguido de um "PROPN".
+<ul><li>
+<a id="1" style="cursor:pointer" onclick="pesquisa('1')">1 (.*dizer.*)\n(.*PROPN)</a>
+</li></ul>
+2) Retornar sentenças com substantivos seguidos ou não de adjetivos, além de um nome próprio que seja aposto.
+<ul><li>
+<a id="2" style="cursor:pointer" onclick="pesquisa('2')">1 (.*NOUN.*)(\n.*ADJ.*)*\n(.*PROPN.*appos)</a>
+</li></ul>
+
 !@#<h3>Critério 2: Ausência de B apontando para A</h3>
-Parâmetros: A#X#B#Y
-<br>Se em uma sentença tiver um token marcado como A na coluna X e não tiver nenhum outro token com valor B na coluna Y apontando para A, retornar a sentença.
+Se em uma sentença tiver um token marcado como A na coluna X e não tiver nenhum outro token com valor B na coluna Y apontando para A, retornar a sentença.
+<br><br>Parâmetros: A#X#B#Y
 <br><br>Dica: O parâmetro B aceita o operador lógico '|' (ou).
-<br><br>Exemplo: root#8#nsubj|csubj#8
-<br>Retornar sentenças em que o 'root' não tenha nenhum 'nsubj' ou 'csubj' apontando para ele.
+<h4>Exemplos:</h4>
+1) Retornar sentenças em que o 'root' não tenha nenhum 'nsubj' ou 'csubj' apontando para ele.
+<ul><li>
+<a id="3" style="cursor:pointer" onclick="pesquisa('3')">2 root#8#nsubj|csubj#8</a>
+</li></ul>
+
 !@#<h3>Critério 3: Regex Independentes</h3>
-Parâmetros: Expressão 1#Expressão 2# ... #Expressão N
-<br>Checa se várias expressões regulares dão match em uma sentença e a retorna caso nenhuma falhe.
-<br><br>Dica: Utilize '#!' para negar uma expressão regular.
-<br><br>Exemplo: VERB.*root#!nsubj#!csubj
-<br>Procurar por sentenças em que o 'root' seja 'VERB', e que não tenham nenhum 'nsubj' nem 'csubj'.
+Checa se várias expressões regulares dão match em uma sentença e a retorna caso nenhuma das expressões falhe.
+<br><br>Parâmetros:<br>Expressão 1#Expressão 2# . . . #Expressão N
+<br><br>Dica: Utilize '!' para negar uma expressão regular.
+<h4>Exemplos:</h4>
+1) Procurar por sentenças em que o 'root' seja 'VERB', e que não tenham nenhum 'nsubj' nem 'csubj'.
+<ul><li>
+<a id="4" style="cursor:pointer" onclick="pesquisa('4')">3 VERB.*root#!nsubj#!csubj</a>
+</li></ul>

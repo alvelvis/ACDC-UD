@@ -3,126 +3,57 @@
   <head>
     <meta name="viewport" http-equiv="content-type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0">
     <title>link de pesquisa 1 (203): Interrogatório</title>
-    <link href="http://comcorhd.tronco.me/interrogar-ud/style.css" rel="stylesheet" type="text/css">
+    <link href="/interrogar-ud/style.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/interrogar-ud/jquery.easyPaginate.js"></script>
+    <script src="/interrogar-ud/resultados.js"></script>
   </head>
-  <body>
+  <body onload="load()">
+   <button onclick="topFunction()" id="myBtn" title="Voltar ao topo">🡅</button>
     <div class="header">
       <h1><span id="combination">link de pesquisa 1</span> (203)</h1>
       <p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;
         <em><a href="#" onclick="apagar()">excluir</a></em></p>
-      <h2><a href="../index.cgi">interrogações recentes</a> - <a href="../interrogar.cgi"> nova
+        <input type="hidden" id="apagar_link" value="link1">
+      <h2><a href="/cgi-bin/interrogatorio.cgi">interrogações recentes</a> - <a href="/cgi-bin/interrogar.cgi"> nova
           interrogação</a></h2>
     </div>
-    <div class="content"> <br>
+    <div class="content"><br>
+    <br>
+      <div class="tab"><button class="Ver" onclick="openCity(event, 'ver')">
+      Opções </button> <button class="tablinks" onclick="openCity(event, 'filtrar_tab')">
+          Filtrar </button> <button class="tablinks" onclick="openCity(event, 'conllu')">
+          Baixar </button> <button id="fechartabs" style="display:none; color:white; background-color:red;" class="fechartabs" onclick="fechar_tabs()">
+          X </button></div>
+      <div class="tabcontent" id="ver"> <br>
       <br>
-      <div class="tab"><button id="fechartabs" style="display:none" class="fechartabs" onclick="fechar_tabs()">
-      × </button> <button class="tablinks" onclick="openCity(event, 'filtrar_tab')">
-          Filtrar resultados </button> <button class="tablinks" onclick="openCity(event, 'conllu')">
-          Transformar em CoNLLU </button></div>
+      <br>
+      <p><a onclick="tudo('abrir')" style="cursor:pointer">[Abrir anotações]</a> <a style="cursor:pointer" onclick="tudo('fechar')">[Fechar anotações]</a> <a style="cursor:pointer" onclick="tudo('marcar')">[Marcar tudo]</a> <a style="cursor:pointer" onclick="tudo('desmarcar')">[Desmarcar tudo]</a> <a style="cursor:pointer" onclick="paginacao()">[Remover paginação]</a></p>
+      </div>
       <div class="tabcontent" id="filtrar_tab"> <br>
         <br>
         <br>
-        <form action="../filtrar.cgi" method="POST"> <p><label for="pesquisa">
+        <form action="/cgi-bin/filtrar.cgi" method="POST"> <p><label for="pesquisa">
             <div class="tooltip">Expressão do filtro (?):<span class="tooltiptext">As sentenças serão removidas da página atual e salvas em uma página separada. Se for do desejo, é possível retornar à pesquisa original posteriormente.<br><br>Sintaxe: nº do critério + espaço + parâmetros</span></div><br>
             <input id="pesquisa" name="pesquisa" type="text" required></label>
             <br><br> <label for="nome_pesquisa">Nome do filtro (opcional):<br>
 <input id="nome_pesquisa" name="nome_pesquisa" type="text" ></label>
             <br><br> <input id="filtrar"
-value="Filtrar pesquisa" class="btn-gradient orange mini" style="margin-left:0px" type="submit">&nbsp;ou&nbsp;<input value="Filtrar seleção" class="btn-gradient orange mini" type="button" onclick="excluir_selection()"></p></form>
+value="Filtrar pesquisa" class="btn-gradient orange mini" style="margin-left:0px" type="submit">&nbsp;ou&nbsp;<input id="filtrarsel" value="Filtrar seleção" class="btn-gradient orange mini" type="button" onclick="excluir_selection()"></p></form>
       </div>
       <div class="tabcontent" id="conllu"> <br>
         <br>
         <br>
-        <form action="../conllu.cgi" method="POST"><p><label for="nomeconllu">Nome do arquivo (sem <em>.conllu</em>):<br>
+        <form action="/cgi-bin/conllu.cgi" method="POST"><p><label for="nomeconllu">Nome do arquivo (sem <em>.conllu</em>):<br>
             <input id="nomeconllu" name="nomeconllu" type="text" required></label> <input id="conllunizar"
 value="Baixar arquivo" class="btn-gradient orange mini" type="submit"></p></form>
       </div>
       <br>
       <br>
       <br>
-      <br>
-      <a onclick="tudo('abrir')" style="cursor:pointer">Abrir anotações</a> &nbsp; <a style="cursor:pointer" onclick="tudo('fechar')">Fechar anotações</a> &nbsp; <a style="cursor:pointer" onclick="tudo('marcar')">Marcar tudo</a> &nbsp; <a style="cursor:pointer" onclick="tudo('desmarcar')">Desmarcar tudo</a><br><br>
-      <!--SPLIT--> <br></div>
-
-<script>
-function excluir_selection() {
-document.getElementById("pesquisa").value = "";
-//SELECTION
-if (document.getElementById("nome_pesquisa").value == "") { document.getElementById("nome_pesquisa").value = "Seleção"; }
-document.getElementById("pesquisa").value = document.getElementById("pesquisa").value.rsplit('|',1)[0];
-document.getElementById("filtrar").click();
-}
-
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'); // $& means the whole matched string
-}
-
-String.prototype.rsplit = function(sep, maxsplit) {
-    var split = this.split(sep);
-    return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
-}
-
-function tudo(event){
-//TUDO
-}
-
-function mostrar(nome, botao){
-if (document.getElementById(nome).style.display == "none"){
-document.getElementById(nome).style.display = "block"
-document.getElementById(botao).value = "Esconder anotação"
-}else{
-document.getElementById(nome).style.display = "none"
-document.getElementById(botao).value = "Mostrar anotação"
-}
-}
-
-function contexto(nome, botao){
-if (document.getElementById(nome).style.display == "none"){
-document.getElementById(nome).style.display = "block"
-document.getElementById(botao).value = "Esconder contexto"
-}else{
-document.getElementById(nome).style.display = "none"
-document.getElementById(botao).value = "Mostrar contexto"
-}
-}
-
-function apagar() {
-if (confirm('Apagar interrogação "' + document.getElementById("combination").innerHTML + '"?')) {
-window.location = "../apagar.cgi?query=link1"
-}
-}
-function openCity(evt, cityName) {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
-
-    document.getElementById("fechartabs").style.display = "block"
-}
-function fechar_tabs() {
-	document.getElementById('conllu').style.display = "none"
-	document.getElementById('filtrar_tab').style.display = "none"
-	document.getElementById('fechartabs').style.display = "none"
-}
-
-function inquerito(ide) {
-    document.getElementById(ide).submit()
-}
-		</script>
+      <div id="easyPaginate">
+      <!--SPLIT-->
+      </div><br></div>
   </body>
 </html>
