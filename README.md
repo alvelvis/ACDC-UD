@@ -14,6 +14,7 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [udpipe_vertical.py](#udpipe_verticalpy)
 * [generate_release.py](#generate_releasepy)
 * [split_conllu.py](#split_conllupy)
+* [tratar_conllu.py](#tratar_conllupy)
 
 # interrogar_UD.py
 Com esse código é possível realizar pesquisas em arquivos UD de acordo com diferentes critérios.
@@ -460,5 +461,19 @@ A partir de arquivos *train, dev e teste*, **split_conllu.py** gera uma pasta *d
 Você será interrogado sobre o caminho do arquivo *.conllu*. Basta arrastar a pasta para o terminal.
 
 Então, **split_conllu.py** criará uma pasta "documents" com todos os arquivos unitários retirados dos metadados "sent_id", na ordem das sentenças original.
+
+[**↥ voltar ao topo**](#ACDC-UD)
+
+# tratar_conllu.py
+
+Trata os dados em um arquivo .conllu para servir de material de treino ao UDPipe.
+
+O script remove as colunas XPOS e Misc, além de alguns cabeçalhos irrelevantes para o momento de treinamento.
+
+## Como usar
+
+    $ python3 tratar_conllu.py
+
+Será requisitado que o usuário arraste o arquivo *.conllu* para o terminal.
 
 [**↥ voltar ao topo**](#ACDC-UD)
