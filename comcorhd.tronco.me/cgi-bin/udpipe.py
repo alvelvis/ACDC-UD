@@ -6,7 +6,7 @@ import cgi, cgitb
 cgitb.enable()
 import estrutura_dados
 
-modelo = 'bosque-2.2.udpipe'
+modelo = 'bosque-2.3.udpipe'
 
 html = '<html><head><meta name="viewport" http-equiv="content-type" content="text/html; charset=UTF-8; width=device-width, initial-scale=1.0"><title>UDPipe: Interrogatório</title></head><body>'
 

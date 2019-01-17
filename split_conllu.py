@@ -1,15 +1,13 @@
 import os
 
-pasta_conllu = input('Pasta onde estão os arquivos train, dev e teste:\n').replace('"','').replace("'","").replace('\\','/').strip()
+pasta_conllu = input('Pasta onde estão os arquivos .conllu:\n').replace('"','').replace("'","").replace('\\','/').strip()
 
 conllus = list()
 for arquivo in os.listdir(pasta_conllu):
 	if '.conllu' in arquivo:
 		conllus.append(arquivo)
 
-if len(conllus) != 3:
-	print('Não há 3 arquivos conllu na pasta "' + pasta_conllu + '"')
-	exit()
+print(conllus)
 
 if os.path.isdir(pasta_conllu + '/documents'):
 	print('Pasta "documents" já existe em "' + pasta_conllu + '"')

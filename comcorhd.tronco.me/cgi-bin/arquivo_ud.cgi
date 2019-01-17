@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
 print("Content-type:text/html")
@@ -10,9 +10,12 @@ cgitb.enable()
 import re
 import datetime
 from estrutura_dados import slugify as slugify
+import subprocess
 
 #if not 'REQUEST_METHOD' in os.environ:
 #	os.environ['REQUEST_METHOD'] = 'POST'
+
+form = cgi.FieldStorage()
 
 def convert_bytes(num):
     """
@@ -31,7 +34,7 @@ def file_size(file_path):
         file_info = os.stat(file_path)
         return convert_bytes(file_info.st_size)
 
-if os.environ['REQUEST_METHOD'] != 'POST':
+if os.environ['REQUEST_METHOD'] != 'POST' and not 'validate' in form:
     html = open('/interrogar-ud/arquivo_ud.html', 'r').read()
     html1 = html.split('<!--SPLIT-->')[0]
     html2 = html.split('<!--SPLIT-->')[1]
@@ -42,18 +45,35 @@ if os.environ['REQUEST_METHOD'] != 'POST':
     uds = [x for x in os.listdir('/interrogar-ud/conllu') if os.path.isfile('/interrogar-ud/conllu/' + x)]
 
     for ud in uds:
-	    html1 += '<div class="container-lr"><a href="/interrogar-ud/conllu/' + ud + '" download>' + ud + '</a> &nbsp;&nbsp; ' + str(len(open('/interrogar-ud/conllu/' + ud, 'r').read().split('\n\n'))) + ' sentenças &nbsp;&nbsp; ' + str(file_size('/interrogar-ud/conllu/' + ud)) + ' &nbsp;&nbsp; ' + str(datetime.datetime.fromtimestamp(os.path.getctime('/interrogar-ud/conllu/' + ud))).split('.')[0] + ''' &nbsp;&nbsp;&nbsp; <a href="#" onclick='apagar("''' + ud + '''")' ><em>excluir</em></a></div>\n'''
+        try:
+            leitura = open('/interrogar-ud/conllu/' + ud, 'r').read()
+            n_sent = str(len(leitura.split('\n\n')))
+            n_tokens = 0
+            for linha in leitura.splitlines():
+            	if len(linha.split('\t')) > 2:
+            		n_tokens += 1
+            html1 += '<div class="container-lr"><a href="/interrogar-ud/conllu/' + ud + '" download>' + ud + '</a> &nbsp;&nbsp; ' + n_sent + ' sentenças &nbsp;&nbsp; ' + str(n_tokens) + ' tokens &nbsp;&nbsp; ' + str(file_size('/interrogar-ud/conllu/' + ud)) + ' &nbsp;&nbsp; ' + str(datetime.datetime.fromtimestamp(os.path.getctime('/interrogar-ud/conllu/' + ud))).split('.')[0] + ''' &nbsp;&nbsp;&nbsp; <a href="#" onclick='apagar("''' + ud + '''")' >excluir</a> | <a target="_blank" href="/cgi-bin/arquivo_ud.cgi?validate=''' + ud + '''">validar</a></div>\n'''
+        except:
+            html1 += '<div class="container-lr"><a href="/interrogar-ud/conllu/' + ud + '" download>' + ud + '</a> &nbsp;&nbsp; MemoryError &nbsp;&nbsp; ' + str(file_size('/interrogar-ud/conllu/' + ud)) + ' &nbsp;&nbsp; ' + str(datetime.datetime.fromtimestamp(os.path.getctime('/interrogar-ud/conllu/' + ud))).split('.')[0] + ''' &nbsp;&nbsp;&nbsp; <a href="#" onclick='apagar("''' + ud + '''")' >excluir</a> | <a href="/cgi-bin/arquivo_ud.cgi?validate=''' + ud + '''" target="_blank">validar</a></div>\n'''
 
     novo_html = html1 + html2
 
     print(novo_html)
 
 
-else:
-    form = cgi.FieldStorage()
+elif not 'validate' in form:
     f = os.path.basename(form['file'].filename)
     open('/interrogar-ud/conllu/' + slugify(f), 'wb').write(form['file'].file.read())
     print('<body onload="redirect()"><script>function redirect() { window.location = "/cgi-bin/arquivo_ud.cgi" }</script></body>')
 
+else:
+    print('<html><head><meta charset="UTF-8"><title>validate.py</title></head><body>')
+    try:
+        output = subprocess.check_output('python3 /cgi-bin/validate.py --lang=pt /interrogar-ud/conllu/' + form['validate'].value, shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        output = e.output.decode()
+    for line in output.split('\n'):
+        print('<br>', line)
+    print('</body></html>')
 
 

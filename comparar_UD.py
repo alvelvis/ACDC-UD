@@ -70,7 +70,7 @@ def main(saída, arquivos):
 	#Checa os parâmetros
 	files_list = list()
 	codificação = dict()
-	parâmetros = '--' + arquivos.split('--')[1]
+	parâmetros = '--' + arquivos.split('--')[1] if '--' in arquivos else ''
 	arquivos = arquivos.split('--')[0]
 	for arquivo in arquivos.split('!@#'):
 		if arquivo.replace('!@#','').strip() != '':

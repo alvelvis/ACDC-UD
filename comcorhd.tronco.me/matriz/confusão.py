@@ -241,8 +241,8 @@ function openCity(evt, cityName) {
                         html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + sentença[1] + '<br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" \>' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" \>' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" \>')
                         html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
                         html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b>")
-                        html.append("<pre>" + sentença[2] + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
-                        html.append("<pre>" + sentença[3] + '</pre></div></div>')
+                        html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;') + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
+                        html.append("<pre>" + sentença[3].replace('<','&lt;').replace('>','&gt;') + '</pre></div></div>')
 
                 html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" class="btn-gradient orange" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual" style="margin-left:0px"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></div></body></form></html>
 

@@ -6,15 +6,15 @@
     <link href="/interrogar-ud/style.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="/interrogar-ud/jquery.easyPaginate.js"></script>
+    <!--<script src="/interrogar-ud/jquery.easyPaginate.js"></script>-->
     <script src="/interrogar-ud/resultados.js"></script>
   </head>
   <body onload="load()">
-   <button onclick="topFunction()" id="myBtn" title="Voltar ao topo">🡅</button>
+   <button onclick="topFunction()" id="myBtn" title="Voltar ao topo">Voltar ao topo</button>
     <div class="header">
       <h1><span id="combination">link de pesquisa 1</span> (203)</h1>
       <p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;
-        <em><a href="#" onclick="apagar()">excluir</a></em></p>
+        <!--em--><a href="#" onclick="apagar()">excluir</a><!--/em--></p>
         <input type="hidden" id="apagar_link" value="link1">
       <h2><a href="/cgi-bin/interrogatorio.cgi">interrogações recentes</a> - <a href="/cgi-bin/interrogar.cgi"> nova
           interrogação</a></h2>
@@ -29,7 +29,7 @@
       <div class="tabcontent" id="ver"> <br>
       <br>
       <br>
-      <p><a onclick="tudo('abrir')" style="cursor:pointer">[Abrir anotações]</a> <a style="cursor:pointer" onclick="tudo('fechar')">[Fechar anotações]</a> <a style="cursor:pointer" onclick="tudo('marcar')">[Marcar tudo]</a> <a style="cursor:pointer" onclick="tudo('desmarcar')">[Desmarcar tudo]</a> <a style="cursor:pointer" onclick="paginacao()">[Remover paginação]</a></p>
+      <p><a onclick="tudo('abrir')" style="cursor:pointer">Abrir anotações</a><br><a style="cursor:pointer" onclick="tudo('fechar')">Fechar anotações</a><br><a style="cursor:pointer" onclick="tudo('marcar')">Marcar tudo</a><br><a style="cursor:pointer" onclick="tudo('desmarcar')">Desmarcar tudo</a><!--br><a style="cursor:pointer" onclick="paginacao()">Remover paginação</a--></p>
       </div>
       <div class="tabcontent" id="filtrar_tab"> <br>
         <br>
@@ -40,7 +40,7 @@
             <br><br> <label for="nome_pesquisa">Nome do filtro (opcional):<br>
 <input id="nome_pesquisa" name="nome_pesquisa" type="text" ></label>
             <br><br> <input id="filtrar"
-value="Filtrar pesquisa" class="btn-gradient orange mini" style="margin-left:0px" type="submit">&nbsp;ou&nbsp;<input id="filtrarsel" value="Filtrar seleção" class="btn-gradient orange mini" type="button" onclick="excluir_selection()"></p></form>
+value="Filtrar pesquisa" class="btn-gradient orange mini" style="margin-left:0px" type="submit">&nbsp;ou&nbsp;<input id="filtrarsel" value="Remover seleção" class="btn-gradient orange mini" type="button" onclick="excluir_selection()"></p></form>
       </div>
       <div class="tabcontent" id="conllu"> <br>
         <br>
@@ -52,8 +52,8 @@ value="Baixar arquivo" class="btn-gradient orange mini" type="submit"></p></form
       <br>
       <br>
       <br>
-      <div id="easyPaginate">
+      <!--div id="easyPaginate"-->
       <!--SPLIT-->
-      </div><br></div>
+      <!--/div--><br></div>
   </body>
 </html>

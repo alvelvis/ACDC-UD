@@ -177,6 +177,7 @@ def load_conllu(file):
             # Start a new sentence
             ud.sentences.append(UDSpan(index, 0))
             sentence_start = len(ud.words)
+        #print(line)
         if not line:
             # Add parent and children UDWord links and check there are no cycles
             def process_word(word):

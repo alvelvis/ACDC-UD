@@ -99,7 +99,8 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		#SENTID
 		if sentid != '': novo += '''<p>'''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		#FORM
-		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form><form action="/cgi-bin/udpipe.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
+		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
+		novo += '''<form action="/cgi-bin/udpipe.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
 		#TEXT
 		novo += '''<p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</p>
 <p>'''
@@ -114,9 +115,9 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 			temcontexto = False
 
 		if temcontexto:
-			novo += '''<input id="contexto_'''+str(i+1)+'''" value="Mostrar contexto" onclick="contexto('divcontexto_'''+str(i+1)+'''', 'contexto_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="mostrar_'''+str(i+1)+'''" class="anotacao" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button">'''
+			novo += '''<input id="contexto_'''+str(i+1)+'''" value="Mostrar contexto" onclick="contexto('divcontexto_'''+str(i+1)+'''', 'contexto_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="mostrar_'''+str(i+1)+'''" class="anotacao" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input type="button" value="Abrir inquérito" onclick='inquerito("form_'''+str(i+1)+'''")'>'''
 		else:
-			novo += '''<input class="anotacao" id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button">'''
+			novo += '''<input class="anotacao" id="mostrar_'''+str(i+1)+'''" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input type="button" value="Abrir inquérito" onclick='inquerito("form_'''+str(i+1)+'''")'>'''
 
 		novo += '''</p>'''
 
@@ -164,7 +165,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		novo += '''<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
 
 		#Fim contexto e anotação
-		novo += '''<div style="display:none" id="optdiv_''' + str(i+1) + '''"><p><a style="cursor:pointer" onclick='inquerito("form_'''+str(i+1)+'''")'>[Abrir inquérito]</a> <a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>[Anotar no UDPipe]</a></p></div></div>\n'''
+		novo += '''<div style="display:none" id="optdiv_''' + str(i+1) + '''"><p><a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>Anotar no UDPipe</a></p></div></div>\n'''
 
 		html1 = html1 + novo
 
@@ -182,7 +183,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 
 	html = html1 + html2
 
-	html = html.replace('''<a style="cursor:pointer" onclick="tudo('marcar')">[Marcar tudo]</a> <a style="cursor:pointer" onclick="tudo('desmarcar')">[Desmarcar tudo]</a>''', "")
+	html = html.replace('''<a style="cursor:pointer" onclick="tudo('marcar')">Marcar tudo</a><br><a style="cursor:pointer" onclick="tudo('desmarcar')">Desmarcar tudo</a>''', "")
 
 	#title
 	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
@@ -209,5 +210,10 @@ elif form['action'].value == 'desfazer':
 	html = form['html'].value
 	original = form['original'].value
 	open('/interrogar-ud/resultados/' + original + '.html', 'w').write(open(html, 'r').read())
+
+	open('/interrogar-ud/tmp/' + html.rsplit('/', 1)[1].rsplit('_anterior', 1)[0], 'w').write(open(html.rsplit('_anterior', 1)[0], 'r').read())
+	open('/interrogar-ud/tmp/' + html.rsplit('/', 1)[1], 'w').write(open(html, 'r').read())
+	os.remove(html.rsplit('_anterior', 1)[0])
+	os.remove(html)
 
 	print('<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" /></head><body onload="redirect()"><script>function redirect() { window.location = "/interrogar-ud/resultados/' + original + '.html" }</script></body>')

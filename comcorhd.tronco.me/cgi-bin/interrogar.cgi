@@ -64,7 +64,7 @@ else:
 	#Arquivo UD, Nome, Data, Link
 	arquivo_ud = '/interrogar-ud/conllu/' + form["conllu"].value
 	ud = form["conllu"].value
-	nome = form['nome'].value
+	nome = 'teste' if form['meth'].value == 'teste' else form['nome'].value
 	data = str(datetime.now()).replace(' ','_').split('.')[0]
 	link = '/interrogar-ud/resultados/' + slugify(nome) + '_' + data + '.html'
 
@@ -102,7 +102,8 @@ else:
 		#SENTID
 		if sentid != '': html1 += '''<p><input class="cb" id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" title="Selecionar sentença para filtragem" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		#OPÇÕES
-		html1 += '''<form action="/cgi-bin/inquerito.py?conllu='''+ud+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form><form action="/cgi-bin/udpipe.py?conllu='''+ud+'''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
+		html1 += '''<form action="/cgi-bin/inquerito.py?conllu='''+ud+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
+		html1 += '''<form action="/cgi-bin/udpipe.py?conllu='''+ud+'''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
 		#TEXT
 		html1 += '''<p><span id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</span></p>
 <p>'''
@@ -117,9 +118,9 @@ else:
 			temcontexto = False
 
 		if temcontexto:
-			html1 += '''<input id="contexto_'''+str(i+1)+'''" value="Mostrar contexto" onclick="contexto('divcontexto_'''+str(i+1)+'''', 'contexto_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="mostrar_'''+str(i+1)+'''" class="anotacao" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button">'''
+			html1 += '''<input id="contexto_'''+str(i+1)+'''" value="Mostrar contexto" onclick="contexto('divcontexto_'''+str(i+1)+'''', 'contexto_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="mostrar_'''+str(i+1)+'''" class="anotacao" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input type="button" value="Abrir inquérito" onclick='inquerito("form_'''+str(i+1)+'''")'>'''
 		else:
-			html1 += '''<input id="mostrar_'''+str(i+1)+'''" class="anotacao" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button">'''
+			html1 += '''<input id="mostrar_'''+str(i+1)+'''" class="anotacao" value="Mostrar anotação" onclick="mostrar('div_'''+str(i+1)+'''', 'mostrar_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input id="opt_'''+str(i+1)+'''" class="opt" value="Mostrar opções" onclick="mostraropt('optdiv_'''+str(i+1)+'''', 'opt_'''+str(i+1)+'''')" style="margin-left:0px" type="button"> <input type="button" value="Abrir inquérito" onclick='inquerito("form_'''+str(i+1)+'''")'>'''
 
 		html1 += '''</p>'''
 
@@ -169,7 +170,7 @@ else:
 
 		#Fim contexto e anotação
 		#Opções
-		html1 += '''<p style="display:none" id="optdiv_''' + str(i+1) + '''"><a style="cursor:pointer" onclick='inquerito("form_'''+str(i+1)+'''")'>[Abrir inquérito]</a> <a style="cursor:pointer" onclick='filtraragora("'''+str(i+1)+'''")'>[Filtrar sentença]</a> <a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>[Anotar no UDPipe]</a></p></div>\n'''
+		html1 += '''<p style="display:none" id="optdiv_''' + str(i+1) + '''"><a style="cursor:pointer" onclick='filtraragora("'''+str(i+1)+'''")'>Remover sentença</a><br><a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>Anotar no UDPipe</a></p></div>\n'''
 
 	html = html1 + html2
 

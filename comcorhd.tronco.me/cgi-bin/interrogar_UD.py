@@ -4,7 +4,8 @@ import re
 
 #Crio a função que vai ser chamada seja pelo HTML ou seja pelo terminal
 def main(arquivoUD, criterio, parametros):
-
+	parametros = parametros.strip()
+	
 	#Lê o arquivo UD
 	qualquercoisa = estrutura_dados.LerUD(arquivoUD)
 
@@ -49,9 +50,9 @@ def main(arquivoUD, criterio, parametros):
 	if criterio == 2:
 
 		#Variáveis
-		y = parametros.split('#')[0]
+		y = parametros.split('#')[0].strip()
 		z = int(parametros.split('#')[1])
-		k = parametros.split('#')[2].split('|')
+		k = [x.strip() for x in parametros.split('#')[2].split('|')]
 		w = int(parametros.split('#')[3])
 		for sentence in qualquercoisa:
 			achei = 'nãoachei'
@@ -64,9 +65,10 @@ def main(arquivoUD, criterio, parametros):
 						sentence[i] = '<b>' + '\t'.join(sentence[i]) + '</b>'
 						sentence[i] = sentence[i].split('\t')
 						break
-			for i, linha in enumerate(sentence):
-				if '# text' in linha:
-					sentence[i] = re.sub(r'\b' + re.escape(token) + r'\b', '<b>' + token + '</b>', sentence[i])
+			if achei != 'nãoachei':
+				for i, linha in enumerate(sentence):
+					if '# text' in linha:
+						sentence[i] = re.sub(r'\b' + re.escape(token) + r'\b', '<b>' + token + '</b>', sentence[i])
 
 			if achei != 'nãoachei':
 				for linha in sentence:
@@ -77,9 +79,10 @@ def main(arquivoUD, criterio, parametros):
 				if descarta == False:
 					output.append(sentence)
 					
-	#Regex Livre
+	#Regex Independentes
 	if criterio == 3:
-		regras = parametros.split('#')
+		regras = [x.strip() for x in parametros.split('&')]
+
 		for a, sentence in enumerate(qualquercoisa):
 			sentence2 = sentence
 			for b, linha in enumerate(sentence):
@@ -115,6 +118,84 @@ def main(arquivoUD, criterio, parametros):
 				sentence2 = sentence2.replace(header, header2)
 				output.append(sentence2.splitlines())
 
+	#pais e filhos
+	if criterio == 4:
+		filho = parametros.split('->')[0].strip()
+		pai = parametros.split('->')[1].strip()
+		
+		negativo_filho = False
+		negativo_pai = False
+		if filho[0] == '!':
+			negativo_filho = True
+			filho = ''.join(filho[1:])
+		if pai[0] == '!':
+			negativo_pai = True
+			pai = ''.join(pai[1:])
+
+		for a, sentenca in enumerate(qualquercoisa):
+			acheifilho = 'não'
+			acheipai = 'não'
+			descarta = False
+			for b, linha in enumerate(sentenca):
+				if isinstance(linha, list):
+					if re.search(filho, '\t'.join(linha), flags=re.IGNORECASE|re.MULTILINE):
+						acheifilho = (linha, b)
+				if isinstance(linha, list):
+					if re.search(pai, '\t'.join(linha), flags=re.IGNORECASE|re.MULTILINE):
+						acheipai = (linha, b)
+				
+				if not negativo_filho and not negativo_pai and acheipai != 'não' and acheifilho != 'não' and acheipai[0][0] == acheifilho[0][6]:
+					for c, linha in enumerate(sentenca):
+						if '# text' in linha:
+							qualquercoisa[a][c] = re.sub(r'\b' + re.escape(acheipai[0][1]) + r'\b', '<b>@BLUE/' + acheipai[0][1] + '/FONT</b>', qualquercoisa[a][c], flags=re.IGNORECASE|re.MULTILINE)
+							qualquercoisa[a][c] = re.sub(r'\b' + re.escape(acheifilho[0][1]) + r'\b', '<b>@RED/' + acheifilho[0][1] + '/FONT</b>', qualquercoisa[a][c], flags=re.IGNORECASE|re.MULTILINE)
+							break
+					qualquercoisa[a][acheipai[1]] = ('<b>@BLUE/' + '\t'.join(qualquercoisa[a][acheipai[1]]) + '/FONT</b>').split('\t')
+					qualquercoisa[a][acheifilho[1]] = ('<b>@RED/' + '\t'.join(qualquercoisa[a][acheifilho[1]]) + '/FONT</b>').split('\t')
+					output.append(qualquercoisa[a])
+					break
+				
+				elif negativo_filho and acheipai != 'não' and acheifilho != 'não' and acheipai[0][0] == acheifilho[0][6]:
+					descarta = True
+					break
+				
+				elif negativo_pai and acheifilho != 'não' and acheipai != 'não' and acheipai[0][0] == acheifilho[0][6]:
+					descarta = True
+					break
+
+			if negativo_filho and acheipai != 'não' and acheifilho != 'não' and not descarta:
+				for c, linha in enumerate(sentenca):
+					if '# text' in linha:
+						qualquercoisa[a][c] = re.sub(r'\b' + re.escape(acheipai[0][1]) + r'\b', '<b>@BLUE/' + acheipai[0][1] + '/FONT</b>', qualquercoisa[a][c], flags=re.IGNORECASE|re.MULTILINE)
+						break
+				qualquercoisa[a][acheipai[1]] = ('<b>@BLUE/' + '\t'.join(qualquercoisa[a][acheipai[1]]) + '/FONT</b>').split('\t')
+				output.append(qualquercoisa[a])
+				
+			elif negativo_pai and acheipai != 'não' and acheifilho != 'não' and not descarta:
+				for c, linha in enumerate(sentenca):
+					if '# text' in linha:
+						qualquercoisa[a][c] = re.sub(r'\b' + re.escape(acheifilho[0][1]) + r'\b', '<b>@BLUE/' + acheifilho[0][1] + '/FONT</b>', qualquercoisa[a][c], flags=re.IGNORECASE|re.MULTILINE)
+						break
+				qualquercoisa[a][acheifilho[1]] = ('<b>@BLUE/' + '\t'.join(qualquercoisa[a][acheifilho[1]]) + '/FONT</b>').split('\t')
+				output.append(qualquercoisa[a])
+					
+			elif negativo_filho and acheipai != 'não' and acheifilho == 'não':
+				for c, linha in enumerate(sentenca):
+					if '# text' in linha:
+						qualquercoisa[a][c] = re.sub(r'\b' + re.escape(acheipai[0][1]) + r'\b', '<b>@BLUE/' + acheipai[0][1] + '/FONT</b>', qualquercoisa[a][c], flags=re.IGNORECASE|re.MULTILINE)
+						break
+				qualquercoisa[a][acheipai[1]] = ('<b>@BLUE/' + '\t'.join(qualquercoisa[a][acheipai[1]]) + '/FONT</b>').split('\t')
+				output.append(qualquercoisa[a])
+			
+			elif negativo_pai and acheifilho != 'não' and acheipai == 'não':
+				for c, linha in enumerate(sentenca):
+					if '# text' in linha:
+						qualquercoisa[a][c] = re.sub(r'\b' + re.escape(acheifilho[0][1]) + r'\b', '<b>@RED/' + acheifilho[0][1] + '/FONT</b>', qualquercoisa[a][c], flags=re.IGNORECASE|re.MULTILINE)
+						break
+				qualquercoisa[a][acheifilho[1]] = ('<b>@RED/' + '\t'.join(qualquercoisa[a][acheifilho[1]]) + '/FONT</b>').split('\t')
+				output.append(qualquercoisa[a])
+
+
 	#Transforma o output em lista de sentenças (sem splitlines e sem split no \t)
 	for a, sentence in enumerate(output):
 		for b, linha in enumerate(sentence):
@@ -143,6 +224,11 @@ if __name__ == '__main__':
 		w=int(input('na coluna: '))
 		nome=input('nomeie sua criação:\n')
 		parametros  = y + '#' + str(z) + '#' + k + '#' + str(w)
+		
+	if criterio == 4:
+		filho = input('Filho: ')
+		pai = input('Pai: ')
+		parametros = filho + ' -> ' + pai
 
 	#Chama a função principal e printo o resultado, dando a ela os parâmetros dos inputs
 	printar = main(arquivoUD, criterio, parametros)
