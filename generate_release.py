@@ -31,5 +31,3 @@ for arquivo_id in os.listdir(pasta):
 		open(arquivo_conllu, 'w').write("\n\n".join(novo_conllu) + '\n\n')
 		tudo_junto += "\n\n".join(novo_conllu) + '\n\n'
 
-open(pasta + '/tudo_junto.conllu', 'w').write(tudo_junto)
-
