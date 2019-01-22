@@ -1,18 +1,18 @@
 import os
 import re
 
-pasta_conllu = input('Pasta onde estão os arquivos .conllu:\n').replace('"','').replace("'","").replace('\\','/').strip()
+pasta_conllu = input('Arquivo .conllu:\n').replace('"','').replace("'","").replace('\\','/').strip()
 
-conllus = list()
-for arquivo in os.listdir(pasta_conllu):
-	if '.conllu' in arquivo:
-		conllus.append(arquivo)
-
+conllus = [pasta_conllu.rsplit('/', 1)[1]]
+#for arquivo in os.listdir(pasta_conllu):
+#	if '.conllu' in arquivo:
+#		conllus.append(arquivo)
+pasta_conllu = pasta_conllu.rsplit('/', 1)[0]
 print(conllus)
 
 documents = dict()
 for conllu in conllus:
-	texto = open(pasta_conllu + '/' + conllu, 'r').read().split('\n\n')
+	texto = open(pasta_conllu + '/' + conllu, 'r', encoding="utf8").read().split('\n\n')
 	for sentence in texto:
 		if '# sent_id = ' in sentence:
 			identificador = sentence.split('# sent_id = ')[1].split('-')[0]
@@ -39,4 +39,4 @@ for documento in documents.keys():
 
 
 	print(nome)
-	open(pasta_conllu + '/documents/' + nome + '.conllu', 'w').write('\n\n'.join(documentos_organizados[documento]) + '\n\n')
+	open(pasta_conllu + '/documents/' + nome + '.conllu', 'w', encoding="utf8").write('\n\n'.join(documentos_organizados[documento]) + '\n\n')

@@ -11,6 +11,7 @@ def main(arquivoUD, criterio, parametros):
 
 	#Cria a lista que vai ser enviada seja ao terminal ou ao HTML
 	output = list()
+	casos = 0
 
 	#Regex
 	tabela = ['@YELLOW/','@PURPLE/','@BLUE/','@RED/','@CYAN/','@YELLOW/','@PURPLE/','@BLUE/','@RED/','@CYAN/']
@@ -25,6 +26,7 @@ def main(arquivoUD, criterio, parametros):
 			sentence2 = "\n".join(sentence2)
 			regex = re.search(parametros, sentence2, flags=re.IGNORECASE|re.MULTILINE)
 			if regex:
+				casos += len(re.findall(parametros, sentence2, flags=re.IGNORECASE|re.MULTILINE))
 				cores = len(regex.groups())
 				new_sentence = re.sub('(' + parametros + ')', r'<b>\1</b>', sentence2, flags=re.IGNORECASE|re.MULTILINE)
 				tokens = list()
@@ -64,7 +66,8 @@ def main(arquivoUD, criterio, parametros):
 						token = linha[1]
 						sentence[i] = '<b>' + '\t'.join(sentence[i]) + '</b>'
 						sentence[i] = sentence[i].split('\t')
-						break
+						casos += 1
+						#break
 			if achei != 'nãoachei':
 				for i, linha in enumerate(sentence):
 					if '# text' in linha:
@@ -94,8 +97,10 @@ def main(arquivoUD, criterio, parametros):
 			for regranum, regra in enumerate(regras):
 				if regra[0] == '!':
 					regex = re.search(regra[1:], sentence2, flags=re.IGNORECASE|re.MULTILINE)
+					casos += len(re.findall(regra[1:], sentence2, flags=re.I|re.M))
 				else:
 					regex = re.search(regra, sentence2, flags=re.IGNORECASE|re.MULTILINE)
+					casos += len(re.findall(regra, sentence2, flags=re.I|re.M))
 				if (regra[0] == '!' and regex) or (regra[0] != '!' and not regex):
 					descarta = True
 					break
@@ -203,7 +208,7 @@ def main(arquivoUD, criterio, parametros):
 				sentence[b] = "\t".join(sentence[b])
 		output[a] = "\n".join(sentence)
 
-	return output
+	return {'output': output, 'casos': casos}
 
 #Ele só pede os inputs se o script for executado pelo terminal. Caso contrário (no caso do código ser chamado por uma página html), ele não pede os inputs, pois já vou dar a ele os parâmetros por meio da página web
 if __name__ == '__main__':
@@ -231,7 +236,7 @@ if __name__ == '__main__':
 		parametros = filho + ' -> ' + pai
 
 	#Chama a função principal e printo o resultado, dando a ela os parâmetros dos inputs
-	printar = main(arquivoUD, criterio, parametros)
+	printar = main(arquivoUD, criterio, parametros)['output']
 	
 	for a, sentence in enumerate(printar):
 		printar[a] = printar[a].splitlines()

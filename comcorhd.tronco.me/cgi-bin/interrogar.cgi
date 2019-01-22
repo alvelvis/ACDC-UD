@@ -69,7 +69,8 @@ else:
 	link = '/interrogar-ud/resultados/' + slugify(nome) + '_' + data + '.html'
 
 	#Ocorrências da pesquisa Interrogar_UD.py
-	lista_ocorrencias = interrogar_UD.main(arquivo_ud, int(criterio), parametros)
+	interrogarud = interrogar_UD.main(arquivo_ud, int(criterio), parametros)
+	lista_ocorrencias = interrogarud['output']
 	print('Total: ' + str(len(lista_ocorrencias)))
 	ocorrencias = str(len(lista_ocorrencias))
 
@@ -127,7 +128,7 @@ else:
 		#CONTEXTO
 		if temcontexto:
 			if '-' in sentid:
-				sentnum = int(sentid.split('-')[1].split()[0])
+				sentnum = int(sentid.split('-')[1].split()[0].split('/')[0])
 				sentnome = sentid.split('-')[0]
 				contexto1 = ''
 				contexto2 = ''
@@ -178,7 +179,7 @@ else:
 	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
 
 	#h1 - NOME DA QUERY
-	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome + '</span> (' + ocorrencias + ')</h1>', novo_html)
+	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome + '</span> (' + ocorrencias + ')</h1><br>Casos: ' + str(interrogarud['casos']), novo_html)
 
 	#h2 - METADADOS DA QUERY
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')

@@ -66,7 +66,8 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 	data = str(datetime.now()).replace(' ','_').split('.')[0]
 	link = '/interrogar-ud/resultados/' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html'
 
-	lista_ocorrencias = interrogar_UD.main(arquivo_ud, int(criterio), parametros)
+	interrogarud = interrogar_UD.main(arquivo_ud, int(criterio), parametros)
+	lista_ocorrencias = interrogarud['output']
 
 	print('Total: ' + str(len(lista_ocorrencias)))
 
@@ -189,7 +190,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
 
 	#h1
-	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome.replace('\\','\\\\') + '</span> (' + ocorrencias + ')</h1>', novo_html)
+	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome.replace('\\','\\\\') + '</span> (' + ocorrencias + ')</h1><br>Casos: ' + str(interrogarud['casos']), novo_html)
 
 	#h2
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')

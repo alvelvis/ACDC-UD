@@ -88,14 +88,18 @@ if os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (f
 				html1 = html1 + '<input type=hidden name=nome_interrogatorio value="' + form['nome_interrogatorio'].value + '">'
 				if 'occ' in form: html1 += '<input type=hidden name=occ value="' + form['occ'].value + '">'
 			html1 += '''Tipo de inquérito:<br><input type="text" placeholder="Crie uma categoria para este tipo de inquérito (opcional)" id=tag name="tag" list="cars" />'''
-			html1 += '<script>var x = document.cookie.split("tag=")[1]; if (x != "NONE") { document.getElementById("tag").value = x }; </script>'
+			html1 += '<script>var x = document.cookie.split("tag=")[1]; if (x && x != "NONE") { document.getElementById("tag").value = x }; </script>'
 			html1 += '''<datalist id="cars">'''
 			if not os.path.isfile('/interrogar-ud/inqueritos_cars.txt'): open('/interrogar-ud/inqueritos_cars.txt', 'w').write('')
 			for linha in open('/interrogar-ud/inqueritos_cars.txt', 'r').read().splitlines():
 				if linha:
 					html1 += '<option>' + linha.replace('<','&lt;').replace('>','&gt;') + '</option>'
 			html1 += '</datalist><br><br>'
-			html1 += 'Dados do inquérito:<br><div class="tooltip"><input style="display: inline-block;" placeholder="Número da linha" id="token" name="token" required><span class="tooltiptext">Linha a ser alterada.</span></div> <div style="display: inline-block;" class="tooltip"><input style="display: inline-block;" placeholder="Número da coluna" id="coluna" name="coluna"><span style="display: inline-block;" class="tooltiptext">Coluna a ser alterada.<br>Caso seja um metadado, a linha não é dividida em colunas: deixar em branco.<br><br>1: ID | 2: WORD | 3: LEMMA | 4: UPOS | 5: XPOS | 6: FEATS | 7: DEPHEAD | 8: DEPREL | 9: DEPS | 10: MISC</span></div> > <div class="tooltip" style="width:40%"><input name="valor" id="valor" style="width:100%" placeholder="Novo valor" required><span class="tooltiptext">Valor para o qual a linha/coluna será substituída.</span></div> <input style="display: inline-block;" type="submit" value="Finalizar inquérito"><br><br><br><b>Clique na linha/coluna que deseja alterar:</b><br><br><div style="block"><table id="t01">'
+			html1 += 'Dados do inquérito:<br><div class="tooltip"><input style="display: inline-block;" placeholder="Número da linha" id="token" name="token" required><span class="tooltiptext">Linha a ser alterada.</span></div> <div style="display: inline-block;" class="tooltip"><input style="display: inline-block;" placeholder="Número da coluna" id="coluna" name="coluna"><span style="display: inline-block;" class="tooltiptext">Coluna a ser alterada.<br>Caso seja um metadado, a linha não é dividida em colunas: deixar em branco.<br><br>1: ID | 2: WORD | 3: LEMMA | 4: UPOS | 5: XPOS | 6: FEATS | 7: DEPHEAD | 8: DEPREL | 9: DEPS | 10: MISC</span></div> > <div class="tooltip" style="width:40%"><input name="valor" list="barradaluisa" id="valor" style="width:100%" placeholder="Novo valor" required>'
+			html1 += '<datalist id="barradaluisa">'
+			for item in open('/interrogar-ud/novovalor.txt', 'r').read().splitlines():
+				html1 += '<option>' + item + '</option>'
+			html1 += '</datalist><span class="tooltiptext">Valor para o qual a linha/coluna será substituída.</span></div> <input style="display: inline-block;" type="submit" value="Finalizar inquérito"><br><br><br><b>Clique na linha/coluna que deseja alterar:</b><br><br><div style="block"><table id="t01">'
 
 			for a, linha in enumerate(sentence2.splitlines()):
 				if not '\t' in linha:
