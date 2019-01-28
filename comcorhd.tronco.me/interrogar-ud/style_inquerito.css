@@ -1,3 +1,11 @@
+#div_filtro:hover {
+    background-color: #ffffeb;
+}
+
+#div_filtro {
+    padding: 10px;
+}
+
 #myBtn {
   display: none; /* Hidden by default */
   position: fixed; /* Fixed/sticky position */

@@ -125,8 +125,8 @@ def main(arquivoUD, criterio, parametros):
 
 	#pais e filhos
 	if criterio == 4:
-		filho = parametros.split('->')[0].strip()
-		pai = parametros.split('->')[1].strip()
+		filho = parametros.split('::')[0].strip()
+		pai = parametros.split('::')[1].strip()
 		
 		negativo_filho = False
 		negativo_pai = False
@@ -233,7 +233,7 @@ if __name__ == '__main__':
 	if criterio == 4:
 		filho = input('Filho: ')
 		pai = input('Pai: ')
-		parametros = filho + ' -> ' + pai
+		parametros = filho + ' :: ' + pai
 
 	#Chama a função principal e printo o resultado, dando a ela os parâmetros dos inputs
 	printar = main(arquivoUD, criterio, parametros)['output']

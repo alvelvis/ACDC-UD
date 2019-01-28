@@ -1,3 +1,10 @@
+function abrir_script() {
+    if (document.getElementById("script").style.display == "none") {
+        document.getElementById("script").style.display = "block" }
+    else {
+        document.getElementById("script").style.display = "none" }
+}
+
 // When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
 

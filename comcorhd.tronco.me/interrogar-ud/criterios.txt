@@ -38,10 +38,10 @@ Verifica se várias expressões regulares dão match em uma sentença e a retorn
 
 !@#<h3>Critério 4: Pais e filhos</h3>
 Pesquisa relações sintáticas entre filhos (regex 1) e pais (regex 2).
-<br><br>Parâmetros:<br>Regex 1 -> Regex 2
+<br><br>Parâmetros:<br>Regex 1 :: Regex 2
 <br><br>Dica: Utilize '!' para negar a presença de um filho ou de um pai.
 <h4>Exemplos:</h4>
 1) Procurar por sentenças em que uma palavra com classe "NOUN" que também é sujeito esteja apontando para um "ADV".
 <ul><li>
-<a id="5" style="cursor:pointer" onclick="pesquisa('5')">4 \tNOUN\t.*nsubj -> \tADV\t</a>
+<a id="5" style="cursor:pointer" onclick="pesquisa('5')">4 \tNOUN\t.*nsubj :: \tADV\t</a>
 </li></ul>

@@ -81,6 +81,8 @@ else:
 	html = open('/interrogar-ud/resultados/link1.html', 'r').read()
 	html = html.replace('/cgi-bin/filtrar.cgi', '/cgi-bin/filtrar.cgi?html=' + slugify(nome) + '_' + data + '&udoriginal=' + ud)
 	html = html.replace('/cgi-bin/conllu.cgi', '/cgi-bin/conllu.cgi?html=/interrogar-ud/resultados/' + slugify(nome) + '_' + data + '.html')
+
+	#código em si	
 	html1 = html.split('<!--SPLIT-->')[0]
 	html2 = html.split('<!--SPLIT-->')[1]
 
@@ -103,7 +105,7 @@ else:
 		#SENTID
 		if sentid != '': html1 += '''<p><input class="cb" id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" title="Selecionar sentença para filtragem" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		#OPÇÕES
-		html1 += '''<form action="/cgi-bin/inquerito.py?conllu='''+ud+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
+		html1 += '''<form action="/cgi-bin/inquerito.py?conllu='''+ud+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
 		html1 += '''<form action="/cgi-bin/udpipe.py?conllu='''+ud+'''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
 		#TEXT
 		html1 += '''<p><span id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</span></p>
@@ -175,15 +177,29 @@ else:
 
 	html = html1 + html2
 
+	#<!--script-->
+	html1 = html.split('<!--script-->')[0]
+	html2 = html.split('<!--script-->')[1]
+	html1 += '<form method="POST" action="/cgi-bin/interrogar-script.py">'
+	html1 += '''<input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"><input type=hidden name="conllu" value="''' + ud + '''">'''
+	html1 += '<select name="script" required>'
+	if not os.path.isdir('/interrogar-ud/scripts/'):
+		os.mkdir('/interrogar-ud/scripts')
+	for item in os.listdir('/interrogar-ud/scripts/'):
+		if '.py' in item and not 'estrutura_dados' in item:
+			html1 += '<option value="' + item + '">' + item + '</option>'
+	html1 += '</select> <input type="submit" value="Executar"></form>'
+	html = html1 + html2
+
 	#title
-	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
+	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome.replace('\\', '\\\\').replace('<', '&lt;').replace('>', '&gt;') + ' (' + ocorrencias + '): Interrogatório</title>', html)
 
 	#h1 - NOME DA QUERY
-	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome + '</span> (' + ocorrencias + ')</h1><br>Casos: ' + str(interrogarud['casos']), novo_html)
+	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome.replace('\\', '\\\\').replace('<', '&lt;').replace('>', '&gt;') + '</span> (' + ocorrencias + ')</h1><br>Casos: ' + str(interrogarud['casos']), novo_html)
 
 	#h2 - METADADOS DA QUERY
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')
-	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; ' + ud + ' &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
+	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; ' + ud + ' &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
 
 	#APAGAR.CGI
 	novo_html = novo_html.replace('id="apagar_link" value="link1"', 'id="apagar_link" value="' + slugify(nome) + '_' + data + '"')

@@ -37,14 +37,14 @@ if not 'pesquisa' in form and not 'action' in form:
 	print(html)
 
 elif not 'action' in form or form['action'].value != 'desfazer':
-	if ' ' in form['pesquisa'].value: parametros = form['pesquisa'].value.split(' ', 1)[1].replace('<b>', '').replace('<\\/b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('<\\/font>','')
+	if ' ' in form['pesquisa'].value: parametros = form['pesquisa'].value.split(' ', 1)[1].replace('<b>', '').replace('<\\/b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('<\\/font>','').replace('<','&lt;').replace('>','&gt;')
 	if not re.match('^\d+$', form['pesquisa'].value.split(' ')[0]):
 		criterio = '1'
-		parametros = form['pesquisa'].value.replace('<b>','').replace('<\\/b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('<\\/font>','')
+		parametros = form['pesquisa'].value.replace('<b>','').replace('<\\/b>','').replace('<font color="' + tabela['yellow'] + '">','').replace('<font color="' + tabela['red'] + '">','').replace('<font color="' + tabela['cyan'] + '">','').replace('<font color="' + tabela['blue'] + '">','').replace('<font color="' + tabela['purple'] + '">','').replace('<\\/font>','').replace('<','&lt;').replace('>','&gt;')
 		if not '^# text = ' in form['pesquisa'].value: print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1).")</script>')
 	else:
 		criterio = form['pesquisa'].value.split(' ')[0]
-
+	print
 	if int(criterio) > int(open('/interrogar-ud/max_crit.txt', 'r').read().split()[0]):
 		print('em desenvolvimento')
 		exit()
@@ -75,9 +75,11 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 
 	ocorrencias = str(len(lista_ocorrencias))
 	html = open('/interrogar-ud/resultados/link1.html', 'r').read().replace('../','../../')
+
+	#alterações
 	html1 = html.split('<!--SPLIT-->')[0]
 	html2 = html.split('<!--SPLIT-->')[1]
-	html_original = open('/interrogar-ud/resultados/' + form['html'].value + '.html', 'r').read().replace('<div class="content">','<div class="content"> > <a href="' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html">' + nome + ' (' + ocorrencias  + ')</a>&nbsp;<a class="close-thik" alt="Desfazer filtro" href="/cgi-bin/filtrar.cgi?action=desfazer&html=' + link + '_anterior&original=' + form['html'].value + '"></a>&nbsp;')
+	html_original = open('/interrogar-ud/resultados/' + form['html'].value + '.html', 'r').read().replace('<div class="content">','<div class="content"> > <a href="' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html">' + nome.replace('<','&lt;').replace('>','&gt;') + ' (' + ocorrencias  + ')</a>&nbsp;<a class="close-thik" alt="Desfazer filtro" href="/cgi-bin/filtrar.cgi?action=desfazer&html=' + link + '_anterior&original=' + form['html'].value + '"></a>&nbsp;')
 	if not 'Com filtros: ' in html_original:
 		ocorrencias_anterior = int(re.search(r'\((\d+)\)\</h1\>', html_original).group(1))
 		html_original = re.sub(r'(\(.*?\)\</h1\>)', r'\1<br>Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
@@ -100,7 +102,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		#SENTID
 		if sentid != '': novo += '''<p>'''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		#FORM
-		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
+		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
 		novo += '''<form action="/cgi-bin/udpipe.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
 		#TEXT
 		novo += '''<p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</p>
@@ -186,15 +188,29 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 
 	html = html.replace('''<a style="cursor:pointer" onclick="tudo('marcar')">Marcar tudo</a><br><a style="cursor:pointer" onclick="tudo('desmarcar')">Desmarcar tudo</a>''', "")
 
+	#<!--script-->
+	html1 = html.split('<!--script-->')[0]
+	html2 = html.split('<!--script-->')[1]
+	html1 += '<form method="POST" action="/cgi-bin/interrogar-script.py">'
+	html1 += '''<input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"><input type=hidden name="conllu" value="''' + ud + '''">'''
+	html1 += '<select name="script" required>'
+	if not os.path.isdir('/interrogar-ud/scripts/'):
+		os.mkdir('/interrogar-ud/scripts')
+	for item in os.listdir('/interrogar-ud/scripts/'):
+		if '.py' in item and not 'estrutura_dados' in item:
+			html1 += '<option value="' + item + '">' + item + '</option>'
+	html1 += '</select> <input type="submit" value="Executar"></form>'
+	html = html1 + html2
+
 	#title
-	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome + ' (' + ocorrencias + '): Interrogatório</title>', html)
+	novo_html = re.sub(re.escape('<title>link de pesquisa 1 (203): Interrogatório</title>'), '<title>' + nome.replace('\\', '\\\\').replace('<', '&lt;').replace('>', '&gt;') + ' (' + ocorrencias + '): Interrogatório</title>', html)
 
 	#h1
-	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome.replace('\\','\\\\') + '</span> (' + ocorrencias + ')</h1><br>Casos: ' + str(interrogarud['casos']), novo_html)
+	novo_html = re.sub(re.escape('<h1><span id="combination">link de pesquisa 1</span> (203)</h1>'), '<h1><span id="combination">' + nome.replace('\\', '\\\\').replace('<', '&lt;').replace('>', '&gt;') + '</span> (' + ocorrencias + ')</h1><br>Casos: ' + str(interrogarud['casos']), novo_html)
 
 	#h2
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')
-	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <div class="tooltip">Filtro<span class="tooltiptext">Página é resultado da filtragem de uma interrogação anterior.</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
+	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <div class="tooltip">Filtro<span class="tooltiptext">Página é resultado da filtragem de uma interrogação anterior.</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
 
 	#apagar.cgi
 	novo_html = re.sub('\<a.*onclick="apagar.*\</a\>', '', novo_html)

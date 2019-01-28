@@ -55,7 +55,7 @@ open('/interrogar-ud/inqueritos_cars.txt', 'w').write('\n'.join(novo_inqueritos_
 queries = open('/interrogar-ud/queries.txt', 'r').read().splitlines()
 novo_queries = list()
 for query in queries:
-	if query and 'teste' in query.split('\t')[1].lower():
+	if query and 'teste' == query.split('\t')[1]:
 		if query and os.path.isdir(query.split('\t')[0].split('.html')[0]):
 			shutil.rmtree(query.split('\t')[0].split('.html')[0])
 			log.append('- diretório excluído: ' + query.split('\t')[0].split('.html')[0])

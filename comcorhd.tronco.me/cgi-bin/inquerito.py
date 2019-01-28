@@ -28,11 +28,20 @@ def printar(coluna = '', valor = '', onlysent = False):
 	global html
 	global html1
 	global html2
+	if valor and valor[0] == '#': valor = ''.join(valor[1:])
 
-	html1 += '<form action="/cgi-bin/inquerito.py?action=filtrar" method="POST">Filtrar relatório:<br><select name="coluna" required><option value=":">Tudo</option><option value="6">Etiqueta</option><option value="0"># text</option><option value="7"># sent_id</option><option value="2">CoNLLU</option><option value="3">Data</option><option value="4">Página no Interrogatório</option></select> <input type=text autofocus="true" name=valor value="' + valor + '" required> <input type=submit value="Realizar filtro"  style="display:block-inline">'
-	html1 += '<input type=checkbox name=onlysent checked>Apenas sentenças</input>' if onlysent else '<input type=checkbox name=onlysent >Apenas sentenças</input>'
+	html1 = html1.replace('<title>Sistema de inquéritos</title>', '<title>Relatório de inquéritos</title>')
 
+	html1 += '<form action="/cgi-bin/inquerito.py?action=filtrar" method="POST"><hr><div id="div_filtro">Filtrar relatório:<br><select name="coluna" required><option value=":">Tudo</option><option value="6">Etiqueta</option><option value="0"># text</option><option value="7"># sent_id</option><option value="2">CoNLLU</option><option value="3">Data</option><option value="4">Página no Interrogatório</option></select> <input type=text autofocus="true" name=valor value="' + valor.replace('"', '&quot;') + '" required> <input type=submit value="Realizar filtro" style="display:block-inline">'
 	if coluna: html1 += ' <a style="display:block-inline" class="close-thik" href="/cgi-bin/inquerito.py"></a>'
+
+	html1 += '<br><br><input type=checkbox name=onlysent checked>Apenas sentenças</input>' if onlysent else '<br><br><input type=checkbox name=onlysent >Apenas sentenças</input>'
+
+	html1 += ' - <a href="/interrogar-ud/relatorio.txt" target="_blank">Baixar relatório</a></div><hr>'
+	relatorio = 'Relatório de Inquéritos - comcorhd.tronco.me/interrogar-ud'
+	if coluna: relatorio += '\nFiltro: ' + valor
+	relatorio += '\nMostrando apenas as sentenças que foram alteradas' if onlysent else '\nMostrando todas as alterações em todas as sentenças'
+	relatorio42 = str()
 
 	html1 += '</form><br><br>'
 
@@ -48,20 +57,33 @@ def printar(coluna = '', valor = '', onlysent = False):
 			if (coluna != ':' and valor and len(linha.split('!@#')) > int(coluna) and (re.search(valor, linha.split('!@#')[int(coluna)], flags=re.I|re.M)) and linha.split('!@#')[int(coluna)] != 'NONE') or (not coluna) or (coluna == ':' and re.search(valor, linha, flags=re.I|re.M)):
 				if (not onlysent) or (onlysent and not linha.split('!@#')[0] in javistos):
 					html42 += '<div class="container"><form target="_blank" id="form_' + str(a) + '" action="/cgi-bin/inquerito.py" method="POST"><input name="textheader" type="hidden" value="' + linha.split('!@#')[0] + '"><input name="conllu" type="hidden" value="' + linha.split('!@#')[2] + '">'
-					if len(linha.split('!@#')) >= 7 and linha.split('!@#')[6] != 'NONE': html42 += '<p><small>#' + linha.split('!@#')[6].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</small></p>'
+					relatorio42 += '\n\n-------------------------'
+					if len(linha.split('!@#')) >= 7 and linha.split('!@#')[6] != 'NONE':
+						html42 += '<p><small>#' + linha.split('!@#')[6].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</small></p>'
+						relatorio42 += '\n\n#' + linha.split('!@#')[6].replace('<b>','').replace('</b>','')
 					html42 += '<p><h3><a style="cursor:pointer" onclick="form_' + str(a) + '.submit()">' + linha.split('!@#')[0] + '</a></h3></p>'
-					if len(linha.split('!@#')) >= 8 and linha.split('!@#')[7] != 'NONE': html42 += '<p>sent_id = ' + linha.split('!@#')[7] + '</p><input name="sentid" type="hidden" value="' + linha.split('!@#')[7] + '">'
-					if len(linha.split('!@#')) >= 6 and linha.split('!@#')[4] != 'NONE' and linha.split('!@#')[5] != 'NONE': html42 = html42 + '<p>Página no Interrogatório: <a target="_blank" href="' + linha.split('!@#')[5] + '">' + linha.split('!@#')[4].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</a></p>'
-					if (not onlysent): html42 += '<pre>ANTES:\t' + linha.split('!@#')[1].split(' --> ')[0].replace('<b>', '@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</pre><pre>DEPOIS:\t' + linha.split('!@#')[1].split(' --> ')[1].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</pre>'
+					relatorio42 += '\n\ntext = ' + linha.split('!@#')[0]
+					if len(linha.split('!@#')) >= 8 and linha.split('!@#')[7] != 'NONE':
+						html42 += '<p>sent_id = ' + linha.split('!@#')[7] + '</p><input name="sentid" type="hidden" value="' + linha.split('!@#')[7] + '">'
+						relatorio42 += '\nsent_id = ' + linha.split('!@#')[7]
+					if len(linha.split('!@#')) >= 6 and linha.split('!@#')[4] != 'NONE' and linha.split('!@#')[5] != 'NONE':
+						html42 = html42 + '<p>Página no Interrogatório: <a target="_blank" href="' + linha.split('!@#')[5] + '">' + linha.split('!@#')[4].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</a></p>'
+						relatorio42 += '\nPágina no interrogatório: ' + linha.split('!@#')[4].replace('<b>','').replace('</b>','')
+					if (not onlysent):
+						html42 += '<pre>ANTES:\t' + linha.split('!@#')[1].split(' --> ')[0].replace('<b>', '@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</pre><pre>DEPOIS:\t' + linha.split('!@#')[1].split(' --> ')[1].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</pre>'
+						relatorio42 += '\nANTES:\t' + linha.split('!@#')[1].split(' --> ')[0].replace('<b>', '').replace('</b>','') + '\nDEPOIS:\t' + linha.split('!@#')[1].split(' --> ')[1].replace('<b>','').replace('</b>','')
 					html42 += '<small><p>' + linha.split('!@#')[2] + '</p><p>' + linha.split('!@#')[3] + '</p></small></form></div>'
+					relatorio42 += '\n\n' + linha.split('!@#')[2]
 					total += 1
 					javistos.append(linha.split('!@#')[0])
 
 	html = html1 + 'Inquéritos: ' + str(total) + '<br><br>' + html42 + html2
+	open('/interrogar-ud/relatorio.txt', 'w').write(relatorio + '\n\n' + 'Inquéritos: ' + str(total) + relatorio42)
 
 if os.environ['REQUEST_METHOD'] == 'POST': form = cgi.FieldStorage()
 
 if os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (form['action'].value != 'alterar' and form['action'].value != 'filtrar' )):
+	html1 = html1.replace('<title>Sistema de inquéritos</title>', '<title>Novo inquérito</title>')
 	ud = form['conllu'].value
 	conlluzao = estrutura_dados.LerUD('/interrogar-ud/conllu/' + ud)
 	if 'finalizado' in form: html1 += '<span style="background-color: cyan">Inquérito concluído com sucesso!</span><br><br><br>'
@@ -82,10 +104,10 @@ if os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (f
 		if '# text = ' + form['textheader'].value + '\n' in sentence2 or '# sent_id = ' + form['textheader'].value + '\n' in sentence2:
 			html1 += '<form action="inquerito.py?sentnum='+str(i)+'&conllu=' + ud + '&action=alterar" method="POST">'
 			if 'sentid' in form: html1 = html1 + '<input type=hidden name=sentid value="' + form['sentid'].value.replace('"', '\"') + '">'
-			if 'link_interrogatorio' in form and not 'teste' in form['link_interrogatorio'].value.lower():
+			if 'link_interrogatorio' in form and 'teste' != form['link_interrogatorio'].value:
 				html1 = html1 + '<input type=hidden name=link_interrogatorio value="' + form['link_interrogatorio'].value + '">'
-			if 'nome_interrogatorio' in form and not 'teste' in form['nome_interrogatorio'].value.lower():
-				html1 = html1 + '<input type=hidden name=nome_interrogatorio value="' + form['nome_interrogatorio'].value + '">'
+			if 'nome_interrogatorio' in form and 'teste' != form['nome_interrogatorio'].value:
+				html1 = html1 + '<input type=hidden name=nome_interrogatorio value="' + form['nome_interrogatorio'].value.replace('"', '&quot;') + '">'
 				if 'occ' in form: html1 += '<input type=hidden name=occ value="' + form['occ'].value + '">'
 			html1 += '''Tipo de inquérito:<br><input type="text" placeholder="Crie uma categoria para este tipo de inquérito (opcional)" id=tag name="tag" list="cars" />'''
 			html1 += '<script>var x = document.cookie.split("tag=")[1]; if (x && x != "NONE") { document.getElementById("tag").value = x }; </script>'
@@ -166,7 +188,7 @@ elif os.environ['REQUEST_METHOD'] == 'POST' and form['action'].value == 'alterar
 				 <body><form action="/cgi-bin/inquerito.py?conllu=''' + ud + '''" method="POST" id="reenviar"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"><input type=hidden name=finalizado value=sim>'''
 		if 'tag' in form: html += '<input type=hidden name=tag value="' + form['tag'].value + '">'
 		html += '''</form>
-				 <script>document.cookie = "tag=''' + tag + '''"; document.getElementById('reenviar').submit();</script></body></html>'''
+				 <script>document.cookie = "tag=''' + tag.replace('"', '\\"') + '''"; document.getElementById('reenviar').submit();</script></body></html>'''
 
 	except Exception as e:
 		print('Erro: ' + str(e))
