@@ -9,7 +9,7 @@
   background-color: #99a9dd; /* Set a background color */
   color: white; /* Text color */
   cursor: pointer; /* Add a mouse pointer on hover */
-  padding: 5px 10px; /* Some padding */
+  padding: 10px 15px; /* Some padding */
   border-radius: 20px; /* Rounded corners */
   font-size: 16px; /* Increase font size */
 }
@@ -54,6 +54,7 @@ content: '✖'; /* UTF-8 symbol */
 input[type=text] {
     max-width: 400px;
     width: 100%;
+    height: 30px;
     //padding: 3px;
     //border-radius: 4px;
 }
@@ -213,7 +214,7 @@ h2 {
 .content,
 .content-gradient,
 .content-3d {
-  margin: 40px auto;
+  margin: 20px auto;
 }
 .content {
   width: 90%;

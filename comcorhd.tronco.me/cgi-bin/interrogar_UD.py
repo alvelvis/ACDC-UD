@@ -14,7 +14,7 @@ def main(arquivoUD, criterio, parametros):
 	casos = 0
 
 	#Regex
-	tabela = ['@YELLOW/','@PURPLE/','@BLUE/','@RED/','@CYAN/','@YELLOW/','@PURPLE/','@BLUE/','@RED/','@CYAN/']
+	tabela = ['@YELLOW/','@PURPLE/','@BLUE/','@RED/','@CYAN/']
 	
 	if criterio == 1:
 		for a, sentence in enumerate(qualquercoisa):
@@ -40,11 +40,11 @@ def main(arquivoUD, criterio, parametros):
 				for token in tokens:
 					header2 = re.sub(r'\b' + re.escape(token) + r'\b', '<b>' + token + '</b>', header2)
 				for i in range(cores):
-					if regex[i+1] != None and i <= len(tabela):
+					if regex[i+1] != None and i < len(tabela):
 						token = regex[i+1]
 						if '\t' in regex[i+1]:
 							token = regex[i+1].split('\t')[1]
-						header2 = re.sub(r'\b' + re.escape(token) + r'\b', tabela[i] + token + '/FONT', header2)
+							header2 = re.sub(r'\b' + re.escape(token) + r'\b', tabela[i] + token + '/FONT', header2)
 				new_sentence = new_sentence.replace(header, header2)
 				output.append(new_sentence.splitlines())
 

@@ -1,13 +1,23 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 
+#import cookies
+import os
+
+#if not 'HTTP_COOKIE' in os.environ: os.environ['HTTP_COOKIE'] = ''
+#cookie = cookies.Cookie(os.environ['HTTP_COOKIE'])
+
+#print(cookie)
 print("Content-type:text/html")
 print('\n\n')
 
-import os, sys
+import sys
 import cgi,cgitb
 cgitb.enable()
 import re
+
+#conectado = False
+#if 'conectado' in cookie and cookie['conectado'] == True: conectado = True
 
 def printar(coluna = '', valor = ''):
 	from estrutura_dados import slugify as slugify
@@ -31,7 +41,7 @@ def printar(coluna = '', valor = ''):
 	for query in queries:
 		if query.strip():
 			if (coluna != ':' and valor and len(query.split('\t')) >= int(coluna) + 1 and (re.search(valor, query.split('\t')[int(coluna)], flags=re.I|re.M))) or (not coluna) or (coluna == ':' and re.search(valor, query, flags=re.I|re.M)):
-				html_query += '''<div class="container-lr" ><p><h3><a href="''' + query.split('\t')[0] + '''">''' + query.split('\t')[1].replace('<','&lt;').replace('>','&gt;') + ''' (''' + query.split('\t')[2] + ''')</a> <!--a class="close-thik" href="#" onclick='apagar("''' + query.split('\t')[0].split('resultados/')[1].split('.html')[0] + '''")'></a--></h3></p><p><div class="tooltip" style="display: inline-block">''' + query.split('\t')[3] + ''' ''' + query.split('\t')[4].replace('<','&lt;').replace('>','&gt;') + '''<span class="tooltiptext">''' + criterios[int(query.split('\t')[3])].split('<h4>')[0] + '''</span></div></p><small><p>''' + query.split('\t')[5] + '''</p><p>''' + query.split('\t')[6] + '''</p></small></div>\n''' # &nbsp;&nbsp;&nbsp;&nbsp;
+				html_query += '''<div class="container-lr" ><p><h3><a href="''' + query.split('\t')[0] + '''">''' + query.split('\t')[1].replace('<','&lt;').replace('>','&gt;') + ''' (''' + query.split('\t')[2] + ''')</a> <!--a class="close-thik" href="#" onclick='apagar("''' + query.split('\t')[0].split('resultados/')[1].split('.html')[0] + '''")'></a--></h3></p><p><div class="tooltip" style="display: inline-block">''' + query.split('\t')[3] + ''' ''' + query.split('\t')[4].replace('<','&lt;').replace('>','&gt;') + '''<span class="tooltiptext">''' + criterios[int(query.split('\t')[3])].split('<h4>')[0] + '''</span></div></p><small><p>''' + query.split('\t')[5] + '''</p><p>''' + query.split('\t')[6] + '''</p></small></div>\n'''# if conectado else '''<div class="container-lr" ><p><h3><a href="''' + query.split('\t')[0] + '''">''' + query.split('\t')[1].replace('<','&lt;').replace('>','&gt;') + ''' (''' + query.split('\t')[2] + ''')</a> <!--a class="close-thik" href="#" onclick='apagar("''' + query.split('\t')[0].split('resultados/')[1].split('.html')[0] + '''")'></a--></h3></p><p><div class="tooltip" style="display: inline-block">''' + query.split('\t')[3] + ''' ''' + query.split('\t')[4].replace('<','&lt;').replace('>','&gt;') + '''<span class="tooltiptext">''' + criterios[int(query.split('\t')[3])].split('<h4>')[0] + '''</span></div></p><small><p>''' + query.split('\t')[5] + '''</p><p>''' + query.split('\t')[6] + '''</p></small></div>\n''' # &nbsp;&nbsp;&nbsp;&nbsp;
 				total += 1
 
 	novo_html = html.split('<!--SPLIT-->')[0] + novo_html + 'Interrogações: ' + str(total) + '<br><br>' + html_query + html.split('<!--SPLIT-->')[1]

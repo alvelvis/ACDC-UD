@@ -32,9 +32,9 @@ for inquerito in inqueritos:
 	if inquerito and inquerito.split('!@#')[1].split(' --> ')[0] == inquerito.split('!@#')[1].split(' --> ')[1].replace('<b>','').replace('</b>',''):
 		log.append('- inquérito excluído (não modificou nada): ' + inquerito)
 		continue
-	elif inquerito and not inquerito.split('!@#')[1].split(' --> ')[1].replace('<b>','').replace('</b>','') in open('/interrogar-ud/conllu/' + inquerito.split('!@#')[2], 'r').read():
-		log.append('- inquérito excluído (modificação não se manteve): ' + inquerito)
-		continue
+	#elif inquerito and not inquerito.split('!@#')[1].split(' --> ')[1].replace('<b>','').replace('</b>','') in open('/interrogar-ud/conllu/' + inquerito.split('!@#')[2], 'r').read():
+		#log.append('- inquérito excluído (modificação não se manteve): ' + inquerito)
+		#continue
 	else:
 		novo_inqueritos.append(inquerito)
 open('/interrogar-ud/inqueritos.txt', 'w').write('\n'.join(novo_inqueritos))
@@ -44,7 +44,7 @@ inqueritos_cars = open('/interrogar-ud/inqueritos_cars.txt', 'r').read().splitli
 inqueritos = open('/interrogar-ud/inqueritos.txt', 'r').read()
 novo_inqueritos_cars = list()
 for inquerito_car in inqueritos_cars:
-	if '!@#' + inquerito_car not in inqueritos and inquerito_car:
+	if ('!@#' + inquerito_car not in inqueritos or 'teste' in inquerito_car) and inquerito_car:
 		log.append('- etiqueta de inquérito excluída: ' + inquerito_car)
 		continue
 	else:
@@ -78,4 +78,4 @@ for item in os.listdir('/interrogar-ud/resultados'):
 			log.append('- diretório excluído (não encontrado em queries): ' + query)
 
 open('/interrogar-ud/inqueritos-log.txt', 'w').write(str(datetime.now()).replace(' ','_').split('.')[0] + ':\n' + '\n'.join(log) + '\n\n' + logfile)
-print(str(datetime.now()).replace(' ','_').split('.')[0] + ':\n' + '\n'.join(log))
+print('<pre>' + str(datetime.now()).replace(' ','_').split('.')[0] + ':\n' + '\n'.join(log) + '</pre>')

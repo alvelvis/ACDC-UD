@@ -102,7 +102,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		#SENTID
 		if sentid != '': novo += '''<p>'''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		#FORM
-		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
+		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
 		novo += '''<form action="/cgi-bin/udpipe.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
 		#TEXT
 		novo += '''<p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</p>
@@ -191,15 +191,15 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 	#<!--script-->
 	html1 = html.split('<!--script-->')[0]
 	html2 = html.split('<!--script-->')[1]
-	html1 += '<form method="POST" action="/cgi-bin/interrogar-script.py">'
-	html1 += '''<input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"><input type=hidden name="conllu" value="''' + ud + '''">'''
-	html1 += '<select name="script" required>'
+	html1 += '<form method="POST" action="/cgi-bin/inquerito.py?action=script&executar=sim" target="_blank">'
+	html1 += '''<input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"><input type=hidden name="conllu" value="''' + udoriginal + '''">'''
+	html1 += '<input type=text name="script" list="lista" required><datalist id="lista">'
 	if not os.path.isdir('/interrogar-ud/scripts/'):
 		os.mkdir('/interrogar-ud/scripts')
 	for item in os.listdir('/interrogar-ud/scripts/'):
 		if '.py' in item and not 'estrutura_dados' in item:
 			html1 += '<option value="' + item + '">' + item + '</option>'
-	html1 += '</select> <input type="submit" value="Executar"></form>'
+	html1 += '</datalist> <input type="submit" value="Executar"></form>'
 	html = html1 + html2
 
 	#title
@@ -210,7 +210,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 
 	#h2
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')
-	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <div class="tooltip">Filtro<span class="tooltiptext">Página é resultado da filtragem de uma interrogação anterior.</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
+	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <div class="tooltip">' + udoriginal + '<span class="tooltiptext">Página é resultado da filtragem de uma interrogação anterior.</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
 
 	#apagar.cgi
 	novo_html = re.sub('\<a.*onclick="apagar.*\</a\>', '', novo_html)

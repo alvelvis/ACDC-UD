@@ -128,7 +128,7 @@ function contexto(nome, botao) {
 }
 
 function apagar() {
-    if (confirm('Apagar interrogação "' + document.getElementById("combination").innerHTML + '"?')) {
+    if (confirm('Apagar interrogação "' + document.getElementById("combination").innerHTML.replace('&lt;', '<').replace('&gt;', '>') + '"?')) {
         window.location = "/cgi-bin/apagar.cgi?query=" + document.getElementById("apagar_link").value;
     }
 }

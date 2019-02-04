@@ -13,6 +13,11 @@ import os
 from datetime import datetime
 import re
 import difflib
+from subprocess import call
+#import json
+
+#with open('/interrogar-ud/cookies.json', 'w') as fp:
+	#json.dump(dict(os.environ), fp)
 
 arquivos = list()
 for i, arquivo in enumerate(os.listdir('/interrogar-ud/conllu')):
@@ -38,9 +43,11 @@ def printar(coluna = '', valor = '', onlysent = False):
 	html1 += '<br><br><input type=checkbox name=onlysent checked>Apenas sentenças</input>' if onlysent else '<br><br><input type=checkbox name=onlysent >Apenas sentenças</input>'
 
 	html1 += ' - <a href="/interrogar-ud/relatorio.txt" target="_blank">Baixar relatório</a></div><hr>'
-	relatorio = 'Relatório de Inquéritos - comcorhd.tronco.me/interrogar-ud'
+	relatorio = str(datetime.now()).replace(' ','_').split('.')[0] + '\nRelatório de Inquéritos - comcorhd.tronco.me/interrogar-ud'
 	if coluna: relatorio += '\nFiltro: ' + valor
 	relatorio += '\nMostrando apenas as sentenças que foram alteradas' if onlysent else '\nMostrando todas as alterações em todas as sentenças'
+	
+	lista_sentences = list()
 	relatorio42 = str()
 
 	html1 += '</form><br><br>'
@@ -63,26 +70,63 @@ def printar(coluna = '', valor = '', onlysent = False):
 						relatorio42 += '\n\n#' + linha.split('!@#')[6].replace('<b>','').replace('</b>','')
 					html42 += '<p><h3><a style="cursor:pointer" onclick="form_' + str(a) + '.submit()">' + linha.split('!@#')[0] + '</a></h3></p>'
 					relatorio42 += '\n\ntext = ' + linha.split('!@#')[0]
+					if not '# text = ' + linha.split('!@#')[0] in lista_sentences: lista_sentences.append('# text = ' + linha.split('!@#')[0])
 					if len(linha.split('!@#')) >= 8 and linha.split('!@#')[7] != 'NONE':
 						html42 += '<p>sent_id = ' + linha.split('!@#')[7] + '</p><input name="sentid" type="hidden" value="' + linha.split('!@#')[7] + '">'
-						relatorio42 += '\nsent_id = ' + linha.split('!@#')[7]
-					if len(linha.split('!@#')) >= 6 and linha.split('!@#')[4] != 'NONE' and linha.split('!@#')[5] != 'NONE':
+						relatorio42 += '\nsent = ' + linha.split('!@#')[7]
+					if len(linha.split('!@#')) >= 6 and linha.split('!@#')[4] != 'NONE' and linha.split('!@#')[5] != 'NONE':	
 						html42 = html42 + '<p>Página no Interrogatório: <a target="_blank" href="' + linha.split('!@#')[5] + '">' + linha.split('!@#')[4].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</a></p>'
-						relatorio42 += '\nPágina no interrogatório: ' + linha.split('!@#')[4].replace('<b>','').replace('</b>','')
+						relatorio42 += '\n\nPágina no interrogatório: ' + linha.split('!@#')[4].replace('<b>','').replace('</b>','')
 					if (not onlysent):
 						html42 += '<pre>ANTES:\t' + linha.split('!@#')[1].split(' --> ')[0].replace('<b>', '@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</pre><pre>DEPOIS:\t' + linha.split('!@#')[1].split(' --> ')[1].replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<','&lt;').replace('>','&gt;').replace('@BOLD', '<b>').replace('/BOLD', '</b>') + '</pre>'
-						relatorio42 += '\nANTES:\t' + linha.split('!@#')[1].split(' --> ')[0].replace('<b>', '').replace('</b>','') + '\nDEPOIS:\t' + linha.split('!@#')[1].split(' --> ')[1].replace('<b>','').replace('</b>','')
+						relatorio42 += '\n\nANTES:\t' + linha.split('!@#')[1].split(' --> ')[0].replace('<b>', '').replace('</b>','') + '\nDEPOIS:\t' + linha.split('!@#')[1].split(' --> ')[1].replace('<b>','').replace('</b>','')
 					html42 += '<small><p>' + linha.split('!@#')[2] + '</p><p>' + linha.split('!@#')[3] + '</p></small></form></div>'
 					relatorio42 += '\n\n' + linha.split('!@#')[2]
+					relatorio42 += '\n' + linha.split('!@#')[3]
 					total += 1
 					javistos.append(linha.split('!@#')[0])
 
 	html = html1 + 'Inquéritos: ' + str(total) + '<br><br>' + html42 + html2
-	open('/interrogar-ud/relatorio.txt', 'w').write(relatorio + '\n\n' + 'Inquéritos: ' + str(total) + relatorio42)
+	open('/interrogar-ud/relatorio.txt', 'w').write(relatorio + '\n\n' + 'Inquéritos: ' + str(total) + '\n\nResumo: ' + str(len(lista_sentences)) + ' sentenças alteradas\n' + '\n'.join(lista_sentences) + relatorio42)
 
-if os.environ['REQUEST_METHOD'] == 'POST': form = cgi.FieldStorage()
+if os.environ['REQUEST_METHOD'] == 'POST':
+	form = cgi.FieldStorage()
+	if (not 'HTTP_COOKIE' in os.environ) or ('HTTP_COOKIE' in os.environ and not 'conectado' in os.environ['HTTP_COOKIE']):
+		print('<script>window.location = "/interrogar-ud/autenticar.html"</script>')
+		exit()
 
-if os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (form['action'].value != 'alterar' and form['action'].value != 'filtrar' )):
+if os.environ['REQUEST_METHOD'] == 'POST' and 'action' in form.keys() and form['action'].value == 'script':
+	inqueritos = open('/interrogar-ud/inqueritos.txt').read().splitlines()
+
+	#pega os headers
+	headers = list()
+	for linha in open(form['link_interrogatorio'].value, 'r').read().splitlines():
+		if '# text = ' in linha:
+			headers.append(re.sub(r'\<.*?\>', '', linha))
+
+	open('/interrogar-ud/scripts/headers.txt', 'w').write("\n".join(headers))
+	call('python3 /interrogar-ud/scripts/' + form['script'].value + ' ' + form['conllu'].value + ' ' + form['executar'].value, shell=True)	
+
+	if form['executar'].value == 'exec':
+		for linha in open('/interrogar-ud/scripts/novos_inqueritos.txt', 'r').read().splitlines():
+			if form['nome_interrogatorio'].value != 'teste':
+				inqueritos.insert(0, linha.rsplit('!@#', 1)[0] + '!@#' + form['nome_interrogatorio'].value + ' (' + form['occ'].value + ')!@#' + form['link_interrogatorio'].value + '!@#' + form['script'].value + '!@#' + linha.rsplit('!@#', 1)[1])
+			else:
+				inqueritos.insert(0, linha.rsplit('!@#', 1)[0] + '!@#NONE!@#NONE!@#' + form['script'].value + '!@#' + linha.rsplit('!@#', 1)[1])
+
+		open('/interrogar-ud/inqueritos.txt', 'w').write('\n'.join(inqueritos))
+		html += '<form id="submeter" action="/cgi-bin/inquerito.py?action=filtrar" method="POST" target="_blank"><input type=hidden name=coluna value=6><input type=hidden name=valor value="' + form['script'].value + '"></form>'
+		html += '<script>document.getElementById("submeter").submit();</script>'
+		print(html)
+		exit()
+	
+	elif form['executar'].value == 'sim':
+		html = 'Simulação:'
+		html += '<pre>' + open('/interrogar-ud/scripts/sim.txt', 'r').read().replace('<', '&lt;').replace('>','&gt;')
+		html += '</pre>'
+		html += '<br><form action="/cgi-bin/inquerito.py?action=script&executar=exec" method="POST"><input type=hidden name="nome_interrogatorio" value="''' + form['nome_interrogatorio'].value + '''"><input type=hidden name=occ value="''' + form['occ'].value + '''"><input type=hidden name="link_interrogatorio" value="''' + form['link_interrogatorio'].value + '''"><input type=hidden name="conllu" value="''' + form['conllu'].value + '''"><input type=hidden value="''' + form['script'].value + '''" name="script"><input type=submit value="Executar script"></form>'''
+
+elif os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (form['action'].value != 'alterar' and form['action'].value != 'filtrar' and form['action'].value != 'script')):
 	html1 = html1.replace('<title>Sistema de inquéritos</title>', '<title>Novo inquérito</title>')
 	ud = form['conllu'].value
 	conlluzao = estrutura_dados.LerUD('/interrogar-ud/conllu/' + ud)
@@ -109,7 +153,7 @@ if os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (f
 			if 'nome_interrogatorio' in form and 'teste' != form['nome_interrogatorio'].value:
 				html1 = html1 + '<input type=hidden name=nome_interrogatorio value="' + form['nome_interrogatorio'].value.replace('"', '&quot;') + '">'
 				if 'occ' in form: html1 += '<input type=hidden name=occ value="' + form['occ'].value + '">'
-			html1 += '''Tipo de inquérito:<br><input type="text" placeholder="Crie uma categoria para este tipo de inquérito (opcional)" id=tag name="tag" list="cars" />'''
+			html1 += '''Tipo de inquérito:<br><br><input type="text" style="border-width: 0px; border-radius: 10px; text-align: center;" placeholder="Crie uma etiqueta para este tipo de inquérito" id=tag name="tag" list="cars" required>'''
 			html1 += '<script>var x = document.cookie.split("tag=")[1]; if (x && x != "NONE") { document.getElementById("tag").value = x }; </script>'
 			html1 += '''<datalist id="cars">'''
 			if not os.path.isfile('/interrogar-ud/inqueritos_cars.txt'): open('/interrogar-ud/inqueritos_cars.txt', 'w').write('')
@@ -121,18 +165,26 @@ if os.environ['REQUEST_METHOD'] == 'POST' and (not 'action' in form.keys() or (f
 			html1 += '<datalist id="barradaluisa">'
 			for item in open('/interrogar-ud/novovalor.txt', 'r').read().splitlines():
 				html1 += '<option>' + item + '</option>'
-			html1 += '</datalist><span class="tooltiptext">Valor para o qual a linha/coluna será substituída.</span></div> <input style="display: inline-block;" type="submit" value="Finalizar inquérito"><br><br><br><b>Clique na linha/coluna que deseja alterar:</b><br><br><div style="block"><table id="t01">'
+			html1 += '</datalist><span class="tooltiptext">Valor para o qual a linha/coluna será substituída.</span></div> <input style="display: inline-block;" type="submit" value="Finalizar inquérito"><br><br><br><b>Clique na linha/coluna que deseja alterar:</b></div><table id="t01">'
+
+			dicionario = dict()
+			for a, linha in enumerate(sentence2.splitlines()):
+				if '\t' in linha:
+					dicionario[linha.split('\t')[0]] = linha
 
 			for a, linha in enumerate(sentence2.splitlines()):
 				if not '\t' in linha:
-					html1 += '''<tr><td colspan="42" style="cursor:pointer; color:black;" onclick="document.getElementById('valor').value = \'''' + linha.replace("'","\\'") + '''\'; document.getElementById('token').value = \'''' + str(a+1) + '''\'; document.getElementById('coluna').value = ''; document.getElementById('valor').focus(); topfunction() ">''' + linha + '</td></tr>'
+					html1 += '''<tr><td colspan="42" style="cursor:pointer; color:black;" onclick="document.getElementById('valor').value = \'''' + linha.replace("'","\\'") + '''\'; document.getElementById('token').value = \'''' + str(a+1) + '''\'; document.getElementById('coluna').value = ''; document.getElementById('valor').focus(); document.getElementById('valor').select(); topfunction() ">''' + linha + '</td></tr>'
 				else:
 					html1 += '<tr>'
 					for b, coluna in enumerate(linha.split('\t')):
-						html1 += '''<td style="cursor:pointer; color:black;" onclick="document.getElementById('valor').value = \'''' + coluna.replace("'","\\'") + '''\'; document.getElementById('token').value = \'''' + str(a+1) + '''\'; document.getElementById('coluna').value = \'''' + str(b+1) + '''\'; document.getElementById('valor').focus(); topfunction()">''' + coluna.replace('<','&lt;').replace('>','&gt;') + '</td>'
+						if b == 6 and re.search(r'^\d+$', coluna) and coluna in dicionario.keys():
+							html1 += '''<td style="cursor:pointer; color:black;" onclick="document.getElementById('valor').value = \'''' + coluna.replace("'","\\'") + '''\'; document.getElementById('token').value = \'''' + str(a+1) + '''\'; document.getElementById('coluna').value = \'''' + str(b+1) + '''\'; document.getElementById('valor').focus(); document.getElementById('valor').select(); topfunction()"><div class="tooltip">''' + coluna.replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptextfix">' + dicionario[coluna].replace('<','&lt;').replace('>','&gt;') + '</span></div></td>'
+						else:
+							html1 += '''<td style="cursor:pointer; color:black;" onclick="document.getElementById('valor').value = \'''' + coluna.replace("'","\\'") + '''\'; document.getElementById('token').value = \'''' + str(a+1) + '''\'; document.getElementById('coluna').value = \'''' + str(b+1) + '''\'; document.getElementById('valor').focus(); document.getElementById('valor').select(); topfunction()">''' + coluna.replace('<','&lt;').replace('>','&gt;') + '</td>'
 					html1 += '</tr>'
 
-			html1 += '</div></table><input type="hidden" name="textheader" value="' + form['textheader'].value + '"></label></form>'
+			html1 += '</table><input type="hidden" name="textheader" value="' + form['textheader'].value + '"></label></form>'
 			achou = True
 			break
 	if not achou: html1 += 'Sentença não encontrada.'
@@ -177,6 +229,7 @@ elif os.environ['REQUEST_METHOD'] == 'POST' and form['action'].value == 'alterar
 		inquerito_concluido += '!@#' + form['nome_interrogatorio'].value + ' (' + form['occ'].value + ')' if 'occ' in form else '!@#NONE'
 		inquerito_concluido += '!@#' + form['link_interrogatorio'].value if 'link_interrogatorio' in form else '!@#NONE'
 		tag = form['tag'].value.replace('&lt;','<').replace('&gt;','>').replace(';', '_') if 'tag' in form else 'NONE'
+		if tag[0] == '#': tag = tag[1:]
 		inquerito_concluido += '!@#' + tag if 'tag' in form else '!@#NONE'
 		inquerito_concluido += '!@#' + form['sentid'].value if 'sentid' in form else '!@#NONE'
 		open('/interrogar-ud/inqueritos.txt', 'w').write(inquerito_concluido + '\n' + inqueritos)

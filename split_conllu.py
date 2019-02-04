@@ -1,13 +1,17 @@
 import os
 import re
+import sys
 
-pasta_conllu = input('Arquivo .conllu:\n').replace('"','').replace("'","").replace('\\','/').strip()
+if len(sys.argv) == 1:
+	pasta_conllu = input('Arquivo .conllu:\n').replace('"','').replace("'","").replace('\\','/').strip()
+else:
+	pasta_conllu = sys.argv[1]
 
-conllus = [pasta_conllu.rsplit('/', 1)[1]]
+conllus = [pasta_conllu.rsplit('/', 1)[1]] if '/' in pasta_conllu else [pasta_conllu]
 #for arquivo in os.listdir(pasta_conllu):
 #	if '.conllu' in arquivo:
 #		conllus.append(arquivo)
-pasta_conllu = pasta_conllu.rsplit('/', 1)[0]
+pasta_conllu = pasta_conllu.rsplit('/', 1)[0] if '/' in pasta_conllu else '.'
 print(conllus)
 
 documents = dict()
