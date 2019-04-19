@@ -17,11 +17,14 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 * [tratar_conllu.py](#tratar_conllupy)
 
 # interrogar_UD.py
+
 Com esse código é possível realizar pesquisas em arquivos UD de acordo com diferentes critérios.
 
 O script é utilizado no Interrogatório: http://comcorhd.tronco.me/interrogar-ud/
 
 Os critérios de pesquisa são explicados na página de [interrogação](http://comcorhd.tronco.me/cgi-bin/interrogar.cgi).
+
+Para mais informações sobre o Interrogatório, consultar [http://github.com/alvelvis/Interrogat-rio](http://github.com/alvelvis/Interrogat-rio).
 
 [**↥ voltar ao topo**](#ACDC-UD)
 
