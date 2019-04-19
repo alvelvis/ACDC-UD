@@ -59,7 +59,7 @@ for query in queries:
 		if query and os.path.isdir(query.split('\t')[0].split('.html')[0]):
 			shutil.rmtree(query.split('\t')[0].split('.html')[0])
 			log.append('- diretório excluído: ' + query.split('\t')[0].split('.html')[0])
-		os.remove(query.split('\t')[0])
+		if os.path.isfile(query.split('\t')[0]): os.remove(query.split('\t')[0])
 		log.append('- entrada de pesquisa e pesquisa excluídas: ' + query)
 		continue
 	else:

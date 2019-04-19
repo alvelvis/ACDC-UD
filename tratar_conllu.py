@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-conllu = input('Arraste o arquivo .conllu: ').replace('\\','/').replace('"','').replace("'","").strip()
+import sys
+
+if len(sys.argv) < 2:
+	conllu = input('Arraste o arquivo .conllu: ').replace('\\','/').replace('"','').replace("'","").strip()
+else:
+	conllu = sys.argv[1]
 arquivo = open(conllu, 'r').read().splitlines()
 novo_conllu = list()
 for linha in arquivo:

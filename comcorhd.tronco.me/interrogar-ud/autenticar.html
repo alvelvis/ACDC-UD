@@ -1,11 +1,15 @@
-<head><title>Credenciamento</title>
+<head><title>Credenciamento: Sistema de inquéritos</title>
 <style>
 body {
   background: #2d343d;
 }
 
 .login {
-  margin: 20px auto;
+  //margin: 20px auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 300px;
   padding: 30px 25px;
   background: white;
@@ -79,7 +83,7 @@ h1.login-title {
 </style>
 <body>
 <form class="login" method=POST action="/cgi-bin/autenticar-interrogatorio.py">
-    <h1 class="login-title">Acessar inquéritos</h1>
+    <h1 class="login-title">Acessar<br>inquéritos</h1>
     <input type="text" name="nome" class="login-input" placeholder="Nome" autofocus required>
     <input type="password" name="senha" class="login-input" placeholder="Senha" required>
     <input type="submit" value="Sou credenciado!" class="login-button">

@@ -6,7 +6,7 @@
   z-index: 99; /* Make sure it does not overlap */
   border: none; /* Remove borders */
   outline: none; /* Remove outline */
-  background-color: #99a9dd; /* Set a background color */
+  background-color: rgba(255,105,30,1); /* Set a background color */
   color: white; /* Text color */
   cursor: pointer; /* Add a mouse pointer on hover */
   padding: 10px 15px; /* Some padding */
@@ -23,6 +23,14 @@
 .easyPaginateNav {
     max-width: 100%;
     overflow: auto;
+}
+
+th, td {
+    padding: 10px;
+}
+
+table {
+    //margin: auto;
 }
 
 html {
@@ -54,7 +62,7 @@ content: '✖'; /* UTF-8 symbol */
 input[type=text] {
     max-width: 400px;
     width: 100%;
-    height: 30px;
+    //height: 30px;
     //padding: 3px;
     //border-radius: 4px;
 }
@@ -222,6 +230,9 @@ h2 {
 }
 .content .container:nth-child(even) { background-color: #fafafa; }
 .content .container-lr:nth-child(even) { background-color: #fafafa; }
+.content .container:nth-child(odd) { background-color: #f5f5f5; }
+.content .container-lr:nth-child(odd) { background-color: #f5f5f5; }
+
 .content-3d {
   width: 90%;
   max-width: 300px;
@@ -230,10 +241,13 @@ pre {
     width: auto;
     max-height: 500px;
     padding: 30px 30px 30px 30px;
+    //border:1px solid #999;
+    //page-break-inside: avoid;
     //background-color: #303030;
-    background-color: #080808;
+    //background-color: #080808;
     //background-color: rgba(0, 0, 0, 0.72);
-    color: #f8f8f2;
+    //color: #f8f8f2;
+    background-color: #E9E9E9;
     border-radius: 0 0 4px 4px;
     //margin-top: 20px;
     //white-space: pre-wrap; /* css-3 */
@@ -251,11 +265,11 @@ pre .val {color: #e6db74;} /* value */
 .btn-container, .container {
     //background-color: #eaedf1;
     //background-color: white;
-    border-radius: 4px;
+    //border-radius: 4px;
     text-align: left;
     //border-top: 1px dotted black;
     padding: 15px 0px 15px 0px;
-    margin-bottom: 20px;
+    //margin-bottom: 20px;
     //margin-top: 20px;
 }
 .container p, .leftright {
@@ -266,9 +280,9 @@ pre .val {color: #e6db74;} /* value */
     //background-color: #cef6ce;
     //background-color: white;
     //border-top: 1px dotted black;
-    border-radius: 4px;
+    //border-radius: 4px;
     text-align: left;
-    margin-bottom: 20px;
+    //margin-bottom: 20px;
 }
 .content .container:hover { background-color: #ffffeb; }
 .content .container-lr:hover { background-color: #ffffeb; }

@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import shutil
 
 if len(sys.argv) == 1:
 	pasta_conllu = input('Arquivo .conllu:\n').replace('"','').replace("'","").replace('\\','/').strip()
@@ -13,6 +14,13 @@ conllus = [pasta_conllu.rsplit('/', 1)[1]] if '/' in pasta_conllu else [pasta_co
 #		conllus.append(arquivo)
 pasta_conllu = pasta_conllu.rsplit('/', 1)[0] if '/' in pasta_conllu else '.'
 print(conllus)
+
+if os.path.isdir(pasta_conllu + '/documents/'):
+	for item in os.listdir(pasta_conllu + '/documents/'):
+		if '.conllu' in item:
+			os.remove(pasta_conllu + '/documents/' + item)
+else:
+	os.mkdir(pasta_conllu + '/documents/')
 
 documents = dict()
 for conllu in conllus:
@@ -40,7 +48,6 @@ for documento in documents.keys():
 	for i in range(4 - len(nome)):
 		nome = '0' + nome
 	nome = re.search(r'\D+', documento)[0] + nome
-
 
 	print(nome)
 	open(pasta_conllu + '/documents/' + nome + '.conllu', 'w', encoding="utf8").write('\n\n'.join(documentos_organizados[documento]) + '\n\n')

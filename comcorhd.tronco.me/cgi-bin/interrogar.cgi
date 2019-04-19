@@ -82,7 +82,7 @@ else:
 	html = html.replace('/cgi-bin/filtrar.cgi', '/cgi-bin/filtrar.cgi?html=' + slugify(nome) + '_' + data + '&udoriginal=' + ud)
 	html = html.replace('/cgi-bin/conllu.cgi', '/cgi-bin/conllu.cgi?html=/interrogar-ud/resultados/' + slugify(nome) + '_' + data + '.html')
 
-	#código em si	
+	#código em si
 	html1 = html.split('<!--SPLIT-->')[0]
 	html2 = html.split('<!--SPLIT-->')[1]
 
@@ -90,6 +90,7 @@ else:
 	for i, ocorrencia in enumerate(lista_ocorrencias):
 		print(str(i+1) + '/' + str(len(lista_ocorrencias)))
 		ocorrencia = ocorrencia.replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<font color="' + tabela['yellow'] + '">','@YELLOW/').replace('<font color="' + tabela['red'] + '">','@RED/').replace('<font color="' + tabela['cyan'] + '">','@CYAN/').replace('<font color="' + tabela['blue'] + '">','@BLUE/').replace('<font color="' + tabela['purple'] + '">','@PURPLE/').replace('</font>','/FONT').replace('<','&lt;').replace('>','&gt;')
+		ocorrencia_limpa = ocorrencia.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@RED/', '').replace('@CYAN/', '').replace('@BLUE/', '').replace('@PURPLE/', '').replace('/FONT', '').replace('&lt;', '<').replace('&gt;', '>')
 
 		#PROCURA SENTID E TEXT
 		if '# sent_id = ' in ocorrencia:
@@ -105,8 +106,9 @@ else:
 		#SENTID
 		if sentid != '': html1 += '''<p><input class="cb" id="checkbox_'''+str(i+1)+'''" style="margin-left:0px;" title="Selecionar sentença para filtragem" type="checkbox"> '''+sentid.replace('/BOLD','</b>').replace('@BOLD','<b>')+'''</p>'''
 		#OPÇÕES
-		html1 += '''<form action="/cgi-bin/inquerito.py?conllu='''+ud+'''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
-		html1 += '''<form action="/cgi-bin/udpipe.py?conllu='''+ud+'''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
+		html1 += '''<form action="/cgi-bin/inquerito.py?conllu=''' + ud + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
+		html1 += '''<form action="/cgi-bin/udpipe.py?conllu=''' + ud + '''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
+		html1 += '<form action="/cgi-bin/draw_tree.py?conllu=' + ud + '" target="_blank" method="POST" id="tree_' + str(i+1) + '"><input type=hidden name=sent_id value="' + sentid.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '"><input type=hidden name=text value="' + text.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '"></form>'
 		#TEXT
 		html1 += '''<p><span id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</span></p>
 <p>'''
@@ -130,8 +132,8 @@ else:
 		#CONTEXTO
 		if temcontexto:
 			if '-' in sentid:
-				sentnum = int(sentid.split('-')[1].split()[0].split('/')[0])
-				sentnome = sentid.split('-')[0]
+				sentnum = int(sentid.rsplit('-', 1)[1].split()[0].split('/')[0])
+				sentnome = sentid.rsplit('-', 1)[0]
 				contexto1 = ''
 				contexto2 = ''
 				if sentnum == 1:
@@ -139,9 +141,9 @@ else:
 				for sentence in conllu_completo:
 					if '# sent_id = ' in sentence and '# text = ' in sentence:
 						if contexto1 != '.':
-							if sentence.split('# sent_id = ')[1].split('-')[0] == sentnome and int(sentence.split('# sent_id = ')[1].split('-')[1].split('\n')[0]) == sentnum -1:
+							if sentence.split('# sent_id = ')[1].rsplit('-', 1)[0] == sentnome and int(sentence.split('# sent_id = ')[1].rsplit('-', 1)[1].split('\n')[0]) == sentnum -1:
 								contexto1 = sentence.split('# text = ')[1].split('\n')[0]
-						if sentence.split('# sent_id = ')[1].split('-')[0] == sentnome and int(sentence.split('# sent_id = ')[1].split('-')[1].split('\n')[0]) == sentnum +1:
+						if sentence.split('# sent_id = ')[1].rsplit('-', 1)[0] == sentnome and int(sentence.split('# sent_id = ')[1].rsplit('-', 1)[1].split('\n')[0]) == sentnum +1:
 							contexto2 = sentence.split('# text = ')[1].split('\n')[0]
 						if (contexto1 != '' or contexto1 == '.') and contexto2 != '':
 							break
@@ -168,12 +170,18 @@ else:
 				except:
 					pass
 
-		#ANOTAÇÃO
-		html1 += '''<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
-
 		#Fim contexto e anotação
 		#Opções
-		html1 += '''<p style="display:none" id="optdiv_''' + str(i+1) + '''"><a style="cursor:pointer" onclick='filtraragora("'''+str(i+1)+'''")'>Remover sentença</a><br><a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>Anotar no UDPipe</a></p></div>\n'''
+		html1 += '''<p style="display:none" id="optdiv_''' + str(i+1) + '''"><a style="cursor:pointer" onclick='filtraragora("'''+str(i+1)+'''")'>Remover sentença</a><br>'''
+		html1 += '''<a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>Anotar no UDPipe</a><br>'''
+		html1 += '''<a style="cursor:pointer" onclick='drawtree("tree_'''+str(i+1)+'''")'>Visualizar árvore</a>'''
+		html1 += '''</p>'''
+
+		#ANOTAÇÃO
+		html1 += '''\n<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
+
+		html1 += '</div>\n'
+
 
 	html = html1 + html2
 
@@ -199,7 +207,7 @@ else:
 
 	#h2 - METADADOS DA QUERY
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')
-	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; ' + ud + ' &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
+	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; ' + ud + ' &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data.replace('_', ' ') + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
 
 	#APAGAR.CGI
 	novo_html = novo_html.replace('id="apagar_link" value="link1"', 'id="apagar_link" value="' + slugify(nome) + '_' + data + '"')

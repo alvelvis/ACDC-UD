@@ -66,7 +66,6 @@ def main(arquivoUD, criterio, parametros):
 						token = linha[1]
 						sentence[i] = '<b>' + '\t'.join(sentence[i]) + '</b>'
 						sentence[i] = sentence[i].split('\t')
-						casos += 1
 						#break
 			if achei != 'nãoachei':
 				for i, linha in enumerate(sentence):
@@ -81,10 +80,11 @@ def main(arquivoUD, criterio, parametros):
 								descarta = True
 				if descarta == False:
 					output.append(sentence)
+					casos += 1
 					
 	#Regex Independentes
 	if criterio == 3:
-		regras = [x.strip() for x in parametros.split('&')]
+		regras = [x.strip() for x in parametros.split('::')]
 
 		for a, sentence in enumerate(qualquercoisa):
 			sentence2 = sentence

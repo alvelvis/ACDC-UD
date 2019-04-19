@@ -13,7 +13,7 @@
     </div>
     <div class="content">
       <form action="/cgi-bin/arquivo_ud.cgi" method="post" enctype="multipart/form-data"> <label for="arquivo">Novo arquivo UD:<br>
-          <input name="file" value="Escolher arquivo" required="required" type="file"> </label><input class="btn-gradient orange mini" value="Enviar" type="submit"></form>
+          <input name="file" value="Escolher arquivo" required="required" type="file"> </label><input class="btn-gradient orange mini" value="Enviar" onclick="document.getElementById('submeter').value = 'Enviando...'" id=submeter type="submit"></form>
       <br>
       <br>
       <!--SPLIT--> </div>

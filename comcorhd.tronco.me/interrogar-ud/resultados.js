@@ -33,16 +33,19 @@ function excluir_selection() {
         }
     }
 
-    if (document.getElementById("nome_pesquisa").value == "") {
-        document.getElementById("nome_pesquisa").value = "Seleção";
+    if (document.getElementById("nome_pesquisa_sel").value == "") {
+    	var data = new Date().toLocaleString()
+        document.getElementById("nome_pesquisa_sel").value = "Seleção " + data;
     }
+
+    document.getElementById("nome_pesquisa").value = document.getElementById("nome_pesquisa_sel").value;
 
     document.getElementById("pesquisa").value = document.getElementById("pesquisa").value.rsplit('|',1)[0];
     document.getElementById("filtrar").click();
 }
 
 function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&').replace('&amp;', '.'); // $& means the whole matched string
 }
 
 String.prototype.rsplit = function(sep, maxsplit) {
@@ -177,6 +180,10 @@ function inquerito(ide) {
 }
 
 function anotarudpipe(ide) {
+    document.getElementById(ide).submit()
+}
+
+function drawtree(ide) {
     document.getElementById(ide).submit()
 }
 

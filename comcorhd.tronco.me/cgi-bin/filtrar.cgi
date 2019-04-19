@@ -44,7 +44,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		if not '^# text = ' in form['pesquisa'].value: print('<script>window.alert("Critério não especificado. Utilizando expressão regular (critério 1).")</script>')
 	else:
 		criterio = form['pesquisa'].value.split(' ')[0]
-	print
+	
 	if int(criterio) > int(open('/interrogar-ud/max_crit.txt', 'r').read().split()[0]):
 		print('em desenvolvimento')
 		exit()
@@ -79,7 +79,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 	#alterações
 	html1 = html.split('<!--SPLIT-->')[0]
 	html2 = html.split('<!--SPLIT-->')[1]
-	html_original = open('/interrogar-ud/resultados/' + form['html'].value + '.html', 'r').read().replace('<div class="content">','<div class="content"> > <a href="' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html">' + nome.replace('<','&lt;').replace('>','&gt;') + ' (' + ocorrencias  + ')</a>&nbsp;<a class="close-thik" alt="Desfazer filtro" href="/cgi-bin/filtrar.cgi?action=desfazer&html=' + link + '_anterior&original=' + form['html'].value + '"></a>&nbsp;')
+	html_original = open('/interrogar-ud/resultados/' + form['html'].value + '.html', 'r').read().replace('<div class="content">','<div class="content"> > <a href="' + form['html'].value + '/' + slugify(nome) + '_' + data + '.html">' + nome.replace('<','&lt;').replace('>','&gt;') + ' (' + ocorrencias  + ')</a>&nbsp;<!--a class="close-thik" alt="Desfazer filtro" href="/cgi-bin/filtrar.cgi?action=desfazer&html=' + link + '_anterior&original=' + form['html'].value + '"></a-->&nbsp;')
 	if not 'Com filtros: ' in html_original:
 		ocorrencias_anterior = int(re.search(r'\((\d+)\)\</h1\>', html_original).group(1))
 		html_original = re.sub(r'(\(.*?\)\</h1\>)', r'\1<br>Com filtros: ' + str(ocorrencias_anterior - int(ocorrencias)), html_original)
@@ -90,6 +90,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 	for i, ocorrencia in enumerate(lista_ocorrencias):
 		print(str(i+1) + '/' + str(len(lista_ocorrencias)))
 		ocorrencia = ocorrencia.replace('<b>','@BOLD').replace('</b>','/BOLD').replace('<font color="' + tabela['yellow'] + '">','@YELLOW/').replace('<font color="' + tabela['red'] + '">','@RED/').replace('<font color="' + tabela['cyan'] + '">','@CYAN/').replace('<font color="' + tabela['blue'] + '">','@BLUE/').replace('<font color="' + tabela['purple'] + '">','@PURPLE/').replace('</font>','/FONT').replace('<','&lt;').replace('>','&gt;')
+		ocorrencia_limpa = ocorrencia.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@RED/', '').replace('@CYAN/', '').replace('@BLUE/', '').replace('@PURPLE/', '').replace('/FONT', '').replace('&lt;', '<').replace('&gt;', '>')
 
 		if '# sent_id = ' in ocorrencia:
 			sentid = ocorrencia.split('# sent_id = ')[1].split('\n')[0]
@@ -104,6 +105,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		#FORM
 		novo += '''<form action="/cgi-bin/inquerito.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="form_'''+str(i+1)+'''"><input type=hidden name=sentid value="''' + sentid.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name=occ value="''' + ocorrencias + '''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"><input type=hidden name="nome_interrogatorio" value="''' + nome.replace('"', '&quot;') + '''"><input type=hidden name="link_interrogatorio" value="''' + link + '''"></form>'''
 		novo += '''<form action="/cgi-bin/udpipe.py?conllu=''' + udoriginal + '''" target="_blank" method="POST" id="udpipe_'''+str(i+1)+'''"><input type="hidden" name="textheader" value="''' + text.replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''"></form>'''
+		novo += '<form action="/cgi-bin/draw_tree.py?conllu=' + udoriginal + '" target="_blank" method="POST" id="tree_' + str(i+1) + '"><input type=hidden name=sent_id value="' + sentid.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '"><input type=hidden name=text value="' + text.replace('@BOLD', '').replace('/BOLD', '').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '"></form>'
 		#TEXT
 		novo += '''<p id="text_'''+str(i+1)+'''">'''+ text.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>')+ '''</p>
 <p>'''
@@ -127,8 +129,8 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 		#Contexto e Anotação
 		if temcontexto:
 			if '-' in sentid:
-				sentnum = int(sentid.split('-')[1].split()[0])
-				sentnome = sentid.split('-')[0]
+				sentnum = int(sentid.rsplit('-', 1)[1].split()[0])
+				sentnome = sentid.rsplit('-', 1)[0]
 				contexto1 = ''
 				contexto2 = ''
 				if sentnum == 1:
@@ -136,9 +138,9 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 				for sentence in conllu_completo:
 					if '# sent_id = ' in sentence and '# text = ' in sentence:
 						if contexto1 != '.':
-							if sentence.split('# sent_id = ')[1].split('-')[0] == sentnome and int(sentence.split('# sent_id = ')[1].split('-')[1].split('\n')[0]) == sentnum -1:
+							if sentence.split('# sent_id = ')[1].rsplit('-', 1)[0] == sentnome and int(sentence.split('# sent_id = ')[1].rsplit('-', 1)[1].split('\n')[0]) == sentnum -1:
 								contexto1 = sentence.split('# text = ')[1].split('\n')[0]
-						if sentence.split('# sent_id = ')[1].split('-')[0] == sentnome and int(sentence.split('# sent_id = ')[1].split('-')[1].split('\n')[0]) == sentnum +1:
+						if sentence.split('# sent_id = ')[1].rsplit('-', 1)[0] == sentnome and int(sentence.split('# sent_id = ')[1].rsplit('-', 1)[1].split('\n')[0]) == sentnum +1:
 							contexto2 = sentence.split('# text = ')[1].split('\n')[0]
 						if (contexto1 != '' or contexto1 == '.') and contexto2 != '':
 							break
@@ -165,10 +167,14 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 				except:
 					pass
 
-		novo += '''<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
-
 		#Fim contexto e anotação
-		novo += '''<div style="display:none" id="optdiv_''' + str(i+1) + '''"><p><a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>Anotar no UDPipe</a></p></div></div>\n'''
+		novo += '''<div style="display:none" id="optdiv_''' + str(i+1) + '''"><p><a style="cursor:pointer" onclick='anotarudpipe("udpipe_'''+str(i+1)+'''")'>Anotar no UDPipe</a><br>'''
+		novo += '''<a style="cursor:pointer" onclick='drawtree("tree_'''+str(i+1)+'''")'>Visualizar árvore</a>'''
+		novo += '''</p></div>'''
+
+		novo += '''\n<pre id="div_'''+str(i+1)+'''" style="display:none">''' + ocorrencia.replace('/BOLD','</b>').replace('@BOLD','<b>').replace('@YELLOW/', '<font color="' + tabela['yellow'] + '">').replace('@PURPLE/', '<font color="' + tabela['purple'] + '">').replace('@BLUE/', '<font color="' + tabela['blue'] + '">').replace('@RED/', '<font color="' + tabela['red'] + '">').replace('@CYAN/', '<font color="' + tabela['cyan'] + '">').replace('/FONT', '</font>') + '''</pre>'''
+
+		novo += '</div>\n'
 
 		html1 = html1 + novo
 
@@ -210,7 +216,7 @@ elif not 'action' in form or form['action'].value != 'desfazer':
 
 	#h2
 	criterios = open('/interrogar-ud/criterios.txt', 'r').read().split('!@#')
-	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <div class="tooltip">' + udoriginal + '<span class="tooltiptext">Página é resultado da filtragem de uma interrogação anterior.</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
+	novo_html = re.sub(re.escape('<p>critério y#z#k&nbsp;&nbsp;&nbsp; arquivo_UD&nbsp;&nbsp;&nbsp; <span id="data">data</span>&nbsp;&nbsp;&nbsp;'), '<p><div class="tooltip">' + criterio + ' ' + parametros.replace('\\','\\\\').replace('<','&lt;').replace('>','&gt;') + '<span class="tooltiptext">' + criterios[int(criterio)].replace('\\','\\\\').split('<h4>')[0] + '</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <div class="tooltip">' + udoriginal + '<span class="tooltiptext">Página é resultado da filtragem de uma interrogação anterior.</span></div> &nbsp;&nbsp;&nbsp;&nbsp; <span id="data">' + data.replace('_', ' ') + '</span> &nbsp;&nbsp;&nbsp;&nbsp; ', novo_html)
 
 	#apagar.cgi
 	novo_html = re.sub('\<a.*onclick="apagar.*\</a\>', '', novo_html)

@@ -15,8 +15,8 @@ if os.environ['REQUEST_METHOD'] == 'POST':
 	ud = form['conllu'].value
 	text = form['textheader'].value
 
-	html += '# text = ' + text
-	html += '<br><br>Modelo do UDPipe: <a href="/interrogar-ud/modelos_udpipe/' + modelo + '" download>' + modelo + '</a>'
+	html += '<style>body { width: 90%; margin: 20px auto; }</style><h1>UDPipe</h1><hr><a href="#" onclick="window.close()"">Fechar</a><br><br>'
+	html += 'Modelo: <a href="/interrogar-ud/modelos_udpipe/' + modelo + '" download>' + modelo + '</a>'
 
 	open('/interrogar-ud/cru.txt', 'w').write(text.replace('"', '\\"'))
 
@@ -24,7 +24,7 @@ if os.environ['REQUEST_METHOD'] == 'POST':
 
 	resultado = open('/interrogar-ud/anotado.txt', 'r').read()
 
-	html += '<br><br><pre>' + resultado + '</pre>'
+	html += '<pre style="font-size: 14px">' + resultado + '</pre>'
 
 	anotado = estrutura_dados.LerUD('/interrogar-ud/conllu/' + ud)
 	for sentence in anotado:
@@ -37,7 +37,7 @@ if os.environ['REQUEST_METHOD'] == 'POST':
 			anotado[a] = '\t'.join(anotado[a])
 	anotado = '\n'.join(anotado)
 
-	html += '''<br><input type=button value="Mostrar anotação original (''' + ud + ''')" onclick="document.getElementById('anotacao').style.display = 'block';"><pre id=anotacao style="display:none"><br>''' + anotado + '''</pre>'''
+	#html += '''<br><input type=button value="Mostrar anotação original (''' + ud + ''')" onclick="document.getElementById('anotacao').style.display = 'block';"><pre id=anotacao style="display:none"><br>''' + anotado + '''</pre>'''
 
 	#os.remove('/interrogar-ud/anotado.txt')
 

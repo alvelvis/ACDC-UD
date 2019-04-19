@@ -35,12 +35,27 @@
         <br>
         <br>
         <form action="/cgi-bin/filtrar.cgi" method="POST"> <p><label for="pesquisa">
-            <div class="tooltip">Expressão do filtro (?):<span class="tooltiptext">As sentenças serão removidas da página atual e salvas em uma página separada. Se for do desejo, é possível retornar à pesquisa original posteriormente.<br><br>Sintaxe: nº do critério + espaço + parâmetros</span></div><br>
-            <input id="pesquisa" name="pesquisa" type="text" required></label>
-            <br><br> <label for="nome_pesquisa">Nome do filtro (opcional):<br>
-<input id="nome_pesquisa" name="nome_pesquisa" type="text" ></label>
-            <br><br> <input id="filtrar"
-value="Filtrar pesquisa" class="btn-gradient orange mini" style="margin-left:0px" type="submit"><br>&nbsp;ou&nbsp;<br><input id="filtrarsel" style="margin-left:0px" value="Filtrar itens selecionados" class="btn-gradient orange mini" type="button" onclick="excluir_selection()"></p></form>
+            <table>
+              <tr>
+                <td>
+                  <div class="tooltip">Expressão do filtro (?):<span class="tooltiptext">As sentenças serão removidas da página atual e salvas em uma página separada. Se for do desejo, é possível retornar à pesquisa original posteriormente.<br><br>Sintaxe: nº do critério + espaço + parâmetros</span></div><br>
+                  <input id="pesquisa" name="pesquisa" type="text" required></label>
+                  <br><br> <label for="nome_pesquisa">Nome do filtro (opcional):<br>
+      <input id="nome_pesquisa" name="nome_pesquisa" type="text" ></label>
+                  <br> <input id="filtrar"
+      value="Filtrar pesquisa" class="btn-gradient orange mini" style="margin-left:0px" type="submit">
+                </td>
+                <td>
+                  ou
+                </td>
+                <td>
+                  <label for="nome_pesquisa_sel">Nome do filtro (opcional):<br>
+                  <input id="nome_pesquisa_sel" type="text" ></label>
+                  <br>
+                  <input id="filtrarsel" style="margin-left:0px" value="Filtrar itens selecionados" class="btn-gradient orange mini" type="button" onclick="excluir_selection()"></p></form>
+                </td>
+              </tr>
+            </table>
       </div>
       <div class="tabcontent" id="conllu"> <br>
         <br>

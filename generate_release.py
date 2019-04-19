@@ -2,7 +2,12 @@
 
 import os
 
-pasta = input('Diretório dos arquivos ID.txt:\n').replace('"','').replace("'","").strip()
+tem_conllu = False
+for item in os.listdir('.'):
+	if '.conllu' in item:
+		tem_conllu = True
+		pasta = '.'
+if not tem_conllu: pasta = input('Diretório dos arquivos ID.txt:\n').replace('"','').replace("'","").strip()
 
 tudo_junto = str()
 

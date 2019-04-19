@@ -28,12 +28,12 @@ Se em uma sentença tiver um token marcado como A na coluna X e não tiver nenhu
 
 !@#<h3>Critério 3: Regex Independentes</h3>
 Verifica se várias expressões regulares dão match em uma sentença e a retorna caso nenhuma das expressões falhe.
-<br><br>Parâmetros:<br>Regex 1&Regex 2& . . . &Regex N
+<br><br>Parâmetros:<br>Regex 1 :: Regex 2 :: . . . :: Regex N
 <br><br>Dica: Utilize '!' para negar uma expressão regular.
 <h4>Exemplos:</h4>
 1) Procurar por sentenças em que o 'root' seja 'VERB', e que não tenham nenhum 'nsubj' nem 'csubj'.
 <ul><li>
-<a id="4" style="cursor:pointer" onclick="pesquisa('4')">3 VERB.*root&!nsubj&!csubj</a>
+<a id="4" style="cursor:pointer" onclick="pesquisa('4')">3 VERB.*root::!nsubj::!csubj</a>
 </li></ul>
 
 !@#<h3>Critério 4: Pais e filhos</h3>
