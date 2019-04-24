@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
+import estrutura_ud
 
-tem_conllu = False
-for item in os.listdir('.'):
-	if '.conllu' in item:
-		tem_conllu = True
-		pasta = '.'
-if not tem_conllu: pasta = input('Diretório dos arquivos ID.txt:\n').replace('"','').replace("'","").strip()
-
-tudo_junto = str()
+if len(sys.argv) < 2:
+	pasta = input("Diretório onde estão os arquivos de id e a pasta documents: ")
+else:
+	pasta = sys.argv[1]
 
 for arquivo_id in os.listdir(pasta):
 	if 'pt-' in arquivo_id:
@@ -19,20 +17,18 @@ for arquivo_id in os.listdir(pasta):
 
 		ids = open(arquivo_ids, 'r').read()
 
-		arquivos_conllu = list()
+		arquivos_conllu = str()
 		for conllu in os.listdir(diretorio + 'documents'):
 			if os.path.isfile(diretorio + 'documents/' + conllu):
-				arquivos_conllu.extend(open(diretorio + 'documents/' + conllu, 'r').read().split('\n\n'))
+				arquivos_conllu += open(diretorio + 'documents/' + conllu, 'r').read() + "\n\n"
+
+		corpus = estrutura_ud.Corpus()
+		corpus.build(arquivos_conllu)
 
 		novo_conllu = list()
 		for i, identificador in enumerate(ids.splitlines()):
 			if identificador.strip() != '':
-				for sentence in arquivos_conllu:
-					if '# sent_id = ' in sentence and sentence.split('# sent_id = ')[1].split('\n')[0] == identificador:
-						novo_conllu.append(sentence)
-						print(arquivo_conllu.rsplit('/', 1)[1] + ' - ' + str(i+1) + '/' + str(len(ids.splitlines())) + ': ' + identificador)
-						break
+				novo_conllu.append(corpus.sentences[identificador].to_str())
+				print(arquivo_conllu.rsplit('/', 1)[1] + ' - ' + str(i+1) + '/' + str(len(ids.splitlines())) + ': ' + identificador)
 
 		open(arquivo_conllu, 'w').write("\n\n".join(novo_conllu) + '\n\n')
-		tudo_junto += "\n\n".join(novo_conllu) + '\n\n'
-
