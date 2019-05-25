@@ -52,7 +52,6 @@ def main(modelo, tokenizado, resultado):
 
     novo_texto = adiciona_text(open(resultado, 'r').read(), com_text)
     open(resultado, 'w').write(novo_texto)
-    print('OK!')
 
 
 if __name__ == '__main__':

@@ -6,19 +6,9 @@ import re
 import os
 from subprocess import call
 import estrutura_ud
-
-try:
-		import pandas as pd
-except:
-		try:
-				from pip import main as pipmain
-		except:
-				print('Instale a biblioteca "pandas" e tente novamente.')
-				exit()
-		else:
-				pipmain(['install', 'pandas'])
-				print('Biblioteca "pandas" instalada com sucesso!')
-				exit()
+import pandas as pd
+import html as wb
+import cgi
 
 feats = {
 				1: "ID",
@@ -255,14 +245,28 @@ function openCity(evt, cityName) {
 				carregamento_comment = list()
 				carregamento_check = list()
 				for i, sentença in enumerate(sentenças[combinação]):
+
 						carregamento_check.append('check1_'+str(i))
 						carregamento_check.append('check2_'+str(i))
 						carregamento_comment.append('comment'+str(i))
 						html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" >')
 						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
+
+						#checar pai
+						if combinação.split("-")[0] == combinação.split("-")[1]:
+							pre_1 = estrutura_ud.Sentence()
+							pre_1.build(wb.unescape(sentença[2]))
+							pre_2 = estrutura_ud.Sentence()
+							pre_2.build(wb.unescape(sentença[3]))
+							for t, token in enumerate(pre_1.tokens):
+								if "<b>" in token.to_str():
+									if token.dephead != pre_2.tokens[t].dephead:
+										html.append('<h2 style="font:red">PAIS DIFERENTES</h2>')
+									break
+
 						html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b>")
-						html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;') + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
-						html.append("<pre>" + sentença[3].replace('<','&lt;').replace('>','&gt;') + '</pre></div></div>')
+						html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
+						html.append("<pre>" + sentença[3].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + '</pre></div></div>')
 
 				html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" class="btn-gradient orange" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual" style="margin-left:0px"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></div></body></form></html>
 
@@ -356,10 +360,12 @@ def get_percentages(ud1, ud2, output, coluna):
 	for sentid, sentence in golden_dict.items():
 		for t, token in enumerate(sentence.tokens):
 			if not token.deprel in dicionario:
-				dicionario[token.deprel] = [0, 0, 0]
+				dicionario[token.deprel] = [0, 0, 0, 0, 0]
 			dicionario[token.deprel][0] += 1
 			if system.sentences[sentid].tokens[t].deprel == token.deprel:
 				dicionario[token.deprel][1] += 1
+				if system.sentences[sentid].tokens[t].dephead == token.dephead:
+					dicionario[token.deprel][2] += 1
 
 	sent_accuracy = [0, 0]
 	for sentid, sentence in golden_dict.items():
@@ -371,15 +377,16 @@ def get_percentages(ud1, ud2, output, coluna):
 					acertos += 1
 			if acertos == len(sentence.tokens):
 				sent_accuracy[1] += 1
-				print(sentid)
+				#print(sentid)
 	sentence_accuracy = "<table><tr><th>Acurácia por sentença</th></tr><tr><th>Sentenças comparáveis</th><th>Sentenças corretas</th><th>Número relativo</th></tr><tr><td>{0}</td><td>{1}</td><td>{2}</td></tr></table>".format(sent_accuracy[0], sent_accuracy[1], str((sent_accuracy[1]/sent_accuracy[0])*100) + "%")
 	with open(output + "_sentence.txt", "w") as f:
 		f.write(sentence_accuracy)
 
-	csv = ["{0:20} {1:10} {2:10} {3:}".format("DEPREL", "GOLDEN", "ACERTOS", "PORCENTAGEM")]
-	for classe in dicionario:
-		dicionario[classe][2] = (dicionario[classe][1] / dicionario[classe][0]) * 100
-		csv.append("{0:20} {1:10} {2:10} {3:}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]) + "%"))
+	csv = ["{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format("DEPREL", "GOLDEN", "ACERTOS_PARCIAIS", "ACERTOS_COMPLETOS", "PORCENTAGEM_PARCIAL", "PORCENTAGEM_COMPLETA")]
+	for classe in sorted(dicionario):
+		dicionario[classe][3] = (dicionario[classe][1] / dicionario[classe][0]) * 100
+		dicionario[classe][4] = (dicionario[classe][2] / dicionario[classe][0]) * 100
+		csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
 
 	with open(output + "_results.txt", "w") as f:
 		f.write("\n".join(csv))
