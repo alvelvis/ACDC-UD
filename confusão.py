@@ -14,10 +14,10 @@ feats = {
 				1: "ID",
 				2: "FORM",
 				3: "LEMMA",
-				4: "UPOSTAG",
-				5: "XPOSTAG",
+				4: "UPOS",
+				5: "XPOS",
 				6: "FEATS",
-				7: "HEAD",
+				7: "DEPHEAD",
 				8: "DEPREL",
 				9: "DEPS",
 				10: "MISC",
@@ -92,7 +92,7 @@ def get_list(conllu1, conllu2, coluna):
 
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
-		script = 'cat | python3 conll18_ud_eval.py -v "' + matriz.split('\n\n')[0].splitlines()[1].split(': ' ,1)[1] + '" "' + matriz.split('\n\n')[0].splitlines()[2].split(': ' ,1)[1] + '" > metrica.txt'
+		script = 'yes "\n" | python3 conll18_ud_eval.py -v "' + matriz.split('\n\n')[0].splitlines()[1].split(': ' ,1)[1] + '" "' + matriz.split('\n\n')[0].splitlines()[2].split(': ' ,1)[1] + '" > metrica.txt'
 		call(script, shell=True)
 		metrics = open("metrica.txt", 'r').read()
 		with open(output + "_results.txt", "r") as f:
@@ -359,13 +359,15 @@ def get_percentages(ud1, ud2, output, coluna):
 	dicionario = {}
 	for sentid, sentence in golden_dict.items():
 		for t, token in enumerate(sentence.tokens):
-			if not token.deprel in dicionario:
-				dicionario[token.deprel] = [0, 0, 0, 0, 0]
-			dicionario[token.deprel][0] += 1
-			if system.sentences[sentid].tokens[t].deprel == token.deprel:
-				dicionario[token.deprel][1] += 1
-				if system.sentences[sentid].tokens[t].dephead == token.dephead:
-					dicionario[token.deprel][2] += 1
+			if not token.col[feats[coluna].lower()] in dicionario:
+				if coluna == 8:
+					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0, 0, 0]
+				else:
+					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0]
+			dicionario[token.col[feats[coluna].lower()]][0] += 1
+			if system.sentences[sentid].tokens[t].col[feats[coluna].lower()] == token.col[feats[coluna].lower()] : dicionario[token.col[feats[coluna].lower()]][1] += 1
+			if coluna == 8 and system.sentences[sentid].tokens[t].deprel == token.deprel:
+				dicionario[token.deprel][2] += 1
 
 	sent_accuracy = [0, 0]
 	for sentid, sentence in golden_dict.items():
@@ -382,11 +384,17 @@ def get_percentages(ud1, ud2, output, coluna):
 	with open(output + "_sentence.txt", "w") as f:
 		f.write(sentence_accuracy)
 
-	csv = ["{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format("DEPREL", "GOLDEN", "ACERTOS_PARCIAIS", "ACERTOS_COMPLETOS", "PORCENTAGEM_PARCIAL", "PORCENTAGEM_COMPLETA")]
-	for classe in sorted(dicionario):
-		dicionario[classe][3] = (dicionario[classe][1] / dicionario[classe][0]) * 100
-		dicionario[classe][4] = (dicionario[classe][2] / dicionario[classe][0]) * 100
-		csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
+	if coluna == 8:
+		csv = ["{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format("DEPREL", "GOLDEN", "ACERTOS_PARCIAIS", "ACERTOS_COMPLETOS", "PORCENTAGEM_PARCIAL", "PORCENTAGEM_COMPLETA")]
+		for classe in sorted(dicionario):
+			dicionario[classe][3] = (dicionario[classe][1] / dicionario[classe][0]) * 100
+			dicionario[classe][4] = (dicionario[classe][2] / dicionario[classe][0]) * 100
+			csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
+	else:
+		csv = ["{0:20} {1:10} {2:10} {3:10}".format(feats[coluna], "GOLDEN", "ACERTOS", "PORCENTAGEM")]
+		for classe in sorted(dicionario):
+			dicionario[classe][2] = (dicionario[classe][1] / dicionario[classe][0]) * 100
+			csv.append("{0:20} {1:10} {2:10} {3:10}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]) + "%"))
 
 	with open(output + "_results.txt", "w") as f:
 		f.write("\n".join(csv))
