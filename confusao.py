@@ -100,10 +100,14 @@ def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
 		with open(output + "_sentence.txt", "r") as f:
 			sentence_accuracy = f.read()
 
-		resultados = "<table><tr><th>Acurácia por categoria gramatical</th></tr>"
+		resultados = "<table><tr><th colspan='4'>Acurácia por categoria gramatical</th></tr>"
 		for linha in resultados_cru.splitlines():
 			resultados += "<tr>"
-			for item in linha.split():
+			for n, item in enumerate(linha.split()):
+				if n == 0:
+					deprel = item
+				if n + 1 == len(linha.split()) and deprel != "DEPREL":
+					item = "<a href='UAS/" + deprel + ".html'>" + item + "</a>"
 				resultados += "<td>" + item + "</td>"
 			resultados += "</tr>"
 		resultados += "</table>"
@@ -250,7 +254,7 @@ function openCity(evt, cityName) {
 						carregamento_check.append('check2_'+str(i))
 						carregamento_comment.append('comment'+str(i))
 						html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" >')
-						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar UD[1]" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar UD[2]" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
+						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar GOLDEN" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar PREVISTO" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
 
 						#checar pai
 						if combinação.split("-")[0] == combinação.split("-")[1]:
@@ -264,8 +268,8 @@ function openCity(evt, cityName) {
 										html.append('<h2 style="font:red">PAIS DIFERENTES</h2>')
 									break
 
-						html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>UD[1]:</b>")
-						html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>UD[2]:</b>")
+						html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>GOLDEN:</b>")
+						html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>PREVISTO:</b>")
 						html.append("<pre>" + sentença[3].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + '</pre></div></div>')
 
 				html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" class="btn-gradient orange" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual" style="margin-left:0px"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></div></body></form></html>
@@ -295,21 +299,21 @@ window.location = window.location.href.split("?")[0] + "?" + document.getElement
 function ativa1(nome, botao){
 var div = document.getElementById(nome)
 if (div.style.display == 'none') {
-document.getElementById(botao).value='Esconder UD[1]'
+document.getElementById(botao).value='Esconder GOLDEN'
 div.style.display = 'block'
 } else {
 div.style.display = 'none'
-document.getElementById(botao).value='Mostrar UD[1]'
+document.getElementById(botao).value='Mostrar GOLDEN'
 }
 }
 function ativa2(nome, botao){
 var div = document.getElementById(nome)
 if (div.style.display == 'none') {
-document.getElementById(botao).value='Esconder UD[2]'
+document.getElementById(botao).value='Esconder PREVISTO'
 div.style.display = 'block'
 } else {
 div.style.display = 'none'
-document.getElementById(botao).value='Mostrar UD[2]'
+document.getElementById(botao).value='Mostrar PREVISTO'
 }
 }
 function gerado_false(id) {
@@ -347,7 +351,7 @@ document.getElementById("link_edit"+id).style.display = "inline"''']
 #falta criar os htmls
 def get_percentages(ud1, ud2, output, coluna):
 	if not os.path.isdir("UAS"):
-		os.makedir("UAS")
+		os.mkdir("UAS")
 	UAS = dict()
 	with open(ud1, "r") as f:
 		golden_dict = {}
@@ -366,13 +370,25 @@ def get_percentages(ud1, ud2, output, coluna):
 			if not token.col[feats[coluna].lower()] in dicionario:
 				if coluna == 8:
 					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0, 0, 0]
-					UAS(token.deprel) == dict()
+					UAS[token.deprel] = dict()
 				else:
 					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0]
 			dicionario[token.col[feats[coluna].lower()]][0] += 1
-			if system.sentences[sentid].tokens[t].col[feats[coluna].lower()] == token.col[feats[coluna].lower()] : dicionario[token.col[feats[coluna].lower()]][1] += 1
-			if coluna == 8 and system.sentences[sentid].tokens[t].deprel == token.deprel:
-				dicionario[token.deprel][2] += 1
+			if system.sentences[sentid].tokens[t].col[feats[coluna].lower()] == token.col[feats[coluna].lower()]:
+				dicionario[token.col[feats[coluna].lower()]][1] += 1
+				if coluna == 8:
+					if system.sentences[sentid].tokens[t].dephead == token.dephead:
+						dicionario[token.deprel][2] += 1
+					else:
+						tok_golden = token.head_token.upos
+						tok_system = system.sentences[sentid].tokens[t].head_token.upos
+						tok_golden += "_L" if int(token.head_token.id) < int(token.id) else "_R"
+						tok_system += "_L" if int(system.sentences[sentid].tokens[t].head_token.id) < int(system.sentences[sentid].tokens[t].id) else "_R"
+						if tok_golden + "/" + tok_system in UAS[token.deprel]:
+							UAS[token.deprel][tok_golden + "/" + tok_system]["qtd"] += 1
+						else:
+							UAS[token.deprel][tok_golden + "/" + tok_system] = {"qtd": 1, "sentences": []}
+						UAS[token.deprel][tok_golden + "/" + tok_system]["sentences"].append([sentence, system.sentences[sentid], token, token.head_token, system.sentences[sentid].tokens[t].head_token, system.sentences[sentid].tokens[t]])
 
 	sent_accuracy = [0, 0]
 	for sentid, sentence in golden_dict.items():
@@ -394,7 +410,7 @@ def get_percentages(ud1, ud2, output, coluna):
 		for classe in sorted(dicionario):
 			dicionario[classe][3] = (dicionario[classe][1] / dicionario[classe][0]) * 100
 			dicionario[classe][4] = (dicionario[classe][2] / dicionario[classe][0]) * 100
-			csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} <a href='UAS/{0}.html'>{5:10}</a>".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
+			csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
 	else:
 		csv = ["{0:20} {1:10} {2:10} {3:10}".format(feats[coluna], "GOLDEN", "ACERTOS", "PORCENTAGEM")]
 		for classe in sorted(dicionario):
@@ -403,6 +419,31 @@ def get_percentages(ud1, ud2, output, coluna):
 
 	with open(output + "_results.txt", "w") as f:
 		f.write("\n".join(csv))
+
+	for deprel in UAS:
+		total = 0
+		for x in UAS[deprel].values(): total += x["qtd"]
+		escrever = ["<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='{4}_{0}_{1}.html'>{3}%</a></td></tr>".format(padrao.split("/")[0], padrao.split("/")[1], quantidade["qtd"], (quantidade["qtd"]/total)*100, deprel) for padrao, quantidade in sorted(UAS[deprel].items(), key=lambda x: x[1]["qtd"], reverse=True)]
+		with open("UAS/" + deprel + ".html", "w") as f:
+			f.write("<body style='margin:20px'>" + str(dicionario[deprel][3] - dicionario[deprel][4]) + '% "' + deprel + '" com dephead errado<br><br><head><link href="../style.css" rel="stylesheet" type="text/css"></head>' + "<table><tr><td colspan='4'>Distribuição dos erros</td></tr><tr><th>GOLDEN</th><th>PREVISTO</th><th>N</th><th>%</th></tr>" + "\n".join(escrever) + "<tr><td colspan='2'>Total</td><td>" + str(total) + "</td></tr></table>")
+
+		for padrao in UAS[deprel]:
+			escrever = "<body style='margin:20px;'>DEPREL: " + deprel + "\n<br>GOLDEN HEAD: " + padrao.split("/")[0] + "\n<br>PREVISTO HEAD: " + padrao.split("/")[1] + "<br><br>"
+			for n, sentence in enumerate(UAS[deprel][padrao]["sentences"]):
+				escrever += str(n+1) + " / " + str(len(UAS[deprel][padrao]["sentences"]))
+				escrever += "\n<br># sent_id = " + sentence[0].sent_id
+				text = sentence[0].text
+				text = re.sub(r"\b" + re.escape(sentence[2].word) + r"\b", "<b>" + sentence[2].word + "</b>", text)
+				text = re.sub(r"\b" + re.escape(sentence[3].word) + r"\b", "<font color=green>" + sentence[3].word + "</font>", text)
+				text = re.sub(r"\b" + re.escape(sentence[4].word) + r"\b", "<font color=red>" + sentence[4].word + "</font>", text)
+				escrever += "\n<br># text = " + text
+				escrever += '''\n<br><input type='button' value='Mostrar GOLDEN' onclick='if(document.getElementById("pre_'''+str(n)+'''").style.display == "none") { document.getElementById("pre_''' + str(n) + '''").style.display = "block" } else { document.getElementById("pre_''' + str(n) + '''").style.display = "none" }\'>'''
+				escrever += '''\n<input type='button' value='Mostrar PREVISTO' onclick='if(document.getElementById("pre2_'''+str(n)+'''").style.display == "none") { document.getElementById("pre2_''' + str(n) + '''").style.display = "block" } else { document.getElementById("pre2_''' + str(n) + '''").style.display = "none" }\'>'''
+				escrever += '\n<pre id=pre_' + str(n) + ' style="display:none">GOLDEN<br>' + sentence[0].to_str().replace(sentence[2].to_str(), "<b>" + sentence[2].to_str() + "</b>").replace(sentence[3].to_str(), "<font color=green>" + sentence[3].to_str() + "</font>") + '</pre>'
+				escrever += '\n<pre id=pre2_' + str(n) + ' style="display:none">PREVISTO<br>' + sentence[1].to_str().replace(sentence[5].to_str(), "<b>" + sentence[5].to_str() + "</b>").replace(sentence[4].to_str(), "<font color=red>" + sentence[4].to_str() + "</font>") + '</pre>'
+				escrever += "\n<hr>"
+				with open("UAS/" + deprel + "_" + padrao.replace("/", "_") + ".html", "w") as f:
+					f.write(escrever)
 
 
 def main(ud1, ud2, output, coluna = 4):
@@ -416,14 +457,14 @@ def main(ud1, ud2, output, coluna = 4):
 	pd.set_option('display.expand_frame_repr', False)
 	saída = list()
 	saída.append('Col ' + str(coluna)+': ' + feats[coluna])
-	saída.append('UD[1]: ' + ud1)
-	saída.append('UD[2]: ' + ud2 + '\n')
+	saída.append('GOLDEN: ' + ud1)
+	saída.append('PREVISTO: ' + ud2 + '\n')
 	saída.append(str(pd.crosstab(pd.Series(lista_conllu1), pd.Series(lista_conllu2), rownames=['UD[1]'], colnames=['UD[2]'], margins=True)))
 	saída.append('\n')
-	saída.append('#!$$ Sentenças de UD[1] que não foram encontradas em UD[2]:\n')
+	saída.append('#!$$ Sentenças de GOLDEN que não foram encontradas em PREVISTO:\n')
 	for item in lista_conllu['solitários_1']:
 			saída.append(item)
-	saída.append('\n#!$$ Sentenças de UD[2] que não foram encontradas em UD[1]:\n')
+	saída.append('\n#!$$ Sentenças de PREVISTO que não foram encontradas em GOLDEN:\n')
 	for item in lista_conllu['solitários_2']:
 			saída.append(item)
 
@@ -443,7 +484,7 @@ if __name__ == '__main__':
 	número_de_argumentos_mínimo = 4
 
 	if len(sys.argv) < número_de_argumentos_mínimo +1:
-		print('uso: confusão.py ud1.conllu:utf8 ud2.conllu:utf8 saída.txt:utf8 coluna')
+		print('uso: confusão.py GOLDEN.conllu:utf8 PREVISTO.conllu:utf8 saída.txt:utf8 coluna')
 		print('Colunas:')
 		for i in range(len(feats)):
 				print(str(i+1) + ': ' + feats[i+1])
