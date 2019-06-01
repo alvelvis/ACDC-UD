@@ -344,7 +344,11 @@ document.getElementById("link_edit"+id).style.display = "inline"''']
 
 				open(output + '_html/' + combinação + '.html', 'w', encoding=codificação).write(html)
 
+#falta criar os htmls
 def get_percentages(ud1, ud2, output, coluna):
+	if not os.path.isdir("UAS"):
+		os.makedir("UAS")
+	UAS = dict()
 	with open(ud1, "r") as f:
 		golden_dict = {}
 		for i, sent in enumerate(f.read().split("\n\n")):
@@ -362,6 +366,7 @@ def get_percentages(ud1, ud2, output, coluna):
 			if not token.col[feats[coluna].lower()] in dicionario:
 				if coluna == 8:
 					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0, 0, 0]
+					UAS(token.deprel) == dict()
 				else:
 					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0]
 			dicionario[token.col[feats[coluna].lower()]][0] += 1
@@ -389,7 +394,7 @@ def get_percentages(ud1, ud2, output, coluna):
 		for classe in sorted(dicionario):
 			dicionario[classe][3] = (dicionario[classe][1] / dicionario[classe][0]) * 100
 			dicionario[classe][4] = (dicionario[classe][2] / dicionario[classe][0]) * 100
-			csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
+			csv.append("{0:20} {1:10} {2:10} {3:10} {4:10} <a href='UAS/{0}.html'>{5:10}</a>".format(classe, str(dicionario[classe][0]), str(dicionario[classe][1]), str(dicionario[classe][2]), str(dicionario[classe][3]) + "%", str(dicionario[classe][4]) + "%"))
 	else:
 		csv = ["{0:20} {1:10} {2:10} {3:10}".format(feats[coluna], "GOLDEN", "ACERTOS", "PORCENTAGEM")]
 		for classe in sorted(dicionario):
@@ -400,7 +405,7 @@ def get_percentages(ud1, ud2, output, coluna):
 		f.write("\n".join(csv))
 
 
-def main(ud1, ud2, output, coluna = 4):	
+def main(ud1, ud2, output, coluna = 4):
 	conllu1 = LerUD(ud1)
 	conllu2 = LerUD(ud2)
 	lista_conllu = get_list(conllu1, conllu2, coluna)
