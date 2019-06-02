@@ -241,10 +241,10 @@ function openCity(evt, cityName) {
 		#Páginas independentes
 		for combinação in sentenças:
 				html = ['<html><form><head><meta charset="'+codificação+'" name="viewport" content="width=device-width, initial-scale=1.0" /><style>input[name=maior] { width: 400; }</style><link href="../style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body onLoad="carregar()"><div class="header">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
-				html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</span></h3></div><div class="content"><h3><a href="../' + output + '.html">Voltar</a></h3>')
+				html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</span></h3></div><div class="content"><!--h3><a href="../' + output + '.html">Voltar</a></h3-->')
 				if not os.path.isdir(output + '_html'):
 						os.mkdir(output + '_html')
-				html.append('<h1><span id="combination">' + combinação + '</span> (' + str(len(sentenças[combinação])) + ')</h1><hr><br>' + ''' <input type="button" onclick="enviar('2')" id="salvar_btn" class="btn-gradient orange mini" style="margin-left:0px" value="Gerar link para a versão atual"> <input type="button" class="btn-gradient green mini" onclick="copiar_frases()" id="copiar_btn" value="Copiar sent_id das frases" style="margin-left:0px"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><br><br>''')
+				html.append('<h1><span id="combination">' + combinação + '</span> (' + str(len(sentenças[combinação])) + ')</h1><!--hr--><br>' + ''' <!--input type="button" onclick="enviar('2')" id="salvar_btn" class="btn-gradient orange mini" style="margin-left:0px" value="Gerar link para a versão atual"--> <input type="button" class="btn-gradient green mini" onclick="copiar_frases()" id="copiar_btn" value="Copiar sent_id das frases" style="margin-left:0px"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><br><br>''')
 
 				carregamento_comment = list()
 				carregamento_check = list()
@@ -253,7 +253,7 @@ function openCity(evt, cityName) {
 						carregamento_check.append('check1_'+str(i))
 						carregamento_check.append('check2_'+str(i))
 						carregamento_comment.append('comment'+str(i))
-						html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" >')
+						html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<!--br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" -->')
 						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar GOLDEN" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar PREVISTO" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
 
 						#checar pai
@@ -272,7 +272,7 @@ function openCity(evt, cityName) {
 						html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>PREVISTO:</b>")
 						html.append("<pre>" + sentença[3].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + '</pre></div></div>')
 
-				html = "<br>".join(html).replace('\n','<br>') + '''<br><input type="button" class="btn-gradient orange" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual" style="margin-left:0px"> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></div></body></form></html>
+				html = "<br>".join(html).replace('\n','<br>') + '''<br><!--input type="button" class="btn-gradient orange" onclick="enviar('1')" id="salvar_btn" value="Gerar link para a versão atual" style="margin-left:0px"--> <input id="link_edit1" type="text" style="display:none"> <div id="gerado1" style="display:none"><b>Link gerado!</b></div><br><h3><a href="../''' + output + '''.html">Voltar</a></h3></div></body></form></html>
 
 <script>
 function escapeRegExp(string) {
@@ -423,9 +423,9 @@ def get_percentages(ud1, ud2, output, coluna):
 	for deprel in UAS:
 		total = 0
 		for x in UAS[deprel].values(): total += x["qtd"]
-		escrever = ["<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='{4}_{0}_{1}.html'>{3}%</a></td></tr>".format(padrao.split("/")[0], padrao.split("/")[1], quantidade["qtd"], (quantidade["qtd"]/total)*100, deprel) for padrao, quantidade in sorted(UAS[deprel].items(), key=lambda x: x[1]["qtd"], reverse=True)]
+		escrever = ["<tr><td>{0}</td><td>{1}</td><td>{2}</td><td><a href='./{4}_{0}_{1}.html'>{3}%</a></td></tr>".format(padrao.split("/")[0], padrao.split("/")[1], quantidade["qtd"], (quantidade["qtd"]/total)*100, deprel) for padrao, quantidade in sorted(UAS[deprel].items(), key=lambda x: x[1]["qtd"], reverse=True)]
 		with open("UAS/" + deprel + ".html", "w") as f:
-			f.write("<body style='margin:20px'>" + str(dicionario[deprel][3] - dicionario[deprel][4]) + '% "' + deprel + '" com dephead errado<br><br><head><link href="../style.css" rel="stylesheet" type="text/css"></head>' + "<table><tr><td colspan='4'>Distribuição dos erros</td></tr><tr><th>GOLDEN</th><th>PREVISTO</th><th>N</th><th>%</th></tr>" + "\n".join(escrever) + "<tr><td colspan='2'>Total</td><td>" + str(total) + "</td></tr></table>")
+			f.write("<body style='margin:20px'>" + str(dicionario[deprel][3] - dicionario[deprel][4]) + '% "' + deprel + '" com dephead divergentes<br><br><head><link href="../style.css" rel="stylesheet" type="text/css"></head>' + "<table><tr><td colspan='4'>Distribuição dos erros</td></tr><tr><th>GOLDEN</th><th>PREVISTO</th><th>N</th><th>%</th></tr>" + "\n".join(escrever) + "<tr><td colspan='2'>Total</td><td>" + str(total) + "</td></tr></table>")
 
 		for padrao in UAS[deprel]:
 			escrever = "<body style='margin:20px;'>DEPREL: " + deprel + "\n<br>GOLDEN HEAD: " + padrao.split("/")[0] + "\n<br>PREVISTO HEAD: " + padrao.split("/")[1] + "<br><br>"
@@ -437,8 +437,8 @@ def get_percentages(ud1, ud2, output, coluna):
 				text = re.sub(r"\b" + re.escape(sentence[3].word) + r"\b", "<font color=green>" + sentence[3].word + "</font>", text)
 				text = re.sub(r"\b" + re.escape(sentence[4].word) + r"\b", "<font color=red>" + sentence[4].word + "</font>", text)
 				escrever += "\n<br># text = " + text
-				escrever += '''\n<br><input type='button' value='Mostrar GOLDEN' onclick='if(document.getElementById("pre_'''+str(n)+'''").style.display == "none") { document.getElementById("pre_''' + str(n) + '''").style.display = "block" } else { document.getElementById("pre_''' + str(n) + '''").style.display = "none" }\'>'''
-				escrever += '''\n<input type='button' value='Mostrar PREVISTO' onclick='if(document.getElementById("pre2_'''+str(n)+'''").style.display == "none") { document.getElementById("pre2_''' + str(n) + '''").style.display = "block" } else { document.getElementById("pre2_''' + str(n) + '''").style.display = "none" }\'>'''
+				escrever += '''\n<br><input type='button' id="but_'''+str(n)+'''" value='Mostrar GOLDEN' onclick='if(document.getElementById("pre_'''+str(n)+'''").style.display == "none") { document.getElementById("pre_''' + str(n) + '''").style.display = "block"; document.getElementById("but_'''+str(n)+'''").value = "Esconder GOLDEN"; } else { document.getElementById("pre_''' + str(n) + '''").style.display = "none"; document.getElementById("but_'''+str(n)+'''").value = "Mostrar GOLDEN"; }\'>'''
+				escrever += '''\n<input type='button' id="but2_'''+str(n)+'''" value='Mostrar PREVISTO' onclick='if(document.getElementById("pre2_'''+str(n)+'''").style.display == "none") { document.getElementById("pre2_''' + str(n) + '''").style.display = "block"; document.getElementById("but2_'''+str(n)+'''").value = "Esconder PREVISTO"; } else { document.getElementById("pre2_''' + str(n) + '''").style.display = "none"; document.getElementById("but2_'''+str(n)+'''").value = "Mostrar PREVISTO"; }\'>'''
 				escrever += '\n<pre id=pre_' + str(n) + ' style="display:none">GOLDEN<br>' + sentence[0].to_str().replace(sentence[2].to_str(), "<b>" + sentence[2].to_str() + "</b>").replace(sentence[3].to_str(), "<font color=green>" + sentence[3].to_str() + "</font>") + '</pre>'
 				escrever += '\n<pre id=pre2_' + str(n) + ' style="display:none">PREVISTO<br>' + sentence[1].to_str().replace(sentence[5].to_str(), "<b>" + sentence[5].to_str() + "</b>").replace(sentence[4].to_str(), "<font color=red>" + sentence[4].to_str() + "</font>") + '</pre>'
 				escrever += "\n<hr>"
