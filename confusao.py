@@ -9,6 +9,7 @@ import estrutura_ud
 import pandas as pd
 import html as wb
 import cgi
+import datetime
 
 feats = {
 				1: "ID",
@@ -241,7 +242,7 @@ function openCity(evt, cityName) {
 		#Páginas independentes
 		for combinação in sentenças:
 				html = ['<html><form><head><meta charset="'+codificação+'" name="viewport" content="width=device-width, initial-scale=1.0" /><style>input[name=maior] { width: 400; }</style><link href="../style.css" rel="stylesheet" type="text/css"><link href="http://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css"></head><body onLoad="carregar()"><div class="header">'] #<form action="../matriz_cgi.py?output='+output+'&combination='+combinação+'&encoding='+codificação+'" method="post">
-				html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</span></h3></div><div class="content"><!--h3><a href="../' + output + '.html">Voltar</a></h3-->')
+				html.append('<h1>'+output+'</h1><br><span id="topo"><h3>' + matriz.split('\n\n')[0] + '</span></h3></div><div class="content"><h3><a href="../' + output + '.html">Voltar</a></h3>')
 				if not os.path.isdir(output + '_html'):
 						os.mkdir(output + '_html')
 				html.append('<h1><span id="combination">' + combinação + '</span> (' + str(len(sentenças[combinação])) + ')</h1><!--hr--><br>' + ''' <!--input type="button" onclick="enviar('2')" id="salvar_btn" class="btn-gradient orange mini" style="margin-left:0px" value="Gerar link para a versão atual"--> <input type="button" class="btn-gradient green mini" onclick="copiar_frases()" id="copiar_btn" value="Copiar sent_id das frases" style="margin-left:0px"> <input id="link_edit2" type="text" style="display:none"> <div id="gerado2" style="display:none"><b>Link gerado!</b></div><br><br>''')
@@ -249,11 +250,15 @@ function openCity(evt, cityName) {
 				carregamento_comment = list()
 				carregamento_check = list()
 				for i, sentença in enumerate(sentenças[combinação]):
-
+						for word in sentença[1].split():
+							if "<b>" in sentença[1]:
+								negrito = sentença[1].split("<b>")[1].split("</b>")[0]
+								#print(negrito)
+								#exit()
 						carregamento_check.append('check1_'+str(i))
 						carregamento_check.append('check2_'+str(i))
 						carregamento_comment.append('comment'+str(i))
-						html.append('<div class="container">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<!--br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" -->')
+						html.append('<div class="container"><input type="hidden" name="negrito" value="' + negrito + '">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<!--br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" -->')
 						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar GOLDEN" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar PREVISTO" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
 
 						#checar pai
@@ -286,10 +291,11 @@ function copiar_frases(){
 	document.getElementById("link_edit2").value = "";
 	document.getElementById("link_edit2").style.display = "inline";
 	
-	var sentids, i;
+	var sentids, i, negritos;
 	sentids = document.getElementsByName("copiar_id");
+	negritos = document.getElementsByName("negrito");
 	for (i = 0; i < sentids.length; i++) {
-		document.getElementById("link_edit2").value = document.getElementById("link_edit2").value + "^" + sentids[i].value + "$|";
+		document.getElementById("link_edit2").value = document.getElementById("link_edit2").value + "^" + sentids[i].value + "$(.*\\\\n)*.*\\\\t" + negritos[i].value + "\\\\t|";
 	}
 	document.getElementById("link_edit2").value = document.getElementById("link_edit2").value.rsplit('|',1)[0];
 }
@@ -406,7 +412,7 @@ def get_percentages(ud1, ud2, output, coluna):
 		f.write(sentence_accuracy)
 
 	if coluna == 8:
-		csv = ["{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format("DEPREL", "GOLDEN", "ACERTOS_PARCIAIS", "ACERTOS_COMPLETOS", "PORCENTAGEM_PARCIAL", "PORCENTAGEM_COMPLETA")]
+		csv = ["{0:20} {1:10} {2:10} {3:10} {4:10} {5:10}".format("DEPREL", "GOLDEN", "ACERTOS_DEPREL", "ACERTOS_DEPREL_DEPHEAD", "PORCENTAGEM_DEPREL", "PORCENTAGEM_DEPREL_DEPHEAD")]
 		for classe in sorted(dicionario):
 			dicionario[classe][3] = (dicionario[classe][1] / dicionario[classe][0]) * 100
 			dicionario[classe][4] = (dicionario[classe][2] / dicionario[classe][0]) * 100
@@ -428,12 +434,13 @@ def get_percentages(ud1, ud2, output, coluna):
 			f.write("<body style='margin:20px'>" + str(dicionario[deprel][3] - dicionario[deprel][4]) + '% "' + deprel + '" com dephead divergentes<br><br><head><link href="../style.css" rel="stylesheet" type="text/css"></head>' + "<table><tr><td colspan='4'>Distribuição dos erros</td></tr><tr><th>GOLDEN</th><th>PREVISTO</th><th>N</th><th>%</th></tr>" + "\n".join(escrever) + "<tr><td colspan='2'>Total</td><td>" + str(total) + "</td></tr></table>")
 
 		for padrao in UAS[deprel]:
-			escrever = "<body style='margin:20px;'>DEPREL: " + deprel + "\n<br>GOLDEN HEAD: " + padrao.split("/")[0] + "\n<br>PREVISTO HEAD: " + padrao.split("/")[1] + "<br><br>"
+			escrever = "<body style='margin:20px;'>DEPREL: " + deprel + "\n<br>GOLDEN HEAD: " + padrao.split("/")[0] + "\n<br>PREVISTO HEAD: " + padrao.split("/")[1] + '''\n<br><input type=button value='Copiar sent_id das frases' onclick='copiar_frases()'> <input id='input' style='display:none'><br><br>'''
 			for n, sentence in enumerate(UAS[deprel][padrao]["sentences"]):
 				escrever += str(n+1) + " / " + str(len(UAS[deprel][padrao]["sentences"]))
-				escrever += "\n<br># sent_id = " + sentence[0].sent_id
+				escrever += "\n<br><input type=hidden name=copiar_id value='"+sentence[0].sent_id.replace("'", "\\'")+"'># sent_id = " + sentence[0].sent_id
 				text = sentence[0].text
 				text = re.sub(r"\b" + re.escape(sentence[2].word) + r"\b", "<b>" + sentence[2].word + "</b>", text)
+				escrever += "\n<input type=hidden name=negrito value='"+sentence[2].word.replace("'", "\\'")+"'>"
 				text = re.sub(r"\b" + re.escape(sentence[3].word) + r"\b", "<font color=green>" + sentence[3].word + "</font>", text)
 				text = re.sub(r"\b" + re.escape(sentence[4].word) + r"\b", "<font color=red>" + sentence[4].word + "</font>", text)
 				escrever += "\n<br># text = " + text
@@ -442,8 +449,28 @@ def get_percentages(ud1, ud2, output, coluna):
 				escrever += '\n<pre id=pre_' + str(n) + ' style="display:none">GOLDEN<br>' + sentence[0].to_str().replace(sentence[2].to_str(), "<b>" + sentence[2].to_str() + "</b>").replace(sentence[3].to_str(), "<font color=green>" + sentence[3].to_str() + "</font>") + '</pre>'
 				escrever += '\n<pre id=pre2_' + str(n) + ' style="display:none">PREVISTO<br>' + sentence[1].to_str().replace(sentence[5].to_str(), "<b>" + sentence[5].to_str() + "</b>").replace(sentence[4].to_str(), "<font color=red>" + sentence[4].to_str() + "</font>") + '</pre>'
 				escrever += "\n<hr>"
-				with open("UAS/" + deprel + "_" + padrao.replace("/", "_") + ".html", "w") as f:
-					f.write(escrever)
+			escrever += '''
+	<script>
+	String.prototype.rsplit = function(sep, maxsplit) {
+	var split = this.split(sep);
+	return maxsplit ? [ split.slice(0, -maxsplit).join(sep) ].concat(split.slice(-maxsplit)) : split;
+	}
+
+	function copiar_frases(){
+	document.getElementById("input").value = "";
+	document.getElementById("input").style.display = "inline";
+	
+	var sentids, i, negritos;
+	sentids = document.getElementsByName("copiar_id");
+	negritos = document.getElementsByName("negrito");
+	for (i = 0; i < sentids.length; i++) {
+		document.getElementById("input").value = document.getElementById("input").value + "^# sent_id = " + sentids[i].value + "$(.*\\\\n)*.*" + negritos[i].value + "|";
+	}
+	document.getElementById("input").value = document.getElementById("input").value.rsplit('|',1)[0];
+	}
+	</script>'''
+			with open("UAS/" + deprel + "_" + padrao.replace("/", "_") + ".html", "w") as f:
+				f.write(escrever)
 
 
 def main(ud1, ud2, output, coluna = 4):
@@ -475,7 +502,7 @@ def main(ud1, ud2, output, coluna = 4):
 
 	get_percentages(ud1, ud2, output, coluna)
 
-		#Gera os arquivos HTML
+	#Gera os arquivos HTML
 	gerar_HTML("\n".join(saída), conllu1, conllu2, coluna, output, codificação_saída)
 	#Gera o arquivo "txt" (apenas a matriz)
 	open(output, 'w', encoding=codificação_saída).write("\n".join(saída))
