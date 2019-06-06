@@ -253,26 +253,32 @@ function openCity(evt, cityName) {
 						for word in sentença[1].split():
 							if "<b>" in sentença[1]:
 								negrito = sentença[1].split("<b>")[1].split("</b>")[0]
+							else:
+								negrito = ".*"
 								#print(negrito)
 								#exit()
+
+						#checar pai
+						pais = ""
+						#if combinação.split("-")[0] == combinação.split("-")[1]:
+						pre_1 = estrutura_ud.Sentence()
+						pre_1.build(wb.unescape(sentença[2]))
+						pre_2 = estrutura_ud.Sentence()
+						pre_2.build(wb.unescape(sentença[3]))
+						caixa = sentença[1]
+						for t, token in enumerate(pre_1.tokens):
+							if "<b>" in token.to_str():
+								if token.dephead != pre_2.tokens[t].dephead:
+									caixa = re.sub(r"\b" + re.escape(token.head_token.word) + r"\b", "<font color=green>" + token.head_token.word + "</font>", caixa)
+									caixa = re.sub(r"\b" + re.escape(pre_2.tokens[t].head_token.word) + r"\b", "<font color=red>" + pre_2.tokens[t].head_token.word + "</font>", caixa)
+									pais = '<h3><font color="red">PAIS DIFERENTES</font></h3>'
+								break
+
 						carregamento_check.append('check1_'+str(i))
 						carregamento_check.append('check2_'+str(i))
 						carregamento_comment.append('comment'+str(i))
-						html.append('<div class="container"><input type="hidden" name="negrito" value="' + negrito + '">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + sentença[1] + '<!--br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" -->')
-						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar GOLDEN" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar PREVISTO" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''')
-
-						#checar pai
-						if combinação.split("-")[0] == combinação.split("-")[1]:
-							pre_1 = estrutura_ud.Sentence()
-							pre_1.build(wb.unescape(sentença[2]))
-							pre_2 = estrutura_ud.Sentence()
-							pre_2.build(wb.unescape(sentença[3]))
-							for t, token in enumerate(pre_1.tokens):
-								if "<b>" in token.to_str():
-									if token.dephead != pre_2.tokens[t].dephead:
-										html.append('<h2 style="font:red">PAIS DIFERENTES</h2>')
-									break
-
+						html.append('<div class="container"><input type="hidden" name="negrito" value="' + negrito + '">' + str(i+1) + ' / ' + str(len(sentenças[combinação])) + '<br><br>' + sentença[0] + '<br><br>' + '''<input type="hidden" name="copiar_id" id="''' + str(i) + '''" value="''' + sentença[0].replace('/BOLD','').replace('@BOLD','').replace('@YELLOW/', '').replace('@PURPLE/', '').replace('@BLUE/', '').replace('@RED/', '').replace('@CYAN/', '').replace('/FONT', '') + '''">''' + caixa + '<!--br><br><input type="checkbox" style="margin-left:0px" id="check1_'+str(i)+'" >' + combinação.split('-')[0] + ' <input type="checkbox" id="check2_'+str(i)+'" >' + combinação.split('-')[1] + ' - Comentários: <input type="text" id="comment'+str(i)+'" name="maior" -->')
+						html.append('''<br><input type="button" id="botao1''' + combinação + str(i) + '''" style="margin-left:0px" value="Mostrar GOLDEN" onClick="ativa1('sentence1''' + combinação + str(i) + '''', 'botao1''' + combinação + str(i) + '''')" > <input type="button" id="botao2''' + combinação + str(i) + '''" value="Mostrar PREVISTO" onClick="ativa2('sentence2''' + combinação + str(i) + '''', 'botao2''' + combinação + str(i) + '''')">''' + pais)
 						html.append("<div id='sentence1" + combinação + str(i) + "' style='display:none'><b><br>GOLDEN:</b>")
 						html.append("<pre>" + sentença[2].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + "</pre></div><div id='sentence2" + combinação + str(i) + "' style='display:none'><br><b>PREVISTO:</b>")
 						html.append("<pre>" + sentença[3].replace('<','&lt;').replace('>','&gt;').replace("&lt;b&gt;", "<b>").replace("&lt;/b&gt;", "</b>") + '</pre></div></div>')
