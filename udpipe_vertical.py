@@ -45,7 +45,7 @@ def main(modelo, tokenizado, resultado):
     open(tokenizado + 'x', 'w').write(apagar_text(com_text))
 
     #Chama o udpipe
-    call('cat | ./udpipe-* --tag --parse --input vertical "' + modelo + '" "' + tokenizado + 'x" > "' + resultado + '"', shell=True)
+    call('yes "\n" | ./udpipe-* --tag --parse --input vertical "' + modelo + '" "' + tokenizado + 'x" > "' + resultado + '"', shell=True)
 
     #Apaga o arquivo temporário "sem_text" (e sem MWE)
     os.remove(tokenizado + 'x')
