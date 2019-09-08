@@ -6,15 +6,23 @@ import os
 
 #Busca no arquivo "com_text" as entradas de texto e tenta alinhar as sentenças
 def adiciona_text(arquivo, tokenizado):
-    novoarquivo = arquivo.split('\n\n')
+    novoarquivo = arquivo.splitlines()
+    novoarquivo = "\n".join([x for x in novoarquivo if not '# ' in x])
+    novoarquivo = novoarquivo.split('\n\n')
     novoarquivo = [x for x in novoarquivo if x.strip() != '']
     tokenizado = tokenizado.split('\n\n')
 
     for i, sentença in enumerate(novoarquivo):
         for linha in tokenizado[i].splitlines():
+            if '# sent_id = ' in linha:
+                novoarquivo[i] = linha + '\n' + novoarquivo[i]
+                break
+    for i, sentença in enumerate(novoarquivo):
+        for linha in tokenizado[i].splitlines():
             if '# text = ' in linha:
                 novoarquivo[i] = linha + '\n' + novoarquivo[i]
                 break
+
 
     for i, sentença in enumerate(novoarquivo):
         novoarquivo[i] = novoarquivo[i].splitlines()

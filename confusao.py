@@ -27,69 +27,17 @@ feats = {
 def get_list(conllu1, conllu2, coluna):
 		lista_coluna1 = list()
 		lista_coluna2 = list()
-		solitários1 = list()
-		solitários2 = list()
+		solitarios = list()
 
-		#Sentença por sentença do conllu1
-		for sentença in conllu1:
-				sentença_length = 0
-				for linha in sentença:
-						#Encontrou o text_header da sentença
-						if '# text = ' in linha:
-								text_header = linha
-						#Cresce o tamanho de tokens da sentença
-						if isinstance(linha, list):
-								sentença_length += 1
-				#Começa a alinhar com o conllu2 para ver se a sentença também tem lá
-				tem = False
-				for subsentença in conllu2:
-						sentença_correta = False
-						subsentença_length = 0
-						for sublinha in subsentença:
-								#Encontrou a sentença cujo text_header é igual
-								if sublinha == text_header:
-										sentença_correta = True
-								#Cresceu o tamanho de tokens da sentença correta
-								if sentença_correta and isinstance(sublinha, list):
-										subsentença_length += 1
-						#Se tiver uma sentença igual em text_header e em tamanho, tem = True
-						if sentença_correta and subsentença_length == sentença_length:
-								tem = True
-								for sublinha in subsentença:
-									if isinstance(sublinha, list):
-										lista_coluna2.append(sublinha[coluna-1])
-				#Se encontrou sentença igual em conllu2, append!
-				if tem:
-						for linha in sentença:
-								if isinstance(linha, list):
-										lista_coluna1.append(linha[coluna-1])
-				#Se não encontrou, solitários.append
-				else:
-						solitários1.append(text_header)
+		for sentid, sentence in conllu1.sentences.items():
+			if not sentid in conllu2.sentences or sentence.text != conllu2.sentences[sentid].text or len(sentence.tokens) != len(conllu2.sentences[sentid].tokens):
+				solitarios.append(sentid + ': ' + sentence.text)
+			else:
+				for t, token in enumerate(sentence.tokens):
+					lista_coluna1.append(token.col[feats[coluna].lower()])
+					lista_coluna2.append(conllu2.sentences[sentid].tokens[t].col[feats[coluna].lower()])
 
-		#Procurar os solitários2
-		for sentença in conllu2:
-				sentença_length = 0
-				for linha in sentença:
-						if '# text =' in linha:
-								text_header = linha
-						if isinstance(linha, list):
-								sentença_length += 1
-				tem = False
-				for subsentença in conllu1:
-						sentença_correta = False
-						subsentença_length = 0
-						for sublinha in subsentença:
-								if sublinha == text_header:
-										sentença_correta = True
-								if sentença_correta and isinstance(sublinha, list):
-										subsentença_length += 1
-						if sentença_correta and subsentença_length == sentença_length:
-								tem = True
-				if not tem:
-						solitários2.append(text_header)
-
-		return {'matriz_1': lista_coluna1, 'matriz_2': lista_coluna2, 'solitários_1': solitários1, 'solitários_2': solitários2}
+		return {'matriz_1': lista_coluna1, 'matriz_2': lista_coluna2, 'solitários_1': solitarios}
 
 
 def gerar_HTML(matriz, ud1, ud2, col, output, codificação):
@@ -365,19 +313,17 @@ def get_percentages(ud1, ud2, output, coluna):
 	if not os.path.isdir("UAS"):
 		os.mkdir("UAS")
 	UAS = dict()
+
 	with open(ud1, "r") as f:
-		golden_dict = {}
-		for i, sent in enumerate(f.read().split("\n\n")):
-			sentence = estrutura_ud.Sentence()
-			sentence.build(sent)
-			golden_dict[str(i+1)] = sentence
+		golden = estrutura_ud.Corpus()
+		golden.build(f.read())	
 
 	with open(ud2, "r") as f:
 		system = estrutura_ud.Corpus()
 		system.build(f.read())
 
 	dicionario = {}
-	for sentid, sentence in golden_dict.items():
+	for sentid, sentence in golden.sentences.items():
 		for t, token in enumerate(sentence.tokens):
 			if not token.col[feats[coluna].lower()] in dicionario:
 				if coluna == 8:
@@ -403,7 +349,7 @@ def get_percentages(ud1, ud2, output, coluna):
 						UAS[token.deprel][tok_golden + "/" + tok_system]["sentences"].append([sentence, system.sentences[sentid], token, token.head_token, system.sentences[sentid].tokens[t].head_token, system.sentences[sentid].tokens[t]])
 
 	sent_accuracy = [0, 0]
-	for sentid, sentence in golden_dict.items():
+	for sentid, sentence in golden.sentences.items():
 		if sentid in system.sentences and len(sentence.tokens) == len(system.sentences[sentid].tokens):
 			sent_accuracy[0] += 1
 			acertos = 0
@@ -482,7 +428,10 @@ def get_percentages(ud1, ud2, output, coluna):
 def main(ud1, ud2, output, coluna = 4):
 	conllu1 = LerUD(ud1)
 	conllu2 = LerUD(ud2)
-	lista_conllu = get_list(conllu1, conllu2, coluna)
+	conllu1Estruturado, conllu2Estruturado = estrutura_ud.Corpus(), estrutura_ud.Corpus()
+	conllu1Estruturado.load(ud1)
+	conllu2Estruturado.load(ud2)
+	lista_conllu = get_list(conllu1Estruturado, conllu2Estruturado, coluna)
 	lista_conllu1 = lista_conllu['matriz_1']
 	lista_conllu2 = lista_conllu['matriz_2']
 	pd.options.display.max_rows = None
@@ -496,9 +445,6 @@ def main(ud1, ud2, output, coluna = 4):
 	saída.append('\n')
 	saída.append('#!$$ Sentenças de GOLDEN que não foram encontradas em PREVISTO:\n')
 	for item in lista_conllu['solitários_1']:
-			saída.append(item)
-	saída.append('\n#!$$ Sentenças de PREVISTO que não foram encontradas em GOLDEN:\n')
-	for item in lista_conllu['solitários_2']:
 			saída.append(item)
 
 		#Output

@@ -21,6 +21,9 @@ def limpar(texto):
 		elif '# text ' in linha:
 			novotexto.append(linha)
 
+		elif '# sent_id ' in linha:
+			novotexto.append(linha)
+
 		#Pula linha em branco
 		elif linha.strip() == '': novotexto.append('')
 
