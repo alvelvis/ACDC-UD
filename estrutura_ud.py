@@ -98,17 +98,17 @@ class Sentence:
 		return token
 
 	def build(self, txt):
-		if '# text = ' in txt:
-			self.text = txt.split('# text = ')[1].split('\n')[0]
+		if '# text =' in txt:
+			self.text = txt.split('# text =')[1].split('\n')[0].strip()
 			self.metadados['text'] = self.text
-		if '# sent_id = ' in txt:
-			self.sent_id = txt.split('# sent_id = ')[1].split('\n')[0]
+		if '# sent_id =' in txt:
+			self.sent_id = txt.split('# sent_id =')[1].split('\n')[0].strip()
 			self.metadados['sent_id'] = self.sent_id
-		if '# source = ' in txt:
-			self.source = txt.split('# source = ')[1].split('\n')[0]
+		if '# source =' in txt:
+			self.source = txt.split('# source =')[1].split('\n')[0].strip()
 			self.metadados['source'] = self.source
-		if '# id = ' in txt:
-			self.id = txt.split('# id = ')[1].split('\n')[0]
+		if '# id =' in txt:
+			self.id = txt.split('# id =')[1].split('\n')[0].strip()
 			self.metadados["id"] = self.id
 		
 		for linha in txt.split(self.separator):
