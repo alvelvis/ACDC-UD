@@ -38,4 +38,8 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt"):
     return errorDictionary
 
 if __name__ == "__main__":
-    pprint.pprint(validate(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None, sys.argv[3] if len(sys.argv) > 3 else "validar_UD.txt"))
+    pprint.pprint(validate(
+        conllu=sys.argv[1],
+        sent_id=sys.argv[2] if len(sys.argv) > 2 else None, 
+        errorList=sys.argv[3] if len(sys.argv) > 3 else "validar_UD.txt"
+    ))
