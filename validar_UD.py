@@ -16,6 +16,7 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt"):
             if "erro: " in error:
                 comment = error.split("erro: ")[1]
                 comment = comment.strip()
+                coluna = error.split("|", 1)[0] if "|" in error.split("erro: ")[0] else ""
                 continue
 
             parameters = error.strip()
@@ -26,13 +27,13 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt"):
                 sentence.build(sentString)
                 for t, token in enumerate(sentence.tokens):
                     if "<b>" in token.to_str():
-                        tokenId = re.sub(r"<.*?>", "", re.sub(r"@.*?/", "", token.id))
                         tokenT = t
                         break
 
                 errorDictionary[comment].append({
                     "t": tokenT,
                     "sentence": sentence,
+                    "attribute": coluna,
                 })
 
     return errorDictionary
