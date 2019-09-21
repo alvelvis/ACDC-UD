@@ -12,27 +12,28 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt"):
 
     errorDictionary = {}
     for error in errorList:
-        comment, parameters = error.split("|", 1)\
-            if "|" in error\
-                else (error, error)
-        comment = comment.strip()
-        parameters = parameters.strip()
+        if error:
+            if "erro: " in error:
+                comment = error.split("erro: ")[1]
+                comment = comment.strip()
+                continue
 
-        for sentString in interrogar_UD.main(conllu, 5, parameters, 0, sent_id)['output']:
-            if not comment in errorDictionary:
-                errorDictionary[comment] = []
-            sentence = estrutura_ud.Sentence(recursivo=True)
-            sentence.build(sentString)
-            for t, token in enumerate(sentence.tokens):
-                if "<b>" in token.to_str():
-                    tokenId = re.sub(r"<.*?>", "", re.sub(r"@.*?/", "", token.id))
-                    tokenT = t
-                    break
+            parameters = error.strip()
+            for sentString in interrogar_UD.main(conllu, 5, parameters, 0, sent_id)['output']:
+                if not comment in errorDictionary:
+                    errorDictionary[comment] = []
+                sentence = estrutura_ud.Sentence(recursivo=True)
+                sentence.build(sentString)
+                for t, token in enumerate(sentence.tokens):
+                    if "<b>" in token.to_str():
+                        tokenId = re.sub(r"<.*?>", "", re.sub(r"@.*?/", "", token.id))
+                        tokenT = t
+                        break
 
-            errorDictionary[comment].append({
-                "t": tokenT,
-                "sentence": sentence,
-            })
+                errorDictionary[comment].append({
+                    "t": tokenT,
+                    "sentence": sentence,
+                })
 
     return errorDictionary
 
