@@ -30,6 +30,7 @@ def get_list(conllu1, conllu2, coluna):
 		solitarios = list()
 
 		for sentid, sentence in conllu1.sentences.items():
+			sentenceLength = len(sentence.tokens)
 			if not sentid in conllu2.sentences or sentence.text != conllu2.sentences[sentid].text or len(sentence.tokens) != len(conllu2.sentences[sentid].tokens):
 				solitarios.append(sentid + ': ' + sentence.text)
 			else:
