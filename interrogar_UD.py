@@ -4,7 +4,7 @@ import copy
 import sys
 
 #Crio a função que vai ser chamada seja pelo HTML ou seja pelo terminal
-def main(arquivoUD, criterio, parametros):
+def main(arquivoUD, criterio, parametros, limit=0, sent_id=""):
 	parametros = parametros.strip()
 	
 	#Lê o arquivo UD
@@ -17,9 +17,9 @@ def main(arquivoUD, criterio, parametros):
 		with open(arquivoUD, "r") as f:
 			if "head_token" in parametros or "next_token" in parametros or "previous_token" in parametros:
 				#qtd = len(parametros.split("head_token")) -1 + len(parametros.split("previous_token")) -1 + len(parametros.split("next_token")) -1
-				corpus = estrutura_ud.Corpus(recursivo=True)
+				corpus = estrutura_ud.Corpus(recursivo=True, sent_id=sent_id)
 			else:
-				corpus = estrutura_ud.Corpus(recursivo=False)
+				corpus = estrutura_ud.Corpus(recursivo=False, sent_id=sent_id)
 			corpus.build(f.read())
 			
 
@@ -220,7 +220,6 @@ def main(arquivoUD, criterio, parametros):
 		pesquisa = parametros
 		casos = 0
 
-		pesquisa = pesquisa.replace("'", '"')
 		pesquisa = pesquisa.replace('==', ' == ')
 		pesquisa = pesquisa.replace(" = ", " == ")
 		pesquisa = pesquisa.replace(" @", " ")
@@ -228,8 +227,10 @@ def main(arquivoUD, criterio, parametros):
 		pesquisa = pesquisa.replace("  ", " ").strip()
 		pesquisa = pesquisa.replace(" == ", " == token.")
 		pesquisa = pesquisa.replace(" != ", " != token.")
-		pesquisa = pesquisa.replace(" & ", " and ")
-		pesquisa = pesquisa.replace(" | ", " or ")
+		pesquisa = pesquisa.replace(" > ", " > token.")
+		pesquisa = pesquisa.replace(" < ", " < token.")
+		pesquisa = pesquisa.replace(" >= ", " >= token.")
+		pesquisa = pesquisa.replace(" <= ", " <= token.")
 		pesquisa = "token." + pesquisa
 		pesquisa = pesquisa.replace(" and ", " and token.")
 		pesquisa = pesquisa.replace(" or ", " or token.")
@@ -244,29 +245,33 @@ def main(arquivoUD, criterio, parametros):
 		pesquisa = pesquisa.replace('.upper ', '.upper() ')
 		pesquisa = re.sub(r'token\.([1234567890])', r'\1', pesquisa)
 
-		pesquisa = re.sub(r'(\S+?)\s==\s(\S+)', r're.search( r"^" + r\2 + r"$", \1 )', pesquisa)
-		pesquisa = re.sub(r'(\S+?)\s!=\s(\S+)', r'not re.search( r"^" + r\2 + r"$", \1 )', pesquisa)
+		pesquisa = re.sub(r'(\S+)\s==\s(\".*?\")', r'any( re.search( r"^" + r\2 + r"$", x ) for x in \1.split("|") )', pesquisa)
+		pesquisa = re.sub(r'(\S+)\s!=\s(\".*?\")', r'not any( re.search( r"^" + r\2 + r"$", x ) for x in \1.split("|") )', pesquisa)
 		pesquisa = pesquisa.strip()
 
-		if (".id" in pesquisa or ".dephead" in pesquisa) and (not "int(" in pesquisa):
+		if (".id" in pesquisa or ".dephead" in pesquisa) and (not "int(" in pesquisa) and ("<" in pesquisa or ">" in pesquisa):
 			pesquisa = re.sub(r"(\b\S+\.(id|dephead)\b)", r"int(\1)", pesquisa)
 
 		identificador = "token"
 
-		if " @" in parametros:
-			if parametros[0] == "@": parametros = parametros[1:]
-			arroba = "token." + parametros.split(" @")[1].strip().replace("int(", "").split(")")[0].split(" ")[0].rsplit(".", 1)[0].replace("(", "")
-		else:
-			arroba = identificador
-		if " in " in arroba: arroba = arroba.split(" in ")[1]
+		if parametros[0] == "@":
+			parametros = parametros[1:]
+		
+		arroba = parametros.split(" ")[0] if not ' @' in parametros else parametros.rsplit(" @", 1)[1].replace("int(", "").split(")")[0].split(" ")[0].replace("(", "")
+		arroba = "token." + arroba
+		arroba = arroba.replace("token.token", "token")
+		arroba = arroba.rsplit(".", 1)[0]
+		#if " in " in arroba: arroba = arroba.split(" in ")[1]
 
 		with open("expressao_busca.txt", "w") as f:
 			f.write(f"parametro: {parametros}\npesquisa: {pesquisa}\narroba: {arroba}")
 
 		agilizar = parametros.split('"')[1].split('"')[0] if '"' in parametros else ""
-		agilizado = [[x, y] for x, y in corpus.sentences.items() if re.search(agilizar, y.to_str())] if agilizar else corpus.sentences.items()
+		agilizado = corpus.sentences.items()#[[x, y] for x, y in corpus.sentences.items() if re.search(agilizar, y.to_str())] if agilizar else corpus.sentences.items()
 
 		for sentid, sentence in agilizado:
+			if limit and limit == len(output):
+				break
 			condition = "global sim; global sentence2; sim = 0; sentence2 = copy.copy(sentence); sentence2.print = sentence2.tokens_to_str()"
 			
 			condition += '''

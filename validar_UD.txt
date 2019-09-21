@@ -1,0 +1,2 @@
+Token apontando para si próprio | dephead = id
+Ciclo na sentença | dephead != id and dephead == head_token.id and head_token.dephead == id
