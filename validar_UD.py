@@ -30,9 +30,8 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt"):
                     break
 
             errorDictionary[comment].append({
-                "tokenId": tokenId,
                 "t": tokenT,
-                "sentence": sentence.to_str(),
+                "sentence": sentence,
             })
 
     return errorDictionary
