@@ -53,7 +53,7 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt"):
         for missing in missingToken:
             errorDictionary['1 - Há tokens faltando no corpus'].append({
                 "sentence": "",
-                "sent_id": missing,
+                "sent_id": "<pre>" + missing + "</pre>",
             })
 
     with open(errorList) as f:
