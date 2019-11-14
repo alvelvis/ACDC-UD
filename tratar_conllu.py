@@ -16,7 +16,7 @@ for a, linha in enumerate(novo_conllu):
 	if len(linha.split('\t')) > 2:
 		novo_conllu[a] = linha.split('\t')
 		novo_conllu[a][4] = '_'
-		novo_conllu[a][9] = '_'
+		#novo_conllu[a][9] = '_'
 		novo_conllu[a] = "\t".join(novo_conllu[a])
 
 open(conllu.rsplit('.conllu')[0] + '_editado.conllu', 'w').write('\n'.join(novo_conllu))
