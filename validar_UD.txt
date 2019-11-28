@@ -63,3 +63,6 @@ misc !== "MWE=.*|MWEPOS=.*|SpaceAfter=.*|d2d:.*|ChangedBy=.*|_"
 
 deprel|erro: Este deprel não pode ter dependentes
 head_token.deprel == "(cc|case|det|flat:name|fixed|compound)" and head_token.misc != "MWE=.*"
+
+deprel|erro: PRON não pode ter deprel "det"
+upos = "PRON" and deprel = "det"
