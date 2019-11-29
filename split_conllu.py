@@ -27,10 +27,10 @@ for conllu in conllus:
 	texto = open(pasta_conllu + '/' + conllu, 'r', encoding="utf8").read().split('\n\n')
 	for sentence in texto:
 		if '# sent_id = ' in sentence:
-			identificador = sentence.split('# sent_id = ')[1].split("\n")[0].rsplit('-', 1)[0]
+			identificador = sentence.split('# sent_id = ')[1].rsplit('-', 1)[0]
 			if not identificador in documents.keys():
 				documents[identificador] = dict()
-			documents[identificador][int(sentence.split('# sent_id = ')[1].split("\n")[0].rsplit('-', 1)[1])] = sentence
+			documents[identificador][int(sentence.split('# sent_id = ')[1].rsplit('-', 1)[1].split()[0])] = sentence
 
 documentos_organizados = dict()
 for documento in documents.keys():
@@ -39,7 +39,7 @@ for documento in documents.keys():
 	i = 0
 	while documents[documento]:
 		i += 1
-		if i in documents[documento] and documents[documento][i].split('# sent_id = ')[1].split("\n")[0].rsplit('-', 1)[1] == str(i):
+		if i in documents[documento] and documents[documento][i].split('# sent_id = ')[1].rsplit('-', 1)[1].split()[0] == str(i):
 			documentos_organizados[documento].append(documents[documento][i])
 			del documents[documento][i]
 			i = 0
