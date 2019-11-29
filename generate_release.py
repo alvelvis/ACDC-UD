@@ -10,7 +10,7 @@ else:
 	pasta = sys.argv[1]
 
 for arquivo_id in os.listdir(pasta):
-	if 'pt-' in arquivo_id and ".txt" in arquivo_id:
+	if any(x in arquivo_id for x in ['-test', '-train', '-dev']) and ".txt" in arquivo_id:
 		arquivo_ids = pasta + '/' + arquivo_id
 		diretorio = arquivo_ids.rsplit('/', 1)[0] + '/'
 		arquivo_conllu = arquivo_ids.split('.txt')[0] + '.conllu'
@@ -29,6 +29,6 @@ for arquivo_id in os.listdir(pasta):
 		for i, identificador in enumerate(ids.splitlines()):
 			if identificador.strip() != '':
 				novo_conllu.append(corpus.sentences[identificador].to_str())
-				print(arquivo_conllu.rsplit('/', 1)[1] + ' - ' + str(i+1) + '/' + str(len(ids.splitlines())) + ': ' + identificador)
+				#print(arquivo_conllu.rsplit('/', 1)[1] + ' - ' + str(i+1) + '/' + str(len(ids.splitlines())) + ': ' + identificador)
 
 		open(arquivo_conllu, 'w').write("\n\n".join(novo_conllu) + '\n\n')
