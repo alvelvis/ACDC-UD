@@ -48,6 +48,9 @@ upos = "X" and feats !== "_|Gender=Masc|Number=Sing|Gender=Fem|Number=Plur"
 upos|erro: UPOS inválido
 upos != "ADJ|ADV|AUX|CCONJ|INTJ|ADP|SCONJ|PUNCT|SYM|_|DET|NOUN|NUM|PART|PRON|PROPN|VERB|X"
 
+upos|erro: Este deprel deve ter upos NOUN, PRON, PROPN, SYM ou NUM
+deprel = "obl" and upos != "(NOUN|PRON|PROPN|SYM|NUM)"
+
 deprel|erro: DEPREL inválido
 deprel != "(root|_|case|det|nmod|parataxis|nsubj|flat:name|acl|advmod|obj|amod|punct|appos|nummod|acl:relcl|ccomp|fixed|obl|cop|cc|conj|mark|expl|xcomp|aux|nsubj:pass|aux:pass|obl:agent|iobj|csubj|compound|advcl|flat|dep|flat:foreign|discourse|vocative|orphan|dislocated|reparandum|goeswith|appos:parataxis|ccomp:parataxis)"
 
@@ -66,3 +69,12 @@ head_token.deprel == "(cc|case|det|flat:name|fixed|compound)" and head_token.mis
 
 deprel|erro: PRON não pode ter deprel "det"
 upos = "PRON" and deprel = "det"
+
+deprel|erro: ADP deve ter deprel "case"
+upos = "ADP" and deprel != "case"
+
+deprel|erro: SCONJ deve ter deprel "mark"
+upos = "SCONJ" and deprel != "mark"
+
+deprel|erro: CCONJ deve ter deprel "cc"
+upos = "CCONJ" and deprel != "cc"
