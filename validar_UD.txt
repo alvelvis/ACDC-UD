@@ -37,7 +37,7 @@ upos = "ADV" and feats !== "_|Polarity=Neg"
 upos = "AUX" and feats !== "Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Number=Plur|VerbForm=Inf|VerbForm=Ger|Tense=Fut|Mood=Cnd|Tense=Imp|Tense=Past|VerbForm=Part|Person=1|Mood=Sub|Mood=Imp|Person=2|Gender=Masc|Tense=Pqp"
 upos = "CCONJ|INTJ|ADP|SCONJ|PUNCT|SYM|_" and feats !== "_"
 upos = "DET" and feats !== "Definite=Def|Gender=Masc|Number=Sing|PronType=Art|Definite=Ind|Gender=Fem|Number=Plur|PronType=Ind|PronType=Dem|PronType=Prs|PronType=Tot|PronType=Neg|PronType=Emp|PronType=Int|PronType=Rel|Gender=Unsp|Number=Unsp"
-upos = "NOUN|PROPN" and feats !== "Gender=Masc|Number=Sing|Gender=Fem|Number=Plur|Gender=Unsp|Foreign=Yes|Number=Unsp"
+upos = "(NOUN|PROPN)" and feats !== "Gender=Masc|Number=Sing|Gender=Fem|Number=Plur|Gender=Unsp|Foreign=Yes|Number=Unsp"
 upos = "NUM" and feats !== "NumType=Card|Gender=Masc|Gender=Fem|Number=Sing|NumType=Mult|Number=Plur|NumType=Ord|NumType=Frac|Definite=Ind|PronType=Art|NumType=Sets|NumType=Range"
 upos = "PART" and feats !== "_|Gender=Masc|Number=Sing"
 upos = "PRON" and feats !== "Gender=Masc|Number=Sing|PronType=Dem|PronType=Rel|Case=Acc|Person=3|PronType=Prs|Case=Nom|Number=Plur|PronType=Int|Gender=Fem|PronType=Ind|Gender=Unsp|Person=1|Definite=Def|PronType=Art|Case=Dat|PronType=Tot|PronType=Neg|Number=Unsp|VerbForm=Ger|Person=2|Definite=Ind"
@@ -66,14 +66,23 @@ misc !== "MWE=.*|MWEPOS=.*|Spaces?After=.*|d2d:.*|ChangedBy=.*|_"
 deprel|erro: Este deprel não pode ter dependentes
 head_token.deprel == "(cc|case|det|flat:name|fixed|compound)" and head_token.misc != "MWE=.*"
 
-deprel|erro: PRON não pode ter deprel "det"
-upos = "PRON" and deprel = "det"
+upos|erro: Este upos não pode ter deprel "det"
+upos != "DET" and deprel = "det"
+
+deprel|erro: DET deve ter deprel "det"
+upos = "DET" and deprel != "det"
 
 deprel|erro: ADP deve ter deprel "case"
 upos = "ADP" and deprel != "case"
 
 deprel|erro: SCONJ deve ter deprel "mark"
 upos = "SCONJ" and deprel != "mark"
+
+deprel|erro: Este upos não pode ter deprel "mark"
+upos != "SCONJ" and deprel = "mark"
+
+deprel|erro: Este upos não pode ter ter deprel "cc"
+upos != "CCONJ" and deprel == "cc"
 
 deprel|erro: CCONJ deve ter deprel "cc"
 upos = "CCONJ" and deprel != "cc"
