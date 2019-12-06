@@ -78,11 +78,17 @@ upos = "ADP" and deprel != "case"
 deprel|erro: SCONJ deve ter deprel "mark"
 upos = "SCONJ" and deprel != "mark"
 
-deprel|erro: Este upos não pode ter deprel "mark"
+upos|erro: Este upos não pode ter deprel "mark"
 upos != "SCONJ" and deprel = "mark"
 
-deprel|erro: Este upos não pode ter ter deprel "cc"
+upos|erro: Este upos não pode ter ter deprel "cc"
 upos != "CCONJ" and deprel == "cc"
 
 deprel|erro: CCONJ deve ter deprel "cc"
 upos = "CCONJ" and deprel != "cc"
+
+upos|erro: Este upos não pode ter ter deprel "aux"
+upos != "AUX" and deprel == "aux"
+
+deprel|erro: AUX deve ter deprel "aux"
+upos = "AUX" and deprel != "aux"
