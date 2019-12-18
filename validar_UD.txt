@@ -51,7 +51,7 @@ upos|erro: Este deprel deve ter upos NOUN, PRON, PROPN, SYM ou NUM
 deprel = "obl" and upos != "(NOUN|PRON|PROPN|SYM|NUM)"
 
 deprel|erro: DEPREL inválido
-deprel != "(root|_|case|det|nmod|parataxis|nsubj|flat:name|acl|advmod|obj|amod|punct|appos|nummod|acl:relcl|ccomp|fixed|obl|cop|cc|conj|mark|expl|xcomp|aux|nsubj:pass|aux:pass|obl:agent|iobj|csubj|compound|advcl|flat|dep|flat:foreign|discourse|vocative|orphan|dislocated|reparandum|goeswith|appos:parataxis|ccomp:parataxis)"
+deprel != "(root|_|case|det|nmod|parataxis|nsubj|flat:name|acl|advmod|obj|amod|punct|appos|nummod|acl:relcl|ccomp|fixed|obl|cop|cc|conj|mark|expl|xcomp|aux|nsubj:pass|aux:pass|obl:agent|iobj|csubj|compound|advcl|flat|dep|flat:foreign|discourse|vocative|orphan|dislocated|reparandum|goeswith|appos:parataxis|ccomp:parataxis|appos:transl)"
 
 misc|erro: Falta MWE no misc
 misc = "MWEPOS=.*" and misc != "MWE=.*"
