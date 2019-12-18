@@ -91,4 +91,4 @@ upos|erro: Este upos não pode ter ter deprel "aux"
 upos != "AUX" and deprel == "aux"
 
 deprel|erro: AUX deve ter deprel "aux"
-upos = "AUX" and deprel != "aux"
+upos = "AUX" and deprel != "(aux|aux:pass)"
