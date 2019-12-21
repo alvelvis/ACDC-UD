@@ -8,75 +8,66 @@ arquivo = sys.argv[1]
 def from_ACDC_to_UD(arquivo):
     with open(arquivo, encoding="latin-1") as f:
         ACDC = f.read()
-    if "<obra id=" in ACDC:
-        arquivos = [{
-            'arquivo': re.findall('<obra id="([^"]+?)"', x)[0].replace(' ', '-'),
-            'tituloobra': re.findall('<tituloobra id="([^"]+?)"', x)[0],
-            'autor': re.findall('<autor id="([^"]+?)"', x)[0],
-            'sentences': [[z for z in y.splitlines() if len(z.split('\t')) > 5] for y in re.findall('<u>(.*?)</u>', x, flags=re.DOTALL) if len(y.split('\t')) > 5],
-            } for x in re.findall('<obra id="[^"]+".*?</obra>', ACDC, flags=re.DOTALL)]
-
-
-        UD = ""
-        for arquivo in arquivos:
-            sent_id = 0
-            for sentence in arquivo['sentences']:
-                UD += f"# sent_id = {arquivo['arquivo']}-{sent_id}\n"
-                UD += "# tituloobra = " + arquivo['tituloobra'] + "\n"
-                UD += "# autor = " + arquivo['autor'] + "\n"
-                UD += "# text = " + " ".join([x.split("\t")[0] for x in sentence]) + "\n"
-
-                #transformar em conllu
-                sent_ud = ["{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(
-                    x.split("\t")[17].split("->", 1)[0], 
-                    x.split("\t")[0],
-                    x.split("\t")[8],
-                    x.split("\t")[9],
-                    "_",
-                    "|".join([x.split("\t")[10], x.split("\t")[11], x.split("\t")[12]]),
-                    x.split("\t")[17].split("->", 1)[1],
-                    x.split("\t")[13],
-                    "_",
-                    "_",
-                    ) for x in sentence if len(x.split("\t")) > 15]
-
-                #fazer descontração dos tokens contraídos
-                for t, token in enumerate(sent_ud):
-                    if '+' in token.split("\t")[6]:
-                        #print(token)
-                        for i in range(len(token.split("\t")[6].split("+"))):
-                            sent_ud[t+1+i:t+1+i] = ["{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(
-                                token.split("\t")[0] if not '->' in token.split("\t")[6].split("+")[i] else token.split("\t")[6].split("+")[i].split("->")[0],
-                                token.split("\t")[1], #problema aqui: NA fica com forma NA NA, e não EM A. Os lemas ficam OK
-                                token.split("\t")[2].split("+")[i] if '+' in token.split("\t")[2] else token.split("\t")[2],
-                                token.split("\t")[3].split("+")[i],
-                                "_",
-                                token.split("\t")[5],
-                                token.split("\t")[6].split("+")[i] if not '->' in token.split("\t")[6].split("+")[i] else token.split("\t")[6].split("+")[i].split("->")[1],
-                                token.split("\t")[7].split("+")[i],
-                                "_",
-                                "_")]
-
-                #criar token head da contração
-                for t, token in enumerate(sent_ud):
-                    if '+' in token.split("\t")[6]:
-                        sent_ud[t] = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(
-                                token.split("\t")[0] + "-" + token.split("\t")[6].split("+")[-1].split("->")[0],
-                                token.split("\t")[1],
-                                "_",
-                                "_",
-                                "_",
-                                "_",
-                                "_",
-                                "_",
-                                "_",
-                                "_")
-
-                UD += "\n".join(sent_ud) + "\n"
-                UD += "\n"
-                sent_id += 1
         
-        print(UD)
+    if "<obra id=" in ACDC:
+        lista_tags = []
+        sentences = []
+        tokens = []
+        lista_faltantes = []
+        i = 0
+        MWE = False
+        for l, linha in enumerate(ACDC.splitlines()):
+            #print(linha)
+            if linha.strip().startswith("<obra "):
+                obra = re.search('<obra id="([^"]+)"', linha)[1] if re.search('id="([^"]+?)"', linha) else "_INDEF_"
+            if linha.strip().startswith("<tituloobra"):
+                tituloobra = re.search('<tituloobra id="([^"]+)"', linha)[1] if re.search('id="([^"]+?)"', linha) else "_INDEF_"
+            if linha.strip().startswith("<autor"):
+                autor = re.search('<autor id="([^"]+)"', linha)[1] if re.search('id="([^"]+?)"', linha) else "_INDEF_"
+            if linha.strip().startswith("<") and not linha.strip().startswith("<mwe") and not linha.strip().startswith("</mwe"):
+                lista_tags.append(linha.replace("|", "\\|"))
+            if linha.strip().startswith("<mwe"):
+                MWE = True
+                MWE_lema = re.search(r"lema=([^\s>]+)", linha)[1] if re.search(r"lema=([^\s>]+)", linha) else "_INDEF_"
+                MWE_pos = re.search(r"pos=([^\s>]+)", linha)[1] if re.search(r"pos=([^\s>]+)", linha) else "_INDEF_"
+            if linha.strip().startswith("</mwe"):
+                MWE = False
+            if len(linha.split("\t")) > 17:                    
+                if '+' in linha.split("\t")[17]:
+                    tokens.append(linha.split("\t")[17].split("->")[0] + "-" + linha.split("\t")[17].split("+")[-1].split("->")[0] + "\t" + linha.split("\t")[0] + "\t" + "\t".join("________"))
+                for i in range(len(linha.split("\t")[17].split("+")) -1):
+                    if not linha.split("\t")[17].split("+")[i]:
+                        lista_faltantes.append(ACDC.splitlines()[l-1] + "\n" + ACDC.splitlines()[l])
+                        continue
+                    word = linha.split("\t")[0]
+                    misc = [linha.split("\t")[14], linha.split("\t")[16], linha.split("\t")[18], linha.split("\t")[19], linha.split("\t")[20], linha.split("\t")[21],]
+                    tokens.append("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(
+                            linha.split("\t")[17].split("+")[i].split("->")[0] if '+' in linha.split("\t")[17] else linha.split("\t")[17].split("->")[0],
+                            word,
+                            linha.split("\t")[8].split("+")[i],
+                            linha.split("\t")[9],
+                            "_",
+                            "|".join([linha.split("\t")[10], linha.split("\t")[11], linha.split("\t")[12]]),
+                            linha.split("\t")[17].split("+")[i].split("->")[1] if '+' in linha.split("\t")[17] else linha.split("\t")[17].split("->")[1],
+                            linha.split("\t")[13],
+                            linha.split("\t")[15],
+                            "|".join(misc) if not MWE else "|".join(sorted(misc + ["MWE=" + MWE_lema.replace("=", "_"), "MWEPOS=" + MWE_pos])),
+                            ))
+
+            if '</u>' in linha.strip():
+                sentence = f"# sent_id = {obra.strip().replace(' ', '-')}-{i}\n"
+                sentence += f"# obra = {obra}\n"
+                sentence += f"# tituloobra = {tituloobra}\n"
+                sentence += f"# autor = {autor}\n"
+                sentence += f"# xml_tags = {'|'.join(lista_tags)}\n"
+                sentence += f'# text = ' + " ".join([x.split("\t")[1] for x in tokens]) + "\n"
+                sentence += "\n".join(tokens)
+                sentences.append(sentence)
+                lista_tags = []
+                tokens = []
+                i += 1
+
+        print("\n\n".join(lista_faltantes))                
 
 
 from_ACDC_to_UD(arquivo)
