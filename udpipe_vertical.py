@@ -14,7 +14,6 @@ def adiciona_text(arquivo, tokenizado):
         for linha in tokenizado[i].splitlines():
             if linha.strip().startswith('# '):
                 novoarquivo[i] = linha + '\n' + novoarquivo[i]
-                break
 
     for i, sentença in enumerate(novoarquivo):
         novoarquivo[i] = novoarquivo[i].splitlines()
