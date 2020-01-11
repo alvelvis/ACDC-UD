@@ -40,7 +40,10 @@ def from_ACDC_to_UD(arquivo):
                         lista_faltantes.append(ACDC.splitlines()[l-1] + "\n" + ACDC.splitlines()[l])
                         continue
                     word = linha.split("\t")[0]
-                    misc = [linha.split("\t")[14], linha.split("\t")[16], linha.split("\t")[18], linha.split("\t")[19], linha.split("\t")[20], linha.split("\t")[21],]
+                    misc_21 = linha.split("\t")[21] if len(linha.split("\t")) > 20 else ""
+                    misc_20 = linha.split("\t")[20] if len(linha.split("\t")) > 19 else ""
+                    misc_19 = linha.split("\t")[19] if len(linha.split("\t")) > 18 else ""
+                    misc = [linha.split("\t")[14], linha.split("\t")[16], linha.split("\t")[18], misc_19, misc_20, misc_21]
                     tokens.append("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(
                             linha.split("\t")[17].split("+")[i].split("->")[0] if '+' in linha.split("\t")[17] else linha.split("\t")[17].split("->")[0],
                             word,
