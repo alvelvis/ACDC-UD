@@ -21,6 +21,7 @@ class Token:
 		self.dephead = "0"
 		self.deprel = "_"
 		self.deps = "_"
+		self.sema = "_"
 		self.misc = "_"
 		self.children = []
 		self.separator = separator
@@ -51,6 +52,7 @@ class Token:
 		self.col["dephead"] = self.dephead
 		self.col["deprel"] = self.deprel
 		self.col["deps"] = self.deps
+		self.col["sema"] = self.deps
 		self.col["misc"] = self.misc
 		self.col["text"] = self.text
 
@@ -143,13 +145,14 @@ class Sentence:
 
 class Corpus:
 
-	def __init__(self, separator="\n\n", recursivo=True, sent_id=None, thread=False):
+	def __init__(self, separator="\n\n", recursivo=True, sent_id=None, thread=False, encoding="utf-8"):
 		self.len = 0
 		self.sentences = {}
 		self.separator = separator
 		self.sent_list = []
 		self.recursivo = recursivo
 		self.sent_id = sent_id
+		self.encoding = encoding
 		self.pre = ""
 		self.pos = ""
 		self.thread = thread
@@ -203,7 +206,7 @@ class Corpus:
 		return "\n\n".join(retorno) + '\n\n'
 
 	def load(self, path):
-		with open(path, "r") as f:
+		with open(path, "r", encoding=self.encoding) as f:
 			self.build(f.read())
 
 	def save(self, path):
