@@ -6,23 +6,14 @@ import os
 
 #Busca no arquivo "com_text" as entradas de texto e tenta alinhar as sentenças
 def adiciona_text(arquivo, tokenizado):
-    novoarquivo = arquivo.splitlines()
-    novoarquivo = "\n".join([x for x in novoarquivo if not '# ' in x])
-    novoarquivo = novoarquivo.split('\n\n')
-    novoarquivo = [x for x in novoarquivo if x.strip() != '']
-    tokenizado = tokenizado.split('\n\n')
-
+    novoarquivo = "\n".join([x for x in arquivo.splitlines() if not x.strip().startswith("# ")])
+    novoarquivo = [x for x in novoarquivo.split('\n\n') if x.strip()]
+    tokenizado = [x for x in tokenizado.split('\n\n') if x.strip()]
+    
     for i, sentença in enumerate(novoarquivo):
         for linha in tokenizado[i].splitlines():
-            if '# sent_id = ' in linha:
+            if linha.strip().startswith('# '):
                 novoarquivo[i] = linha + '\n' + novoarquivo[i]
-                break
-    for i, sentença in enumerate(novoarquivo):
-        for linha in tokenizado[i].splitlines():
-            if '# text = ' in linha:
-                novoarquivo[i] = linha + '\n' + novoarquivo[i]
-                break
-
 
     for i, sentença in enumerate(novoarquivo):
         novoarquivo[i] = novoarquivo[i].splitlines()
@@ -50,7 +41,10 @@ def apagar_text(arquivo):
 
 def main(modelo, tokenizado, resultado):
 
-    com_text = open(tokenizado, 'r').read()
+    try:
+        com_text = open(tokenizado, 'r').read()
+    except:
+        com_text = open(tokenizado, 'r', encoding="latin-1").read()
     open(tokenizado + 'x', 'w').write(apagar_text(com_text))
 
     #Chama o udpipe
