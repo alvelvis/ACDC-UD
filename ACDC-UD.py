@@ -5,17 +5,6 @@ import pprint
 
 arquivo = sys.argv[1]
 
-lista_tags = []
-sentences = []
-tokens = []
-lista_faltantes = []
-dep_lugar_errado = []
-lista_contracoes = []
-sent_id = 1
-primeira_plus = False
-ja_primeira_plus = False
-MWE = False
-
 dicionario_contracoes = {
     'No': 'Em+o',
     'pela': 'por+a',
@@ -187,7 +176,7 @@ dicionario_contracoes = {
     'Delas': 'De+elas',
     'eila': 'ei+ela',
     'AO': 'a+o',
-    'Eilas': 'Ei+eças',
+    'Eilas': 'Ei+as',
     #'DE+AS': '',
     'Àquela': 'A+aquela',
     #'com+o': '',
@@ -262,8 +251,8 @@ dicionario_contracoes = {
     #'EM+ISTO': '',
     #'EM+ESSA': '',
     #'DE+AQUELA': '',
-    #'DE+UMAS': '',
-    #'Adonde': '',
+    #'DE+UMAS': 'de+umas',
+    #'Adonde': 'a+onde',
     'nalguns': 'em+alguns',
     'nalgumas': 'em+algumas',
     'Nalguns': 'Em+alguns',
@@ -284,26 +273,37 @@ corpus_splitlines = corpus.splitlines()
 
 if not corpus.startswith("#"):
 
+    metadados = {}
+    if 'obra id=' in corpus:
+        corpus_key = "obra"
+    lista_tags = []
+    sentences = []
+    tokens = []
+    lista_faltantes = []
+    dep_lugar_errado = []
+    lista_contracoes = []
+    sent_id = 1
+    primeira_plus = False
+    ja_primeira_plus = False
+    mwe = False
+
     max_linhas = len(corpus_splitlines)
     for l, linha in enumerate(corpus_splitlines):
 
         try:
 
-            if linha.strip().startswith("<obra "):
-                obra = re.search('<obra id="([^"]+)"', linha)[1] if re.search('id="([^"]+?)"', linha) else "_INDEF_"
-            if linha.strip().startswith("<tituloobra"):
-                tituloobra = re.search('<tituloobra id="([^"]+)"', linha)[1] if re.search('id="([^"]+?)"', linha) else "_INDEF_"
-            if linha.strip().startswith("<autor"):
-                autor = re.search('<autor id="([^"]+)"', linha)[1] if re.search('id="([^"]+?)"', linha) else "_INDEF_"
+            if linha.strip().startswith("<") and ' id="' in linha:
+                metadados[linha.strip().split("<")[1].split(' id="')[0]] = re.search('<.*? id="([^"]+)"', linha)[1]
+
             if linha.strip().startswith("<") and not linha.strip().startswith("<mwe") and not linha.strip().startswith("</mwe"):
                 lista_tags.append(linha.replace("|", "\\|"))
 
             if linha.strip().startswith("<mwe"):
-                MWE = True
-                MWE_lema = re.search(r"lema=([^\s>]+)", linha)[1] if re.search(r"lema=([^\s>]+)", linha) else "_INDEF_"
-                MWE_pos = re.search(r"pos=([^\s>]+)", linha)[1] if re.search(r"pos=([^\s>]+)", linha) else "_INDEF_"
+                mwe = True
+                mwe_lema = re.search(r"lema=([^\s>]+)", linha)[1] if re.search(r"lema=([^\s>]+)", linha) else "__INDEF__"
+                mwe_pos = re.search(r"pos=([^\s>]+)", linha)[1] if re.search(r"pos=([^\s>]+)", linha) else "__INDEF__"
             if linha.strip().startswith("</mwe"):
-                MWE = False
+                mwe = False
 
             if len(linha.split("\t")) > 17:
 
@@ -321,14 +321,18 @@ if not corpus.startswith("#"):
                                 linha = "\t".join(nova_linha)
                                 break
 
-                    if linha.split("\t")[0] in dicionario_contracoes and '+' in linha.split("\t")[17]:
+                    if '+' in linha.split("\t")[17]:
+                        if not linha.split("\t")[0] in lista_contracoes and not '-' in linha.split("\t")[0]:
+                            lista_contracoes.append(linha.split("\t")[0])
+
+                    if linha.split("\t")[0] in dicionario_contracoes and len(linha.split("\t")[17].split("+")) == len(dicionario_contracoes[linha.split("\t")[0]].split("+")):
                         word_or_plus = dicionario_contracoes[linha.split("\t")[0]].split("+")[i]
                     elif '-' in linha.split("\t")[0] and "+" in linha.split('\t')[17]:
                         word_or_plus = "+".join([dicionario_contracoes[x] if x in dicionario_contracoes else x for x in linha.split("\t")[0].replace("-", "+").split("+")]).split("+")[i]
                     else:
                         word_or_plus = linha.split("\t")[0]
 
-                    misc = [f"{col}={x}" for col, x in enumerate(linha.split("\t")) if col not in [0,8,9,10,11,12,18,1,13,15,2,4,6]]
+                    misc = [f"{col}={x.replace('=', '_')}" for col, x in enumerate(linha.split("\t")) if col not in [0,8,9,10,11,12,1,13,15,2,4,6]]
                     if any(corpus_splitlines[l+1].strip().startswith(x) for x in ["<"]):
                         misc.append("TAGAFTER=" + corpus_splitlines[l+1])
                     if any(corpus_splitlines[l-1].strip().startswith(x) for x in ["<"]):
@@ -349,24 +353,22 @@ if not corpus.startswith("#"):
                     tokens.append("{id}\t{word}\t{lemma}\t{upos}\t{xpos}\t{feats}\t{dephead}\t{deprel}\t{deps}\t{misc}".format(
                             id = linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0],
                             word = word_or_plus,
-                            lemma = linha.split("\t")[8].split("+")[i] if '+' in linha.split("\t")[8] else linha.split("\t")[8],
-                            upos = linha.split("\t")[9].split("+")[i] if '+' in linha.split("\t")[9] else linha.split("\t")[9],
-                            xpos = linha.split("\t")[18].split("+")[i] if '+' in linha.split("\t")[18] else linha.split("\t")[18],
+                            lemma = linha.split("\t")[8].split("+")[i] if '+' in linha.split("\t")[8] and '+' in linha.split("\t")[17] else linha.split("\t")[8],
+                            upos = linha.split("\t")[9].split("+")[i] if '+' in linha.split("\t")[9] and '+' in linha.split("\t")[17] else linha.split("\t")[9],
+                            xpos = "_",#linha.split("\t")[18].split("+")[i] if '+' in linha.split("\t")[18] else linha.split("\t")[18],
                             feats = "|".join([linha.split("\t")[10], linha.split("\t")[11], linha.split("\t")[12]]),
                             dephead = linha.split("\t")[17].split("+")[i].split("->")[1].split("-")[0],
-                            deprel = linha.split("\t")[13].split("+")[i],
+                            deprel = linha.split("\t")[13].split("+")[i] if '+' in linha.split("\t")[13] and '+' in linha.split("\t")[13] else linha.split("\t")[13],
                             deps = linha.split("\t")[15],
-                            misc = "|".join(misc) if not MWE else "|".join(sorted(misc + ["MWE=" + MWE_lema.replace("=", "_"), "MWEPOS=" + MWE_pos])),
+                            misc = "|".join(misc) if not mwe else "|".join(sorted(misc + ["MWE=" + mwe_lema.replace("=", "_"), "MWEPOS=" + mwe_pos])),
                     ))
 
             if '</u>' in linha.strip():
                 if l/max_linhas > 0.9 and not "\t" in "\n".join(corpus.splitlines()[l+1:]):
                     lista_tags.extend(corpus.splitlines()[l+1:])
-                sentence = f"# sent_id = {obra.strip().replace(' ', '-')}-{sent_id}\n"
-                sentence += f"# obra = {obra}\n"
-                sentence += f"# tituloobra = {tituloobra}\n"
-                sentence += f"# autor = {autor}\n"
-                sentence += f"# xml_tags = {'|'.join(lista_tags)}\n"
+                sentence = f"# sent_id = {metadados[corpus_key].replace(' ', '-')}-{sent_id}\n"
+                sentence += "\n".join(sorted(['# ' + x + ' = ' + metadados[x] for x in metadados]))
+                sentence += f"\n# xml_tags = {'|'.join(lista_tags)}\n"
                 sentence += f'# text = ' + " ".join([x.split("\t")[1] for x in tokens if not '-' in x.split("\t")[0]]) + "\n"
                 sentence += "\n".join(tokens)
                 sentences.append(sentence)
@@ -378,22 +380,22 @@ if not corpus.startswith("#"):
             raise Exception(linha)
 
     #ajeitando ID das MWEs
-    corpus = estrutura_ud.Corpus()
+    corpus = estrutura_ud.Corpus(recursivo=True)
     corpus.build("\n\n".join(sentences))
 
     for sentence in corpus.sentences.values():
-        mapa_dephead = {}
+        mapa_dephead = {t: _t for t, token in enumerate(sentence.tokens) for _t, _token in enumerate(sentence.tokens) if _token.to_str() == token.head_token.to_str()}
         for t, token in enumerate(sentence.tokens):
-            for _t, _token in enumerate(sentence.tokens):
-                if _token.to_str() == token.head_token.to_str():
-                    mapa_dephead[t] = _t
-                    break
-        for t, token in enumerate(sentence.tokens):      
             if t and (sentence.tokens[t-1].id == token.id or (not '-' in token.id and not '-' in sentence.tokens[t-1].id and int(sentence.tokens[t-1].id) > int(token.id))):
                 token.id = str(int(sentence.tokens[t-1].id)+1)
-        for t, token in enumerate(sentence.tokens):
-            token.dephead = sentence.tokens[mapa_dephead[t]].id if t in mapa_dephead else "0"
-
+            if t in mapa_dephead:
+                token.dephead = sentence.tokens[mapa_dephead[t]].id
+            elif '-' in token.id:
+                token.dephead = '_'
+            else:
+                token.dephead = "0"
+            if token.dephead == token.id:
+                token.dephead = str(int(token.dephead)+1)            
 
     print(corpus.to_str())
     
@@ -403,7 +405,13 @@ if not corpus.startswith("#"):
     with open("dep_lugar_errado.log", "w") as f:
         f.write("\n".join(dep_lugar_errado))
 
+    with open("lista_contracoes.log", "w") as f:
+        f.write("\n".join(sorted(lista_contracoes)))
+
 elif corpus.startswith("#"):
+
+    from_acdc = False
+    not_from_acdc = False
     
     try:
         corpus = estrutura_ud.Corpus(recursivo=True, encoding="utf-8")
@@ -412,26 +420,46 @@ elif corpus.startswith("#"):
         corpus = estrutura_ud.Corpus(recursivo=True, encoding="latin-1")
         corpus.load(sys.argv[1])
 
+    if "xml_tags" in list(corpus.sentences.values())[0].metadados:
+        from_acdc = True
+    elif 'obras' in sys.argv[1].lower():
+        not_from_acdc = "obra"
+    elif 'bosque' in sys.argv[1].lower():
+        not_from_acdc = "artigo"
+
     acdc = []
-    for sentence in corpus.sentences.values():
-        for i, tag in enumerate(sentence.metadados['xml_tags'].split("|")):
-            if tag not in ["</u>", "</t>", "</s>"] and ((acdc and tag != acdc[-1]) or not acdc):
-                if tag not in [x.split("=", 1)[1] for token in sentence.tokens for x in token.misc.split("|") if '=' in x]:
-                    acdc.append(tag)
-            else:
-                before_tag = i
-                break
+    for s, sentence in enumerate(corpus.sentences.values()):
+        
+        if from_acdc:
+            for i, tag in enumerate(sentence.metadados['xml_tags'].split("|")):
+                if tag not in ["</u>", "</t>", "</s>"] and ((acdc and tag != acdc[-1]) or not acdc):
+                    if tag not in [x.split("=", 1)[1] for token in sentence.tokens for x in token.misc.split("|") if '=' in x]:
+                        acdc.append(tag)
+                else:
+                    before_tag = i
+                    break
+        elif not_from_acdc:
+            if sentence.sent_id.rsplit("-", 1)[1] == "1":
+                if s != 0:
+                    acdc.append(f"</{not_from_acdc}>")
+                acdc.append(f'<{not_from_acdc} id="{sentence.metadados["obra"] if "obra" in sentence.metadados else sentence.sent_id.rsplit("-", 1)[0]}">')
+                if 'tituloobra' in sentence.metadados:
+                    acdc.append(f'<tituloobra id="{sentence.metadados["tituloobra"]}">')
+                if 'autor' in sentence.metadados:
+                    acdc.append(f'<autor id="{sentence.metadados["autor"]}">')
+            acdc.append("<u>")
+            acdc.append("<s>")
+            acdc.append("<t>")
                 
         contraction = False
         num_contraction = 0
         max_contraction = 1
-        MWE_anterior = ""
         save_tag_after = ""
         save_tag_b4 = ""
 
         for token in sentence.tokens:
 
-            if contraction:        
+            if contraction:
                 if num_contraction > max_contraction:
                     if save_tag_b4:
                         if save_tag_b4 != acdc[-1]:
@@ -450,74 +478,98 @@ elif corpus.startswith("#"):
                         save_tag_b4 = token.misc.split("TAGB4=")[1].split("|")[0]
                     if "TAGAFTER=" in token.misc:
                         save_tag_after = token.misc.split("TAGAFTER=")[1].split("|")[0]
-                    tokendict[1] = sentence.metadados['obra'].split(" ")[0]
-                    tokendict[2] = sentence.metadados['obra'].split(" ")[1]
-                    tokendict[4] = sentence.metadados['obra'].split(" ")[3]
-                    tokendict[6] = sentence.metadados['obra'].split(" ")[-1]
+
+            if not '-' in token.id and not contraction:         
+                tokendict = {}
+                tokendict[0] = token.word if token.word else "--"
+            
+            if (not '-' in token.id and not contraction) or (contraction and max_contraction >= num_contraction):
+                tokendict[1] = sentence.metadados['obra'].split(" ")[0] if 'obra' in sentence.metadados else sentence.sent_id.rsplit("-", 1)[0]
+                tokendict[2] = sentence.metadados['obra'].split(" ")[1] if 'obra' in sentence.metadados else sentence.sent_id.rsplit("-", 1)[0]
+                tokendict[4] = sentence.metadados['obra'].split(" ")[3] if 'obra' in sentence.metadados else sentence.sent_id.rsplit("-", 1)[0]
+                tokendict[6] = sentence.metadados['obra'].split(" ")[-1] if 'obra' in sentence.metadados else sentence.sent_id.rsplit("-", 1)[0]
+                
+                if not contraction:
+                    tokendict[8] = token.lemma
+                    tokendict[9] = token.upos
+                    tokendict[13] = token.deprel
+                    tokendict[17] = token.id + '->' + token.dephead
+                    if not_from_acdc:
+                        tokendict[18] = token.head_token.lemma if token.head_token.lemma != "_" else "TOPO"
+                elif contraction:
                     tokendict[8] += '+' + token.lemma if tokendict[8] else token.lemma
                     tokendict[9] += '+' + token.upos if tokendict[9] else token.upos
+                    tokendict[13] += '+' + token.deprel if tokendict[13] else token.deprel
+                    tokendict[17] += '+' + token.id + '->' + token.dephead if tokendict[17] else token.id + '->' + token.dephead
+                    if not_from_acdc:
+                        if token.head_token.lemma != "_":
+                            tokendict[18] += '+' + token.head_token.lemma if tokendict[18] else token.head_token.lemma
+                        else:
+                            tokendict[18] += '+' + "TOPO"
+
+                if from_acdc:
                     tokendict[10] = token.feats.split("|")[0]
                     try:
                         tokendict[11] = token.feats.split("|")[1]
                     except:
                         raise Exception(token.to_str())
                     tokendict[12] = token.feats.split("|")[2]
-                    tokendict[13] += '+' + token.deprel if tokendict[13] else token.deprel
-                    tokendict[15] = token.deps
-                    tokendict[17] += '+' + token.id + '->' + token.dephead if tokendict[17] else token.id + '->' + token.dephead
-                    tokendict[18] += '+' + token.xpos if tokendict[18] else token.xpos
-                
-                    for misc in token.misc.split("|"):
-                        try:
-                            tokendict[int(misc.split('=')[0])] = misc.split('=')[1]
-                        except:
-                            continue
-                    num_contraction += 1
-                    continue
+                elif not_from_acdc:
+                    temcagr = []
+                    if "Mood=" in token.feats:
+                        temcagr += [token.feats.split("Mood=")[1].split("|")[0]]
+                    if "Tense=" in token.feats:
+                        temcagr += [token.feats.split("Tense=")[1].split("|")[0]]
+                    if "VerbForm=" in token.feats:
+                        temcagr += [token.feats.split("VerbForm=")[1].split("|")[0]]
+                    tokendict[10] = "|".join(temcagr) if temcagr else "0"
+                    
+                    number = []
+                    if "Person=" in token.feats:
+                        number += [token.feats.split("Person=")[1].split("|")[0]]
+                    if "Number=" in token.feats:
+                        number += [token.feats.split("Number=")[1].split("|")[0]]
+                    tokendict[11] = "|".join(number) if number else "0"
 
-            if not '-' in token.id and not contraction:         
-                tokendict = {}
-                tokendict[0] = token.word if token.word else "--"
-                tokendict[1] = sentence.metadados['obra'].split(" ")[0]
-                tokendict[2] = sentence.metadados['obra'].split(" ")[1]
-                tokendict[4] = sentence.metadados['obra'].split(" ")[3]
-                tokendict[6] = sentence.metadados['obra'].split(" ")[-1]
-                tokendict[8] = token.lemma
-                tokendict[9] = token.upos
-                tokendict[10] = token.feats.split("|")[0]
-                try:
-                    tokendict[11] = token.feats.split("|")[1]
-                except:
-                    raise Exception(token.to_str())
-                tokendict[12] = token.feats.split("|")[2]
-                tokendict[13] = token.deprel
-                tokendict[15] = token.deps
-                tokendict[17] = token.id + '->' + token.dephead
-                tokendict[18] = token.xpos
+                    gender = []
+                    if "Gender=" in token.feats:
+                        gender += [token.feats.split("Gender=")[1].split("|")[0]]
+                    tokendict[12] = "|".join(gender) if gender else "0"
+
+                tokendict[15] = token.deps if token.deps != "_" else "0"
                 
                 for misc in token.misc.split("|"):
                     try:
-                        tokendict[int(misc.split('=')[0])] = misc.split('=')[1]
+                        tokendict[int(misc.split('=')[0])] = misc.split('=')[1] if int(misc.split('=')[0]) != 18 else misc.split("=")[1].replace("_", "=").replace("==", "__")
                     except:
-                        continue
-                
+                        pass
+
+                if (contraction and max_contraction >= num_contraction):
+                    num_contraction += 1
+
+            if (not '-' in token.id and not contraction):
                 if "TAGB4=" in token.misc and ((acdc and token.misc.split("TAGB4=")[1].split("|")[0] != acdc[-1]) or not acdc):
                     acdc.append(token.misc.split("TAGB4=")[1].split("|")[0])
                 acdc.append("\t".join([tokendict[x] for x in sorted(tokendict)]))
                 if "TAGAFTER=" in token.misc and ((acdc and token.misc.split("TAGAFTER=")[1].split("|")[0] != acdc[-1]) or not acdc):
                     acdc.append(token.misc.split("TAGAFTER=")[1].split("|")[0])
-                continue
 
-            elif '-' in token.id:
+            if '-' in token.id:
                 contraction = True
                 max_contraction = int(token.id.split("-")[1]) - int(token.id.split("-")[0])
                 num_contraction = 0
                 tokendict = {i: '' for i in range(30)}
                 tokendict[0] = token.word if token.word else "--"
-                continue
-
-        for i, tag in enumerate(sentence.metadados['xml_tags'].split("|")):
-            if i >= before_tag and tag != acdc[-1]:
-                acdc.append(tag)
+                
+        if from_acdc:
+            for i, tag in enumerate(sentence.metadados['xml_tags'].split("|")):
+                if i >= before_tag and tag != acdc[-1]:
+                    acdc.append(tag)
+        elif not_from_acdc:
+            acdc.append("</t>")
+            acdc.append("</s>")
+            acdc.append("</u>")
+            if s == len(corpus.sentences.values()) -1:
+                acdc.append(f"</{not_from_acdc}>")
 
     print("\n".join(acdc))

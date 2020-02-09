@@ -20,9 +20,9 @@ Pacote de ferramentas em [Python 3](https://www.python.org/download/releases/3.0
 
 Com esse código é possível realizar pesquisas em arquivos UD de acordo com diferentes critérios.
 
-O script é utilizado no Interrogatório: http://comcorhd.tronco.me/interrogar-ud/
+O script é utilizado no Interrogatório: http://comcorhd.letras.puc-rio.br/interrogatorio
 
-Os critérios de pesquisa são explicados na página de [interrogação](http://comcorhd.tronco.me/cgi-bin/interrogar.cgi).
+Os critérios de pesquisa são explicados na página de [interrogação](http://comcorhd.letras.puc-rio.br/interrogatorio).
 
 Para mais informações sobre o Interrogatório, consultar [http://github.com/alvelvis/Interrogat-rio](http://github.com/alvelvis/Interrogat-rio).
 
