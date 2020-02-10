@@ -287,7 +287,6 @@ if not corpus.startswith("#"):
     ja_primeira_plus = False
     mwe = False
 
-    max_linhas = len(corpus_splitlines)
     for l, linha in enumerate(corpus_splitlines):
 
         try:
@@ -296,7 +295,7 @@ if not corpus.startswith("#"):
                 metadados[linha.strip().split("<")[1].split(' id="')[0]] = re.search('<.*? id="([^"]+)"', linha)[1]
 
             if linha.strip().startswith("<") and not linha.strip().startswith("<mwe") and not linha.strip().startswith("</mwe"):
-                lista_tags.append(linha.replace("|", "\\|"))
+                lista_tags.append(linha.replace("|", "<barra_em_pe>"))
 
             if linha.strip().startswith("<mwe"):
                 mwe = True
@@ -334,9 +333,9 @@ if not corpus.startswith("#"):
 
                     misc = [f"{col}={x.replace('=', '_')}" for col, x in enumerate(linha.split("\t")) if col not in [0,8,9,10,11,12,1,13,15,2,4,6]]
                     if any(corpus_splitlines[l+1].strip().startswith(x) for x in ["<"]):
-                        misc.append("TAGAFTER=" + corpus_splitlines[l+1])
+                        misc.append("TAGAFTER=" + corpus_splitlines[l+1].replace("|", "<barra_em_pe>"))
                     if any(corpus_splitlines[l-1].strip().startswith(x) for x in ["<"]):
-                        misc.append("TAGB4=" + corpus_splitlines[l-1])
+                        misc.append("TAGB4=" + corpus_splitlines[l-1].replace("|", "<barra_em_pe>"))
 
                     if '+' in linha.split("\t")[17]:
                         if (not primeira_plus and not ja_primeira_plus) or (i == 0):
@@ -364,8 +363,6 @@ if not corpus.startswith("#"):
                     ))
 
             if '</u>' in linha.strip():
-                if l/max_linhas > 0.9 and not "\t" in "\n".join(corpus.splitlines()[l+1:]):
-                    lista_tags.extend(corpus.splitlines()[l+1:])
                 sentence = f"# sent_id = {metadados[corpus_key].replace(' ', '-')}-{sent_id}\n"
                 sentence += "\n".join(sorted(['# ' + x + ' = ' + metadados[x] for x in metadados]))
                 sentence += f"\n# xml_tags = {'|'.join(lista_tags)}\n"
@@ -379,10 +376,17 @@ if not corpus.startswith("#"):
         except:
             raise Exception(linha)
 
+    last_xml_tags = []
+    for linha in reversed(corpus_splitlines):
+        if "</u>" in linha.strip():
+            break
+        last_xml_tags.append(linha.replace("|", "<barra_em_pe>"))
+    sentences[-1] = re.sub(r'(# xml_tags = .*)\n', r'\1|' + "|".join(reversed(last_xml_tags)) + r"\n", sentences[-1])
+
     #ajeitando ID das MWEs
     corpus = estrutura_ud.Corpus(recursivo=True)
     corpus.build("\n\n".join(sentences))
-
+    
     for sentence in corpus.sentences.values():
         mapa_dephead = {t: _t for t, token in enumerate(sentence.tokens) for _t, _token in enumerate(sentence.tokens) if _token.to_str() == token.head_token.to_str()}
         for t, token in enumerate(sentence.tokens):
@@ -398,6 +402,8 @@ if not corpus.startswith("#"):
                 token.dephead = str(int(token.dephead)+1)            
 
     print(corpus.to_str())
+
+    print("\n\n".join(sentences))
     
     with open("lista_faltantes.log", 'w') as f:
         f.write("\n\n".join(lista_faltantes))
@@ -434,7 +440,7 @@ elif corpus.startswith("#"):
             for i, tag in enumerate(sentence.metadados['xml_tags'].split("|")):
                 if tag not in ["</u>", "</t>", "</s>"] and ((acdc and tag != acdc[-1]) or not acdc):
                     if tag not in [x.split("=", 1)[1] for token in sentence.tokens for x in token.misc.split("|") if '=' in x]:
-                        acdc.append(tag)
+                        acdc.append(tag.replace("<barra_em_pe>", "|"))
                 else:
                     before_tag = i
                     break
@@ -475,9 +481,9 @@ elif corpus.startswith("#"):
                     max_contraction = 1
                 else:
                     if "TAGB4=" in token.misc:
-                        save_tag_b4 = token.misc.split("TAGB4=")[1].split("|")[0]
+                        save_tag_b4 = token.misc.split("TAGB4=")[1].split("|")[0].replace("<barra_em_pe>", "|")
                     if "TAGAFTER=" in token.misc:
-                        save_tag_after = token.misc.split("TAGAFTER=")[1].split("|")[0]
+                        save_tag_after = token.misc.split("TAGAFTER=")[1].split("|")[0].replace("<barra_em_pe>", "|")
 
             if not '-' in token.id and not contraction:         
                 tokendict = {}
@@ -549,10 +555,10 @@ elif corpus.startswith("#"):
 
             if (not '-' in token.id and not contraction):
                 if "TAGB4=" in token.misc and ((acdc and token.misc.split("TAGB4=")[1].split("|")[0] != acdc[-1]) or not acdc):
-                    acdc.append(token.misc.split("TAGB4=")[1].split("|")[0])
+                    acdc.append(token.misc.split("TAGB4=")[1].split("|")[0].replace("<barra_em_pe>", "|"))
                 acdc.append("\t".join([tokendict[x] for x in sorted(tokendict)]))
                 if "TAGAFTER=" in token.misc and ((acdc and token.misc.split("TAGAFTER=")[1].split("|")[0] != acdc[-1]) or not acdc):
-                    acdc.append(token.misc.split("TAGAFTER=")[1].split("|")[0])
+                    acdc.append(token.misc.split("TAGAFTER=")[1].split("|")[0].replace("<barra_em_pe>", "|"))
 
             if '-' in token.id:
                 contraction = True
@@ -564,7 +570,7 @@ elif corpus.startswith("#"):
         if from_acdc:
             for i, tag in enumerate(sentence.metadados['xml_tags'].split("|")):
                 if i >= before_tag and tag != acdc[-1]:
-                    acdc.append(tag)
+                    acdc.append(tag.replace("<barra_em_pe>", "|"))
         elif not_from_acdc:
             acdc.append("</t>")
             acdc.append("</s>")
