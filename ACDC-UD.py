@@ -331,7 +331,9 @@ if not corpus.startswith("#"):
                     else:
                         word_or_plus = linha.split("\t")[0]
 
-                    misc = [f"{col}={x.replace('=', '_')}" for col, x in enumerate(linha.split("\t")) if col not in [0,8,9,10,11,12,1,13,15,2,4,6]]
+                    misc = [f"{col}={x.replace('=', '_')}" for col, x in enumerate(linha.split("\t")) if col not in [3,5,7,0,8,9,10,11,12,1,13,15,2,4,6]]
+                    repetitive_tags = ["3=" + linha.split("\t")[3], "5=" + linha.split("\t")[5], "7=" + linha.split("\t")[7]]
+
                     if any(corpus_splitlines[l+1].strip().startswith(x) for x in ["<"]):
                         misc.append("TAGAFTER=" + corpus_splitlines[l+1].replace("|", "<barra_em_pe>"))
                     if any(corpus_splitlines[l-1].strip().startswith(x) for x in ["<"]):
@@ -365,8 +367,9 @@ if not corpus.startswith("#"):
             if '</u>' in linha.strip():
                 sentence = f"# sent_id = {metadados[corpus_key].replace(' ', '-')}-{sent_id}\n"
                 sentence += "\n".join(sorted(['# ' + x + ' = ' + metadados[x] for x in metadados]))
-                sentence += f"\n# xml_tags = {'|'.join(lista_tags)}\n"
-                sentence += f'# text = ' + " ".join([x.split("\t")[1] for x in tokens if not '-' in x.split("\t")[0]]) + "\n"
+                sentence += f"\n# xml_tags = {'|'.join(lista_tags)}"
+                sentence += f"\n# repetitive_tags = {'|'.join(repetitive_tags)}"
+                sentence += f'\n# text = ' + " ".join([x.split("\t")[1] for x in tokens if not '-' in x.split("\t")[0]]) + "\n"
                 sentence += "\n".join(tokens)
                 sentences.append(sentence)
                 lista_tags = []
@@ -549,6 +552,8 @@ elif corpus.startswith("#"):
                         tokendict[int(misc.split('=')[0])] = misc.split('=')[1] if int(misc.split('=')[0]) != 18 else misc.split("=")[1].replace("_", "=").replace("==", "__")
                     except:
                         pass
+                for tag in sentence.metadados['repetitive_tags'].split("|"):
+                    tokendict[int(tag.split('=')[0])] = tag.split('=')[1]
 
                 if (contraction and max_contraction >= num_contraction):
                     num_contraction += 1
