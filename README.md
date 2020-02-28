@@ -30,7 +30,7 @@ Mude o caminho para arquivo *.conllu* no método `load()`, e caso julgue necess�
 
 * sent_id (string): configure se o corpus carregará apenas uma única sentença do arquivo, tornando muito mais veloz o carregamento do corpus, já que carregará apenas uma sentença.
 
-* Thread (integer): configura o número de CPUs que serão responsáveis por carregar as sentenças do corpus.
+* thread (integer): configura o número de CPUs que serão responsáveis por carregar as sentenças do corpus.
 
 * encoding (string): configura a codificação do corpus, como por exemplo "utf-8", "utf-16" ou "latin-1".
 
@@ -67,6 +67,8 @@ print(corpus.sentences["FRASE-1"].tokens[5].head_token.word)
 corpus.sentences["FRASE-1"].tokens[5].head_token.upos = "NOUN"
 corpus.save("arquivo.conllu")
 ```
+
+[**↥ voltar ao topo**](#ACDC-UD)
 
 # interrogar_UD.py
 
