@@ -74,7 +74,7 @@ deprel|erro: DET deve ter deprel "det"
 upos = "DET" and deprel != "det"
 
 deprel|erro: ADP deve ter deprel "case"
-upos = "ADP" and deprel != "case"
+upos = "ADP" and deprel != "(case|fixed)"
 
 deprel|erro: SCONJ deve ter deprel "mark"
 upos = "SCONJ" and deprel != "mark"
