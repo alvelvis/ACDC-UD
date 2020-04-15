@@ -1,4 +1,4 @@
-import sys
+import sys, re
 
 def chunkIt(seq, num):
     avg = len(seq) / float(num)
@@ -158,17 +158,17 @@ class Sentence:
 
 class Corpus:
 
-	def __init__(self, separator="\n\n", recursivo=True, sent_id=None, thread=False, encoding="utf-8"):
+	def __init__(self, separator="\n\n", recursivo=True, sent_id=None, thread=False, encoding="utf-8", keywords=[]):
 		self.len = 0
 		self.sentences = {}
 		self.separator = separator
-		self.sent_list = []
 		self.recursivo = recursivo
 		self.sent_id = sent_id
 		self.encoding = encoding
 		self.pre = ""
 		self.pos = ""
 		self.thread = thread
+		self.keywords = keywords
 
 	def build(self, txt):
 		if self.sent_id:
@@ -178,8 +178,11 @@ class Corpus:
 			if '\n\n' in txt: txt = txt.rsplit("\n\n", 1)[1]
 			self.pre = old_txt.split(txt)[0].strip()
 			self.pos = old_txt.split(txt)[1].strip()
-
-		sents = txt.split(self.separator)
+			sents = txt.split(self.separator)
+		elif self.keywords:
+			sents = [x for x in txt.split(self.separator) if all(re.search(y, x) for y in self.keywords)]
+		else:
+			sents = txt.split(self.separator)
 
 		if self.thread:
 			import threading
@@ -191,7 +194,6 @@ class Corpus:
 				threads[i].start()
 			for i in range(self.thread):
 				threads[i].join()
-
 		else:
 			self.sent_build(sents)
 
@@ -201,7 +203,6 @@ class Corpus:
 		for sentence in sents:
 			sent = Sentence(recursivo=self.recursivo)
 			sent.build(sentence)
-			self.sent_list.append(sent)
 			if sent.sent_id:
 				self.sentences[sent.sent_id] = sent
 			elif sent.id:
@@ -219,8 +220,22 @@ class Corpus:
 		return "\n\n".join(retorno) + '\n\n'
 
 	def load(self, path):
+		sentence = []
 		with open(path, "r", encoding=self.encoding) as f:
-			self.build(f.read())
+			if not self.sent_id:
+				for line in f:
+					if line.strip():
+						sentence.append(line)
+					else:
+						sentence = "\n".join(sentence)
+						if self.keywords:
+							if all(re.search(x, sentence) for x in self.keywords):
+								self.sent_build([sentence])
+						else:
+							self.sent_build([sentence])
+						sentence = []
+			else:
+				self.build(f.read())
 
 	def save(self, path):
 		final = self.to_str() if not self.sent_id else (self.pre + "\n\n" + self.to_str() + self.pos).strip() + "\n\n"

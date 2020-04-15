@@ -55,8 +55,8 @@ deprel|erro: DEPREL inválido
 deprel != "(root|_|case|det|nmod|parataxis|nsubj|flat:name|acl|advmod|obj|amod|punct|appos|nummod|acl:relcl|ccomp|fixed|obl|cop|cc|conj|mark|expl|xcomp|aux|nsubj:pass|aux:pass|obl:agent|iobj|csubj|compound|advcl|flat|dep|flat:foreign|discourse|vocative|orphan|dislocated|reparandum|goeswith|appos:parataxis|ccomp:parataxis|appos:transl)"
 
 misc|erro: Falta MWE no misc
-misc = "MWEPOS=.*" and misc != "MWE=.*"
-deprel = "fixed|compound" and @head_token.misc != "MWE=.*"
+#misc = "MWEPOS=.*" and misc != "MWE=.*"
+#deprel = "fixed|compound" and @head_token.misc != "MWE=.*"
 
 misc|erro: Falta MWEPOS no misc
 misc = "MWE=.*" and misc != "MWEPOS=.*"
@@ -64,25 +64,25 @@ misc = "MWE=.*" and misc != "MWEPOS=.*"
 misc|erro: MISC inválido
 misc !== "MWE=.*|MWEPOS=.*|Spaces?After=.*|d2d:.*|ChangedBy=.*|_"
 
-deprel|erro: Este deprel não pode ter dependentes
-head_token.deprel == "(cc|case|det|flat:name|fixed|compound)" and head_token.misc != "MWE=.*"
+deprel|erro: O pai deste token não pode ter dependentes
+head_token.deprel == "(cc|case|det|flat:name|fixed|compound)" and @deprel != "(fixed|compound|flat|flat:name)"
 
 upos|erro: Este upos não pode ter deprel "det"
 upos != "DET" and deprel = "det"
 
 deprel|erro: DET deve ter deprel "det"
-upos = "DET" and deprel != "det"
+upos = "DET" and deprel != "det|fixed"
 
 deprel|erro: ADP deve ter deprel "case"
-upos = "ADP" and deprel != "(case|fixed)"
+upos = "ADP" and deprel != "case|fixed"
 
 deprel|erro: SCONJ deve ter deprel "mark"
-upos = "SCONJ" and deprel != "mark"
+upos = "SCONJ" and deprel != "mark|fixed"
 
 upos|erro: Este upos não pode ter deprel "mark"
 upos != "SCONJ" and deprel = "mark"
 
-upos|erro: Este upos não pode ter ter deprel "cc"
+upos|erro: Este upos não pode ter deprel "cc"
 upos != "CCONJ" and deprel == "cc"
 
 deprel|erro: CCONJ deve ter deprel "cc"
@@ -94,9 +94,16 @@ upos != "AUX" and deprel == "aux"
 deprel|erro: AUX deve ter deprel "aux" ou "cop"
 upos = "AUX" and deprel != "(aux|aux:pass|cop)"
 
-deprel|erro: advmod deve ser filho de ADV, VERB ou ADJ
-deprel = "advmod" and head_token.upos != "(ADV|VERB|ADJ)"
-
 deprel|erro: ADV deve ser advmod
 deprel = "advmod" and upos != "ADV"
 deprel != "advmod" and upos = "ADV"
+
+feats|erro: VERB deve ter feats VerbForm
+upos = "(AUX|VERB)" and feats != "VerbForm=.*"
+
+feats|erro: DET e PRON devem ter feats PronType e/ou Definite
+upos = "DET|PRON" and feats != "PronType=.*"
+upos != "DET|PRON" and feats = "PronType=.*"
+upos != "DET|PRON" and feats = "Definite.*"
+feats = "PronType=Art" and feats != "Definite=.*"
+feats = "Definite=.*" and feats != "PronType=Art"
