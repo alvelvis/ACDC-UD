@@ -18,7 +18,7 @@ if os.path.isfile(sys.argv[2] + ".json"):
 	with open(sys.argv[2] + ".json") as f:
 		tokenized_dict = json.load(f)
 else:
-    tokenized = [[token.split("\t")[0] for token in sentence.splitlines() if len(token.split("\t")) > 7 and not '-=' in token.split("\t")[0]] for sentence in arquivo.split("\n\n")]
+    tokenized = [[token.split("\t")[0] for token in sentence.splitlines() if len(token.split("\t")) > 7 and not '-=' in token.split("\t")[0]] for sentence in arquivo]
     print("1/4 dicionário tokenizado: ok")
     nlp = stanza.Pipeline('pt', tokenize_pretokenized=True)
     tokenized_nlp = nlp([x for x in tokenized if x])
@@ -26,7 +26,7 @@ else:
     tokenized_dict = tokenized_nlp.to_dict()
     with open(sys.argv[2] + ".json", "w") as f:
         json.dump(tokenized_dict, f)
-    print(":: checkpooint :: conversão para dict: salva em json")
+    print(":: checkpoint :: conversão para dict: salva em json")
 tokenized = CoNLL.convert_dict(tokenized_dict)
 print("3/4 conversão para CoNLL: ok")
 

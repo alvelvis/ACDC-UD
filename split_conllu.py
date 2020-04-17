@@ -44,10 +44,12 @@ for documento in documents.keys():
 			del documents[documento][i]
 			i = 0
 
-	#nome = re.search(r'\d+', documento)[0]
-	#for i in range(4 - len(nome)):
-		#nome = '0' + nome
-	#nome = re.search(r'\D+', documento)[0] + nome
+	documento_original = documento
+	if len(sys.argv) > 2 and sys.argv[2] == "UD_Portuguese-Bosque":
+		nome = re.search(r'\d+', documento)[0]
+		for i in range(4 - len(nome)):
+			nome = '0' + nome
+		documento = re.search(r'\D+', documento)[0] + nome
 
 	print(documento)
-	open(pasta_conllu + '/documents/' + documento + '.conllu', 'w', encoding="utf8").write('\n\n'.join(documentos_organizados[documento]) + '\n\n')
+	open(pasta_conllu + '/documents/' + documento + '.conllu', 'w', encoding="utf8").write('\n\n'.join(documentos_organizados[documento_original]) + '\n\n')
