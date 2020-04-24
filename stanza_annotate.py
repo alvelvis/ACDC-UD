@@ -1,4 +1,5 @@
 import stanza
+import pickle
 import os
 import sys
 from stanza.utils.conll import CoNLL
@@ -13,15 +14,35 @@ arquivos = {}
 arquivos_cru = {}
 diretorio = sys.argv[1]
 if os.path.isdir(diretorio):
-    for arquivo in os.listdir(diretorio):
-        with open(diretorio + "/" + arquivo, encoding="utf-8") as f:
-            text = f.read()
-            arquivos[arquivo.rsplit(".txt")[0]] = CoNLL.convert_dict(nlp(text).to_dict())
+    if not os.path.isfile(diretorio + "/" + diretorio + ".p"):
+        for arquivo in os.listdir(diretorio):
+            if arquivo.endswith(".txt"):
+                with open(diretorio + "/" + arquivo, encoding="utf-8") as f:
+                    text = f.read()
+                try:
+                    arquivos[arquivo.rsplit(".txt")[0]] = nlp(text)
+                except:
+                    print('erro: ' + arquivo)
+        with open(diretorio + "/" + diretorio + ".p", "wb") as f:
+            f.write(pickle.dump(arquivos))
+    else:
+        with open(diretorio + "/" + diretorio + ".p", "rb") as f:
+            arquivos = pickle.load(arquivos)
+    for arquivo in arquivos:
+        arquivos[arquivo] = CoNLL.convert_dict(arquivos[arquivo].to_dict())
 elif os.path.isfile(diretorio):
     arquivo = diretorio
-    with open(arquivo, encoding="utf-8") as f:
-        text = f.read()
-        arquivos[arquivo.rsplit(".txt")[0]] = CoNLL.convert_dict(nlp(text).to_dict())
+    if not os.path.isfile(diretorio + ".p"):
+        with open(arquivo, encoding="utf-8") as f:
+            text = f.read()
+        arquivos[arquivo.rsplit(".txt")[0]] = nlp(text)
+        with open(diretorio + ".p", "wb") as w:
+            w.write(pickle.dump(arquivos))
+    else:
+        with open(diretorio + ".p") as f:
+            arquivos = pickle.load(f)
+    for arquivo in arquivos:
+        arquivos[arquivo] = CoNLL.convert_dict(arquivos[arquivo].to_dict())
 
 sentences = []
 conllus = {}
