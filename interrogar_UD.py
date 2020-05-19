@@ -8,9 +8,29 @@ import cgi
 import html as web
 
 different_distribution = ["dependentes", "children"]
+coluna_tab = {
+	'id': 0,
+	'word': 1,
+	'lemma': 2,
+	'upos': 3,
+	'xpos': 4,
+	'feats': 5,
+	'dephead': 6,
+	'deprel': 7,
+	'deps': 8,
+	'misc': 9
+}
 
-def getDistribution(arquivoUD, parametros, criterio=5, coluna="lemma", filtros=[], sent_id=""):
+def getDistribution(arquivoUD, parametros, coluna="lemma", filtros=[], sent_id=""):
 	import estrutura_ud
+
+	if re.search(r"^\d+\s", parametros):
+		criterio = int(parametros.split(" ", 1)[0])
+		parametros = parametros.split(" ", 1)[1]
+	elif any(x in parametros for x in [' = ', ' == ', ' != ', ' !== ']) and len(parametros.split('"')) > 2:
+		criterio = 5
+	else:
+		criterio = 1
 
 	if not isinstance(arquivoUD, dict):
 		sentences = main(arquivoUD, criterio, parametros, sent_id=sent_id, fastSearch=True)['output']
@@ -19,38 +39,50 @@ def getDistribution(arquivoUD, parametros, criterio=5, coluna="lemma", filtros=[
 		
 	corpus = list()
 	for sentence in sentences:
-		sent = estrutura_ud.Sentence()
-		sent.build(sentence['resultado'].replace(f"@YELLOW/", "").replace(f"@RED/", "").replace(f"@CYAN/", "").replace(f"@BLUE/", "").replace(f"@PURPLE/", "").replace("/FONT", ""))
-		if sent.sent_id not in filtros:
-			corpus.append(sent)
+		if sentence:
+			if coluna in different_distribution:
+				sent = estrutura_ud.Sentence()
+				sent.build(sentence['resultado'].replace(f"@YELLOW/", "").replace(f"@RED/", "").replace(f"@CYAN/", "").replace(f"@BLUE/", "").replace(f"@PURPLE/", "").replace("/FONT", ""))
+				sent_id = sent.sent_id
+			else:
+				sent = sentence['resultado']
+				sent_id = re.findall(r"# sent_id = (.*?)\n", re.sub(r'<.*?>', '', sent))[0]
+			if sent_id not in filtros:
+				corpus.append(sent)
 	
 	dist = list()
 	all_children = {}
-	for sentence in corpus:
-		for t, token in enumerate(sentence.tokens):
-			if '<b>' in token.to_str() or "</b>" in token.to_str():
-				if not coluna in different_distribution:
-					dist.append(token.col.get(coluna))
-				elif coluna in ["dependentes", "children"]:
-					children = [t]
-					children_already_seen = []
-					children_future = []
-					while children_already_seen != children:
-						for child in children:
-							if not child in children_already_seen:
-								children_already_seen.append(child)
-							for _t, _token in enumerate(sentence.tokens):
-								if cleanEstruturaUD(_token.dephead) == cleanEstruturaUD(sentence.tokens[child].id):
-									children_future.append(_t)
-						[children.append(x) for x in children_future if x not in children]
+	if not coluna in different_distribution:
+		for sentence in corpus:
+			for t, token in enumerate(sentence.splitlines()):
+				if ('<b>' in token or '</b>' in token) and len(token.split("\t")) > 5:
+					dist.append(re.sub(r'<.*?>', '', token.split("\t")[coluna_tab[coluna]]))
+	if coluna in different_distribution:
+		for sentence in corpus:
+			for t, token in enumerate(sentence.tokens):
+				if '<b>' in token.to_str() or "</b>" in token.to_str():
+					if not coluna in different_distribution:
+						dist.append(re.sub(r'<.*?>', '', token.col.get(coluna)))
+					elif coluna in ["dependentes", "children"]:
+						children = [t]
+						children_already_seen = []
 						children_future = []
-					children_list = [cleanEstruturaUD(sentence.tokens[x].word) if x != t else "<b>" + cleanEstruturaUD(sentence.tokens[x].word) + "</b>" for x in sorted(children)]
-					if len(children_list) > 1:
-						dist.append(" ".join(children_list))
-						if children_list:
-							if not " ".join(children_list) in all_children:
-								all_children[" ".join(children_list)] = []
-							all_children[" ".join(children_list)].append(sentence.sent_id)
+						while children_already_seen != children:
+							for child in children:
+								if not child in children_already_seen:
+									children_already_seen.append(child)
+								for _t, _token in enumerate(sentence.tokens):
+									if cleanEstruturaUD(_token.dephead) == cleanEstruturaUD(sentence.tokens[child].id):
+										children_future.append(_t)
+							[children.append(x) for x in children_future if x not in children]
+							children_future = []
+						children_list = [cleanEstruturaUD(sentence.tokens[x].word) if x != t else "<b>" + cleanEstruturaUD(sentence.tokens[x].word) + "</b>" for x in sorted(children)]
+						if len(children_list) > 1:
+							dist.append(" ".join(children_list))
+							if children_list:
+								if not " ".join(children_list) in all_children:
+									all_children[" ".join(children_list)] = []
+								all_children[" ".join(children_list)].append(sentence.sent_id)
 
 
 	dicionario = dict()
@@ -123,11 +155,11 @@ def main(arquivoUD, criterio, parametros, limit=0, sent_id="", fastSearch=False,
 						casos += len(regex)
 						new_sentence = re.sub('(' + parametros + ')', r'<b>\1</b>', sentence)
 						tokens = list()
-						header = '!@#'
+						header = '!@#' if not '# text = ' in new_sentence else '# text = ' + new_sentence.split("# text = ")[1].split("\n")[0]
 						for linha in new_sentence.splitlines():
-							if '# text = ' in linha:
-								header = linha
 							if 'b>' in linha and '\t' in linha:
+								if '\\' in linha:
+									linha = re.sub(r"\\(\d+)", r"\\\\\1", linha)
 								tokens.append(linha.split('\t')[1].replace('<b>','').replace('</b>',''))
 						header2 = header
 						for token in tokens:
@@ -165,7 +197,7 @@ def main(arquivoUD, criterio, parametros, limit=0, sent_id="", fastSearch=False,
 						if any(_colunas[w-1] == x for x in k.split("|")) and _token.dephead == token.id:
 							descarta = True
 					if not descarta:
-						output.append(re.sub(r"\b" + re.escape(token.word) + r"\b", "<b>" + token.word + "</b>", sentence.to_str()))
+						output.append(re.sub(r"\b" + re.escape(token.word) + r"\b", "<b>" + re.escape(token.word) + "</b>", sentence.to_str()))
 						casos += 1
 					
 	#Regex Independentes
@@ -369,16 +401,16 @@ for ''' + identificador + ''' in sentence.tokens:
 	try:
 		if not "-" in '''+identificador+'''.id and (''' + pesquisa + ''') :
 			sentence2.metadados['corresponde'] = 1
-			sentence2.metadados['text'] = re.sub(r'\\b(' + re.escape('''+ identificador +'''.word) + r')\\b', r"@RED/\\1/FONT", sentence2.metadados['text'], flags=re.IGNORECASE|re.MULTILINE)
+			sentence2.metadados['text'] = re.sub(r'\\b(' + re.escape('''+ identificador +'''.word) + r')\\b', r"@RED/\\1/FONT", sentence2.metadados['text'])
 			sentence2.print = sentence2.print.replace('''+ identificador +'''.to_str(), "@RED/" + '''+ identificador +'''.to_str() + "/FONT")
 	'''#try por causa de não ter um next_token no fim de sentença, por ex.
 			if identificador + ".head_token" in pesquisa:
 				condition += '''
-			sentence2.metadados['text'] = re.sub(r'\\b(' + re.escape('''+ identificador +'''.head_token.word) + r')\\b', r"@BLUE/\\1/FONT", sentence2.metadados['text'], flags=re.IGNORECASE|re.MULTILINE)
+			sentence2.metadados['text'] = re.sub(r'\\b(' + re.escape('''+ identificador +'''.head_token.word) + r')\\b', r"@BLUE/\\1/FONT", sentence2.metadados['text'])
 			sentence2.print = sentence2.print.replace('''+ identificador +'''.head_token.to_str(), "@BLUE/" + '''+ identificador +'''.head_token.to_str() + "/FONT")'''
 			
 			condition += '''
-			sentence2.metadados['text'] = re.sub(r'\\b(' + re.escape('''+ arroba +'''.word) + r')\\b', r"<b>\\1</b>", sentence2.metadados['text'], flags=re.IGNORECASE|re.MULTILINE)
+			sentence2.metadados['text'] = re.sub(r'\\b(' + re.escape('''+ arroba +'''.word) + r')\\b', r"<b>\\1</b>", sentence2.metadados['text'])
 			'''
 
 			exec(condition + '''
