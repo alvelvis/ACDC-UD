@@ -3,7 +3,7 @@ sys.path.append("/home/elvis/ACDC-UD")
 import estrutura_ud
 
 if len(sys.argv < 3):
-    sys.stderr.write("usage: release.conllu workbench.conllu")
+    sys.stderr.write("usage: release.conllu workbench_anyversion.conllu")
     exit()
 
 release = estrutura_ud.Corpus(recursivo=True)
