@@ -37,8 +37,8 @@ def get_list(conllu1, conllu2, coluna):
 						solitarios.append(sentid + ': ' + sentence.text)
 					else:
 						for t, token in enumerate(sentence.tokens):
-							lista_coluna1.append(token.col[feats[coluna].lower()])
-							lista_coluna2.append(conllu2.sentences[sentid].tokens[t].col[feats[coluna].lower()])
+							lista_coluna1.append(token.__dict__[feats[coluna].lower()])
+							lista_coluna2.append(conllu2.sentences[sentid].tokens[t].__dict__[feats[coluna].lower()])
 
 		return {'matriz_1': lista_coluna1, 'matriz_2': lista_coluna2, 'solitários_1': solitarios}
 
@@ -328,15 +328,15 @@ def get_percentages(ud1, ud2, output, coluna):
 	dicionario = {}
 	for sentid, sentence in golden.sentences.items():
 		for t, token in enumerate(sentence.tokens):
-			if not token.col[feats[coluna].lower()] in dicionario:
+			if not token.__dict__[feats[coluna].lower()] in dicionario:
 				if coluna == 8:
-					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0, 0, 0]
+					dicionario[token.__dict__[feats[coluna].lower()]] = [0, 0, 0, 0, 0]
 					UAS[token.deprel] = dict()
 				else:
-					dicionario[token.col[feats[coluna].lower()]] = [0, 0, 0]
-			dicionario[token.col[feats[coluna].lower()]][0] += 1
-			if system.sentences[sentid].tokens[t].col[feats[coluna].lower()] == token.col[feats[coluna].lower()]:
-				dicionario[token.col[feats[coluna].lower()]][1] += 1
+					dicionario[token.__dict__[feats[coluna].lower()]] = [0, 0, 0]
+			dicionario[token.__dict__[feats[coluna].lower()]][0] += 1
+			if system.sentences[sentid].tokens[t].__dict__[feats[coluna].lower()] == token.__dict__[feats[coluna].lower()]:
+				dicionario[token.__dict__[feats[coluna].lower()]][1] += 1
 				if coluna == 8:
 					if system.sentences[sentid].tokens[t].dephead == token.dephead:
 						dicionario[token.deprel][2] += 1
