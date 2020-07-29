@@ -387,6 +387,9 @@ if not corpus.startswith("#"):
     sentences[-1] = re.sub(r'(# xml_tags = .*)\n', r'\1|' + "|".join(reversed(last_xml_tags)) + r"\n", sentences[-1])
 
     #ajeitando ID das MWEs
+    sys.stderr.write("Corpus pronto")
+    with open("corpus.conllu", "w") as f:
+        f.write("\n\n".join(sentences))
     corpus = estrutura_ud.Corpus(recursivo=True)
     corpus.build("\n\n".join(sentences))
     
@@ -405,8 +408,8 @@ if not corpus.startswith("#"):
                 token.dephead = str(int(token.dephead)+1)            
 
     print(corpus.to_str())
-
-    print("\n\n".join(sentences))
+    os.remove("corpus.conllu")
+    #print("\n\n".join(sentences))
     
     with open("lista_faltantes.log", 'w') as f:
         f.write("\n\n".join(lista_faltantes))
@@ -552,8 +555,9 @@ elif corpus.startswith("#"):
                         tokendict[int(misc.split('=')[0])] = misc.split('=')[1] if int(misc.split('=')[0]) != 18 else misc.split("=")[1].replace("_", "=").replace("==", "__")
                     except:
                         pass
-                for tag in sentence.metadados['repetitive_tags'].split("|"):
-                    tokendict[int(tag.split('=')[0])] = tag.split('=')[1]
+                if 'repetitive_tags' in sentence.metadados:
+                    for tag in sentence.metadados['repetitive_tags'].split("|"):
+                        tokendict[int(tag.split('=')[0])] = tag.split('=')[1]
 
                 if (contraction and max_contraction >= num_contraction):
                     num_contraction += 1
@@ -561,7 +565,12 @@ elif corpus.startswith("#"):
             if (not '-' in token.id and not contraction):
                 if "TAGB4=" in token.misc and ((acdc and token.misc.split("TAGB4=")[1].split("|")[0] != acdc[-1]) or not acdc):
                     acdc.append(token.misc.split("TAGB4=")[1].split("|")[0].replace("<barra_em_pe>", "|"))
-                acdc.append("\t".join([tokendict[x] for x in sorted(tokendict)]))
+                columns = []
+                for column in tokendict:
+                    while len(columns) < column:
+                        columns.append("_")
+                    columns.append(tokendict[column])
+                acdc.append("\t".join(columns))
                 if "TAGAFTER=" in token.misc and ((acdc and token.misc.split("TAGAFTER=")[1].split("|")[0] != acdc[-1]) or not acdc):
                     acdc.append(token.misc.split("TAGAFTER=")[1].split("|")[0].replace("<barra_em_pe>", "|"))
 
