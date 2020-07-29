@@ -1,6 +1,7 @@
 import sys
 import re
 import estrutura_ud
+import os
 import pprint
 
 arquivo = sys.argv[1]
@@ -390,14 +391,20 @@ if not corpus.startswith("#"):
     sys.stderr.write("Corpus pronto")
     with open("corpus.conllu", "w") as f:
         f.write("\n\n".join(sentences))
-    corpus = estrutura_ud.Corpus(recursivo=True)
+    corpus = estrutura_ud.Corpus(recursivo=False)
     corpus.build("\n\n".join(sentences))
     
     for sentence in corpus.sentences.values():
-        mapa_dephead = {t: _t for t, token in enumerate(sentence.tokens) for _t, _token in enumerate(sentence.tokens) if _token.to_str() == token.head_token.to_str()}
+        mapa_dephead = {}
+        for t, token in enumerate(sentence.tokens):
+            if not '-' in token.id and not t in mapa_dephead and token.dephead != "0":
+                for _t, _token in enumerate(sentence.tokens):
+                    if _token.id == token.dephead and not t in mapa_dephead:
+                        mapa_dephead[t] = _t
         for t, token in enumerate(sentence.tokens):
             if t and (sentence.tokens[t-1].id == token.id or (not '-' in token.id and not '-' in sentence.tokens[t-1].id and int(sentence.tokens[t-1].id) > int(token.id))):
                 token.id = str(int(sentence.tokens[t-1].id)+1)
+        for t, token in enumerate(sentence.tokens):
             if t in mapa_dephead:
                 token.dephead = sentence.tokens[mapa_dephead[t]].id
             elif '-' in token.id:
@@ -405,7 +412,7 @@ if not corpus.startswith("#"):
             else:
                 token.dephead = "0"
             if token.dephead == token.id:
-                token.dephead = str(int(token.dephead)+1)            
+                token.dephead = str(int(token.dephead)+1)
 
     print(corpus.to_str())
     os.remove("corpus.conllu")
