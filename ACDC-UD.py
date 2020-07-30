@@ -275,23 +275,24 @@ corpus_splitlines_len = len(corpus_splitlines)
 
 if not corpus.startswith("#"):
 
+    metadados = {}
+    if 'obra id=' in corpus:
+        corpus_key = "obra"
+    lista_tags = []
+    sentences = []
+    tokens = []
+    lista_faltantes = []
+    dep_lugar_errado = []
+    lista_contracoes = []
+    sent_id = 1
+    primeira_plus = False
+    ja_primeira_plus = False
+    mwe = False
+
     if os.path.isfile("corpus.conllu"):
         corpus = estrutura_ud.Corpus(recursivo=False)
         corpus.load("corpus.conllu")     
     else:
-        metadados = {}
-        if 'obra id=' in corpus:
-            corpus_key = "obra"
-        lista_tags = []
-        sentences = []
-        tokens = []
-        lista_faltantes = []
-        dep_lugar_errado = []
-        lista_contracoes = []
-        sent_id = 1
-        primeira_plus = False
-        ja_primeira_plus = False
-        mwe = False
 
         for l, linha in enumerate(corpus_splitlines):
             if l % 1000 == 0:
@@ -411,6 +412,10 @@ if not corpus.startswith("#"):
         for t, token in enumerate(sentence.tokens):
             if t and (sentence.tokens[t-1].id == token.id or (not '-' in token.id and not '-' in sentence.tokens[t-1].id and int(sentence.tokens[t-1].id) > int(token.id))):
                 token.id = str(int(sentence.tokens[t-1].id)+1)
+            if t and '-' in token.id and (sentence.tokens[t-1].id == token.id.split("-")[0] or int(sentence.tokens[t-1].id) > int(token.id.split("-")[0])):
+                token.id = str(int(sentence.tokens[t-1].id)+1) + "-" + str(int(sentence.tokens[t-1].id)+1 + int(token.id.split("-")[1]) - int(token.id.split("-")[0]))
+            if t and '-' in sentence.tokens[t-1].id and (sentence.tokens[t-1].id.split("-")[0] == token.id or (int(sentence.tokens[t-1].id.split("-")[0]) > int(token.id))):
+                token.id = str(int(sentence.tokens[t-1].id.split("-")[0]))
         for t, token in enumerate(sentence.tokens):
             if t in mapa_dephead:
                 token.dephead = sentence.tokens[mapa_dephead[t]].id
