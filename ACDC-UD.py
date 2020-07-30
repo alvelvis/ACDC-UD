@@ -271,128 +271,135 @@ except:
         corpus = f.read()
 
 corpus_splitlines = corpus.splitlines()
+corpus_splitlines_len = len(corpus_splitlines)
 
 if not corpus.startswith("#"):
 
-    metadados = {}
-    if 'obra id=' in corpus:
-        corpus_key = "obra"
-    lista_tags = []
-    sentences = []
-    tokens = []
-    lista_faltantes = []
-    dep_lugar_errado = []
-    lista_contracoes = []
-    sent_id = 1
-    primeira_plus = False
-    ja_primeira_plus = False
-    mwe = False
+    if os.path.isfile("corpus.conllu"):
+        corpus = estrutura_ud.Corpus(recursivo=False)
+        corpus.load("corpus.conllu")     
+    else:
+        metadados = {}
+        if 'obra id=' in corpus:
+            corpus_key = "obra"
+        lista_tags = []
+        sentences = []
+        tokens = []
+        lista_faltantes = []
+        dep_lugar_errado = []
+        lista_contracoes = []
+        sent_id = 1
+        primeira_plus = False
+        ja_primeira_plus = False
+        mwe = False
 
-    for l, linha in enumerate(corpus_splitlines):
+        for l, linha in enumerate(corpus_splitlines):
+            if l % 1000 == 0:
+                sys.stderr.write("\nLinha processada: {}/{}".format(l, corpus_splitlines_len))
 
-        try:
+            try:
 
-            if linha.strip().startswith("<") and ' id="' in linha:
-                metadados[linha.strip().split("<")[1].split(' id="')[0]] = re.search('<.*? id="([^"]+)"', linha)[1]
+                if linha.strip().startswith("<") and ' id="' in linha:
+                    metadados[linha.strip().split("<")[1].split(' id="')[0]] = re.search('<.*? id="([^"]+)"', linha)[1]
 
-            if linha.strip().startswith("<") and not linha.strip().startswith("<mwe") and not linha.strip().startswith("</mwe"):
-                lista_tags.append(linha.replace("|", "<barra_em_pe>"))
+                if linha.strip().startswith("<") and not linha.strip().startswith("<mwe") and not linha.strip().startswith("</mwe"):
+                    lista_tags.append(linha.replace("|", "<barra_em_pe>"))
 
-            if linha.strip().startswith("<mwe"):
-                mwe = True
-                mwe_lema = re.search(r"lema=([^\s>]+)", linha)[1] if re.search(r"lema=([^\s>]+)", linha) else "__INDEF__"
-                mwe_pos = re.search(r"pos=([^\s>]+)", linha)[1] if re.search(r"pos=([^\s>]+)", linha) else "__INDEF__"
-            if linha.strip().startswith("</mwe"):
-                mwe = False
+                if linha.strip().startswith("<mwe"):
+                    mwe = True
+                    mwe_lema = re.search(r"lema=([^\s>]+)", linha)[1] if re.search(r"lema=([^\s>]+)", linha) else "__INDEF__"
+                    mwe_pos = re.search(r"pos=([^\s>]+)", linha)[1] if re.search(r"pos=([^\s>]+)", linha) else "__INDEF__"
+                if linha.strip().startswith("</mwe"):
+                    mwe = False
 
-            if len(linha.split("\t")) > 17:
+                if len(linha.split("\t")) > 17:
 
-                for i in range(len(linha.split("\t")[17].split("+"))):
+                    for i in range(len(linha.split("\t")[17].split("+"))):
 
-                    if not linha.split("\t")[17].split("+")[i]:
-                        lista_faltantes.append(ACDC.splitlines()[l-1] + "\n" + ACDC.splitlines()[l])
-                        continue
-                    if not '->' in linha.split("\t")[17]:
-                        for coluna in linha.split("\t"):
-                            if '->' in coluna:
-                                dep_lugar_errado.append(linha)
-                                nova_linha = linha.split("\t")
-                                nova_linha[17] = coluna
-                                linha = "\t".join(nova_linha)
-                                break
+                        if not linha.split("\t")[17].split("+")[i]:
+                            lista_faltantes.append(ACDC.splitlines()[l-1] + "\n" + ACDC.splitlines()[l])
+                            continue
+                        if not '->' in linha.split("\t")[17]:
+                            for coluna in linha.split("\t"):
+                                if '->' in coluna:
+                                    dep_lugar_errado.append(linha)
+                                    nova_linha = linha.split("\t")
+                                    nova_linha[17] = coluna
+                                    linha = "\t".join(nova_linha)
+                                    break
 
-                    if '+' in linha.split("\t")[17]:
-                        if not linha.split("\t")[0] in lista_contracoes and not '-' in linha.split("\t")[0]:
-                            lista_contracoes.append(linha.split("\t")[0])
+                        if '+' in linha.split("\t")[17]:
+                            if not linha.split("\t")[0] in lista_contracoes and not '-' in linha.split("\t")[0]:
+                                lista_contracoes.append(linha.split("\t")[0])
 
-                    if linha.split("\t")[0] in dicionario_contracoes and len(linha.split("\t")[17].split("+")) == len(dicionario_contracoes[linha.split("\t")[0]].split("+")):
-                        word_or_plus = dicionario_contracoes[linha.split("\t")[0]].split("+")[i]
-                    elif '-' in linha.split("\t")[0] and "+" in linha.split('\t')[17]:
-                        word_or_plus = "+".join([dicionario_contracoes[x] if x in dicionario_contracoes else x for x in linha.split("\t")[0].replace("-", "+").split("+")]).split("+")[i]
-                    else:
-                        word_or_plus = linha.split("\t")[0]
+                        if linha.split("\t")[0] in dicionario_contracoes and len(linha.split("\t")[17].split("+")) == len(dicionario_contracoes[linha.split("\t")[0]].split("+")):
+                            word_or_plus = dicionario_contracoes[linha.split("\t")[0]].split("+")[i]
+                        elif '-' in linha.split("\t")[0] and "+" in linha.split('\t')[17]:
+                            word_or_plus = "+".join([dicionario_contracoes[x] if x in dicionario_contracoes else x for x in linha.split("\t")[0].replace("-", "+").split("+")]).split("+")[i]
+                        else:
+                            word_or_plus = linha.split("\t")[0]
 
-                    misc = [f"{col}={x.replace('=', '_')}" for col, x in enumerate(linha.split("\t")) if col not in [3,5,7,0,8,9,10,11,12,1,13,15,2,4,6]]
-                    repetitive_tags = ["3=" + linha.split("\t")[3], "5=" + linha.split("\t")[5], "7=" + linha.split("\t")[7]]
+                        misc = [f"{col}={x.replace('=', '_')}" for col, x in enumerate(linha.split("\t")) if col not in [3,5,7,0,8,9,10,11,12,1,13,15,2,4,6]]
+                        repetitive_tags = ["3=" + linha.split("\t")[3], "5=" + linha.split("\t")[5], "7=" + linha.split("\t")[7]]
 
-                    if any(corpus_splitlines[l+1].strip().startswith(x) for x in ["<"]):
-                        misc.append("TAGAFTER=" + corpus_splitlines[l+1].replace("|", "<barra_em_pe>"))
-                    if any(corpus_splitlines[l-1].strip().startswith(x) for x in ["<"]):
-                        misc.append("TAGB4=" + corpus_splitlines[l-1].replace("|", "<barra_em_pe>"))
+                        if any(corpus_splitlines[l+1].strip().startswith(x) for x in ["<"]):
+                            misc.append("TAGAFTER=" + corpus_splitlines[l+1].replace("|", "<barra_em_pe>"))
+                        if any(corpus_splitlines[l-1].strip().startswith(x) for x in ["<"]):
+                            misc.append("TAGB4=" + corpus_splitlines[l-1].replace("|", "<barra_em_pe>"))
 
-                    if '+' in linha.split("\t")[17]:
-                        if (not primeira_plus and not ja_primeira_plus) or (i == 0):
-                            primeira_plus = True
-                    else:
-                        primeira_plus = False
-                        ja_primeira_plus = False                    
+                        if '+' in linha.split("\t")[17]:
+                            if (not primeira_plus and not ja_primeira_plus) or (i == 0):
+                                primeira_plus = True
+                        else:
+                            primeira_plus = False
+                            ja_primeira_plus = False                    
 
-                    if primeira_plus:
-                        tokens.append("{}-{}\t{}".format(linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0], int(linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0]) + len(linha.split("\t")[17].split("+"))-1, linha.split("\t")[0]) + ("\t_" * 8))
-                        ja_primeira_plus = True
-                        primeira_plus = False
+                        if primeira_plus:
+                            tokens.append("{}-{}\t{}".format(linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0], int(linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0]) + len(linha.split("\t")[17].split("+"))-1, linha.split("\t")[0]) + ("\t_" * 8))
+                            ja_primeira_plus = True
+                            primeira_plus = False
 
-                    tokens.append("{id}\t{word}\t{lemma}\t{upos}\t{xpos}\t{feats}\t{dephead}\t{deprel}\t{deps}\t{misc}".format(
-                            id = linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0],
-                            word = word_or_plus,
-                            lemma = linha.split("\t")[8].split("+")[i] if '+' in linha.split("\t")[8] and '+' in linha.split("\t")[17] else linha.split("\t")[8],
-                            upos = linha.split("\t")[9].split("+")[i] if '+' in linha.split("\t")[9] and '+' in linha.split("\t")[17] else linha.split("\t")[9],
-                            xpos = "_",#linha.split("\t")[18].split("+")[i] if '+' in linha.split("\t")[18] else linha.split("\t")[18],
-                            feats = "|".join([linha.split("\t")[10], linha.split("\t")[11], linha.split("\t")[12]]),
-                            dephead = linha.split("\t")[17].split("+")[i].split("->")[1].split("-")[0],
-                            deprel = linha.split("\t")[13].split("+")[i] if '+' in linha.split("\t")[13] and '+' in linha.split("\t")[13] else linha.split("\t")[13],
-                            deps = linha.split("\t")[15],
-                            misc = "|".join(misc) if not mwe else "|".join(sorted(misc + ["MWE=" + mwe_lema.replace("=", "_"), "MWEPOS=" + mwe_pos])),
-                    ))
+                        tokens.append("{id}\t{word}\t{lemma}\t{upos}\t{xpos}\t{feats}\t{dephead}\t{deprel}\t{deps}\t{misc}".format(
+                                id = linha.split("\t")[17].split("+")[i].split("->")[0].split("-")[0],
+                                word = word_or_plus,
+                                lemma = linha.split("\t")[8].split("+")[i] if '+' in linha.split("\t")[8] and '+' in linha.split("\t")[17] else linha.split("\t")[8],
+                                upos = linha.split("\t")[9].split("+")[i] if '+' in linha.split("\t")[9] and '+' in linha.split("\t")[17] else linha.split("\t")[9],
+                                xpos = "_",#linha.split("\t")[18].split("+")[i] if '+' in linha.split("\t")[18] else linha.split("\t")[18],
+                                feats = "|".join([linha.split("\t")[10], linha.split("\t")[11], linha.split("\t")[12]]),
+                                dephead = linha.split("\t")[17].split("+")[i].split("->")[1].split("-")[0],
+                                deprel = linha.split("\t")[13].split("+")[i] if '+' in linha.split("\t")[13] and '+' in linha.split("\t")[13] else linha.split("\t")[13],
+                                deps = linha.split("\t")[15],
+                                misc = "|".join(misc) if not mwe else "|".join(sorted(misc + ["MWE=" + mwe_lema.replace("=", "_"), "MWEPOS=" + mwe_pos])),
+                        ))
 
-            if '</u>' in linha.strip():
-                sentence = f"# sent_id = {metadados[corpus_key].replace(' ', '-')}-{sent_id}\n"
-                sentence += "\n".join(sorted(['# ' + x + ' = ' + metadados[x] for x in metadados]))
-                sentence += f"\n# xml_tags = {'|'.join(lista_tags)}"
-                sentence += f"\n# repetitive_tags = {'|'.join(repetitive_tags)}"
-                sentence += f'\n# text = ' + " ".join([x.split("\t")[1] for x in tokens if not '-' in x.split("\t")[0]]) + "\n"
-                sentence += "\n".join(tokens)
-                sentences.append(sentence)
-                lista_tags = []
-                tokens = []
-                sent_id += 1
+                if '</u>' in linha.strip():
+                    sentence = f"# sent_id = {metadados[corpus_key].replace(' ', '-')}-{sent_id}\n"
+                    sentence += "\n".join(sorted(['# ' + x + ' = ' + metadados[x] for x in metadados]))
+                    sentence += f"\n# xml_tags = {'|'.join(lista_tags)}"
+                    sentence += f"\n# repetitive_tags = {'|'.join(repetitive_tags)}"
+                    sentence += f'\n# text = ' + " ".join([x.split("\t")[1] for x in tokens if not '-' in x.split("\t")[0]]) + "\n"
+                    sentence += "\n".join(tokens)
+                    sentences.append(sentence)
+                    lista_tags = []
+                    tokens = []
+                    sent_id += 1
 
-        except:
-            raise Exception(linha)
+            except:
+                raise Exception(linha)
 
-    last_xml_tags = []
-    for linha in reversed(corpus_splitlines):
-        if "</u>" in linha.strip():
-            break
-        last_xml_tags.append(linha.replace("|", "<barra_em_pe>"))
-    sentences[-1] = re.sub(r'(# xml_tags = .*)\n', r'\1|' + "|".join(reversed(last_xml_tags)) + r"\n", sentences[-1])
+        last_xml_tags = []
+        for linha in reversed(corpus_splitlines):
+            if "</u>" in linha.strip():
+                break
+            last_xml_tags.append(linha.replace("|", "<barra_em_pe>"))
+        sentences[-1] = re.sub(r'(# xml_tags = .*)\n', r'\1|' + "|".join(reversed(last_xml_tags)) + r"\n", sentences[-1])
 
-    #ajeitando ID das MWEs
-    sys.stderr.write("Corpus pronto")
-    with open("corpus.conllu", "w") as f:
-        f.write("\n\n".join(sentences))
-    corpus = estrutura_ud.Corpus(recursivo=False)
-    corpus.build("\n\n".join(sentences))
+        #ajeitando ID das MWEs
+        sys.stderr.write("Corpus pronto")
+        with open("corpus.conllu", "w") as f:
+            f.write("\n\n".join(sentences))
+        corpus = estrutura_ud.Corpus(recursivo=False)
+        corpus.build("\n\n".join(sentences))
     
     for sentence in corpus.sentences.values():
         mapa_dephead = {}
