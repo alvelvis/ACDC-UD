@@ -1,5 +1,5 @@
 dephead|erro: 1 - Token dependente de si próprio
-dephead = id
+token.head_token.id == token.id
 
 dephead|erro: 2 - Ciclo na sentença
 dephead == head_token.id and head_token.dephead == id and dephead != id
@@ -31,10 +31,10 @@ deprel|erro: 7 - Token apontando na direção errada
 deprel = "(appos|conj|fixed|compound|flat|flat:name)" and dephead > id
 deprel = "(case|cc|mark|det|cop|aux)" and dephead < id and misc != "MWE=.*"
 
-deprel|Adjetivação com gênero diferente
+deprel|erro: Adjetivação com gênero diferente
 deprel = "amod|acl" and head_token.gender != gender
 
-deprel|Adjetivação com número diferente
+deprel|erro: Adjetivação com número diferente
 deprel = "amod|acl" and head_token.number != number
 
 feats|erro: Features incompatíveis com a classe gramatical
