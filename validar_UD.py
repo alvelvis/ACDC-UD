@@ -22,6 +22,8 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt", noMissingToke
             errorDictionary['1 - Sentença não termina com o último token'].append({
                 "sentence": "",
                 "sent_id": sentence.sent_id,
+                "t": sentence.map_token_id["1"],
+                "attribute": "id",
             })
 
         temRoot = False
@@ -35,15 +37,19 @@ def validate(conllu, sent_id = None, errorList = "validar_UD.txt", noMissingToke
             if not '1 - Tem 2 root' in errorDictionary:
                 errorDictionary['1 - Tem 2 root'] = []
             errorDictionary['1 - Tem 2 root'].append({
-                "sentence": "",
+                "sentence": sentence,
                 "sent_id": sentence.sent_id,
+                "t": sentence.map_token_id["1"],
+                "attribute": "id",
             })
         if not temRoot:
             if not '1 - Não tem root' in errorDictionary:
                 errorDictionary['1 - Não tem root'] = []
             errorDictionary['1 - Não tem root'].append({
-                "sentence": "",
+                "sentence": sentence,
                 "sent_id": sentence.sent_id,
+                "t": sentence.map_token_id["1"],
+                "attribute": "id",
             })
 
     if not noMissingToken:
