@@ -8,5 +8,6 @@ else
 fi
 meld --diff $folder/interrogar_UD.py $dot/Interrogat-rio/www/cgi-bin/interrogar_UD.py $dot/Julgamento/interrogar_UD.py
 meld --diff $folder/estrutura_ud.py $dot/Interrogat-rio/www/cgi-bin/estrutura_ud.py $dot/Julgamento/estrutura_ud.py
+meld --diff $folder/estrutura_ud.py $dot/Interrogat-rio/www/interrogar-ud/scripts/estrutura_ud.py 
 meld --diff $folder/validar_UD.txt $dot/Interrogat-rio/www/cgi-bin/validar_UD.txt $dot/Julgamento/validar_UD.txt
 meld --diff $folder/tokenization.py $dot/Interrogat-rio/www/cgi-bin/tokenization.py

@@ -2,7 +2,6 @@ import stanza
 import os
 import sys
 from stanza.utils.conll import CoNLL
-sys.path.append("/home/elvis/ACDC-UD")
 import estrutura_ud
 import json
 
